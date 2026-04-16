@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "outbound-execute",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["samples/type-b/serve-preview.js"],
+      "port": 3005
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>활동 로그 - 창고 관리 시스템</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="data.js"></script><script src="shared.js"></script>
+  <style id="commonStyle"></style>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-area">
+      <div class="header-bar"><h1>활동 로그</h1></div>
+      <div class="content-area">
+        <div class="mb-4 flex items-center gap-3">
+          <label style="color:var(--text-secondary);font-size:0.875rem;">기능 필터:</label>
+          <select id="filterSel" onchange="render()" style="width:auto;">
+            <option value="all">전체</option>
+            <option value="inbound_execute">입고 처리</option>
+            <option value="outbound_execute">출고 처리</option>
+            <option value="inbound_schedule">입고 예정</option>
+          </select>
+        </div>
+        <div class="overflow-x-auto">
+          <table>
+            <thead><tr><th>일시</th><th>사용자</th><th>액션</th><th>상세</th></tr></thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('commonStyle').textContent = getCommonStyles();
+    requireAuth();
+    renderLayout('activity-log');
+    function render() {
+      const f = document.getElementById('filterSel').value;
+      const filtered = f === 'all' ? activityLogs : activityLogs.filter(l => l.feature === f);
+      document.getElementById('logBody').innerHTML = filtered.map(l => `
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;">${l.created_at}</td>
+          <td>${l.user}</td>
+          <td>${l.action}</td>
+          <td style="color:var(--text-secondary);font-size:0.875rem;">${l.detail}</td>
+        </tr>`).join('');
+    }
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1776329556701,
+  "projectRoot": "/Users/lovizu/Projects/outsourcing/ynk",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "demo": {
+      "path": "demo",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1776329556695,
+      "keyFiles": [
+        "index.html"
+      ]
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1776329556696,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "samples/type-b/outbound-execute.html",
+      "accessCount": 82,
+      "lastAccessed": 1776369444874,
+      "type": "file"
+    },
+    {
+      "path": "samples/type-b/inbound-execute.html",
+      "accessCount": 71,
+      "lastAccessed": 1776369444627,
+      "type": "file"
+    },
+    {
+      "path": "demo/index.html",
+      "accessCount": 31,
+      "lastAccessed": 1776369377939,
+      "type": "file"
+    },
+    {
+      "path": "demo/inbound-execute.html",
+      "accessCount": 30,
+      "lastAccessed": 1776369208567,
+      "type": "file"
+    },
+    {
+      "path": "demo/outbound-execute.html",
+      "accessCount": 23,
+      "lastAccessed": 1776336357198,
+      "type": "file"
+    },
+    {
+      "path": "samples/type-b/data.js",
+      "accessCount": 13,
+      "lastAccessed": 1776367978166,
+      "type": "file"
+    },
+    {
+      "path": "demo/shared.js",
+      "accessCount": 7,
+      "lastAccessed": 1776369528188,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-b/shared.js",
+      "accessCount": 5,
+      "lastAccessed": 1776369736952,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-a/shared.js",
+      "accessCount": 5,
+      "lastAccessed": 1776369744276,
+      "type": "file"
+    },
+    {
+      "path": "samples/type-b/shared.js",
+      "accessCount": 4,
+      "lastAccessed": 1776366263764,
+      "type": "file"
+    },
+    {
+      "path": ".claude/launch.json",
+      "accessCount": 4,
+      "lastAccessed": 1776366424432,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-a/inbound-execute.html",
+      "accessCount": 4,
+      "lastAccessed": 1776369602814,
+      "type": "directory"
+    },
+    {
+      "path": "demo/samples/type-a/outbound-execute.html",
+      "accessCount": 4,
+      "lastAccessed": 1776369603911,
+      "type": "directory"
+    },
+    {
+      "path": "demo/data.js",
+      "accessCount": 3,
+      "lastAccessed": 1776339104643,
+      "type": "file"
+    },
+    {
+      "path": "example/입고.jpg",
+      "accessCount": 3,
+      "lastAccessed": 1776362437652,
+      "type": "file"
+    },
+    {
+      "path": "example/출고.jpg",
+      "accessCount": 3,
+      "lastAccessed": 1776362534346,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-b/inbound-execute.html",
+      "accessCount": 3,
+      "lastAccessed": 1776369598602,
+      "type": "directory"
+    },
+    {
+      "path": "demo/samples/type-b/outbound-execute.html",
+      "accessCount": 3,
+      "lastAccessed": 1776369600489,
+      "type": "directory"
+    },
+    {
+      "path": "example/전동랙 설계도.jpg",
+      "accessCount": 2,
+      "lastAccessed": 1776361475038,
+      "type": "file"
+    },
+    {
+      "path": "samples/type-b/serve-preview.js",
+      "accessCount": 2,
+      "lastAccessed": 1776366291663,
+      "type": "file"
+    },
+    {
+      "path": "demo/inbound-schedule.html",
+      "accessCount": 1,
+      "lastAccessed": 1776330375852,
+      "type": "file"
+    },
+    {
+      "path": "demo/outbound-schedule.html",
+      "accessCount": 1,
+      "lastAccessed": 1776330383637,
+      "type": "file"
+    },
+    {
+      "path": "demo/inventory.html",
+      "accessCount": 1,
+      "lastAccessed": 1776330535029,
+      "type": "file"
+    },
+    {
+      "path": "demo/products.html",
+      "accessCount": 1,
+      "lastAccessed": 1776330540303,
+      "type": "file"
+    },
+    {
+      "path": "demo/activity-log.html",
+      "accessCount": 1,
+      "lastAccessed": 1776330546069,
+      "type": "file"
+    },
+    {
+      "path": "demo/users.html",
+      "accessCount": 1,
+      "lastAccessed": 1776330553842,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1776330703435,
+      "type": "directory"
+    },
+    {
+      "path": "samples/type-b/index.html",
+      "accessCount": 1,
+      "lastAccessed": 1776365051738,
+      "type": "file"
+    },
+    {
+      "path": "samples/type-b/serve-inbound.js",
+      "accessCount": 1,
+      "lastAccessed": 1776365219870,
+      "type": "file"
+    },
+    {
+      "path": "samples/type-b/serve-outbound.js",
+      "accessCount": 1,
+      "lastAccessed": 1776365221584,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

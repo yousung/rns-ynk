@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>재고 리스트 - 창고 관리 시스템</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="data.js"></script><script src="shared.js"></script>
+  <style id="commonStyle"></style>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-area">
+      <div class="header-bar"><h1>재고 리스트</h1></div>
+      <div class="content-area">
+        <div class="overflow-x-auto">
+          <table>
+            <thead><tr><th>상품코드</th><th>상품명</th><th>총 수량</th><th>위치 수</th><th>상세</th></tr></thead>
+            <tbody id="invBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('commonStyle').textContent = getCommonStyles();
+    requireAuth();
+    renderLayout('inventory');
+
+    function render() {
+      let html = '';
+      products.forEach(p => {
+        const items = inventoryItems.filter(i => i.product_id === p.id);
+        const total = items.reduce((s,i)=>s+i.quantity,0);
+        html += `<tr>
+          <td style="font-family:'JetBrains Mono',monospace;">${p.code}</td>
+          <td>${p.name}</td>
+          <td>${total}개</td>
+          <td>${items.length}곳</td>
+          <td><button style="color:var(--cyan);font-size:0.875rem;cursor:pointer;" onclick="toggleDetail(${p.id})">상세보기</button></td>
+        </tr>
+        <tr id="detail-${p.id}" style="display:none;">
+          <td colspan="5">
+            <div style="background:var(--bg-hover);padding:12px;border-radius:4px;">
+              <table><thead><tr><th>위치</th><th>입고일</th><th>수량</th></tr></thead><tbody>
+                ${items.map(item => {
+                  const pl = pallets.find(pl2 => pl2.id === item.pallet_id);
+                  return `<tr>
+                    <td style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;">${pl ? pl.location : '-'}</td>
+                    <td>${item.received_at}</td>
+                    <td>${item.quantity}개</td>
+                  </tr>`;
+                }).join('')}
+              </tbody></table>
+            </div>
+          </td>
+        </tr>`;
+      });
+      document.getElementById('invBody').innerHTML = html;
+    }
+
+    function toggleDetail(id) {
+      const el = document.getElementById('detail-'+id);
+      el.style.display = el.style.display === 'none' ? 'table-row' : 'none';
+    }
+
+    render();
+  </script>
+</body>
+</html>

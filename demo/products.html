@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품 리스트 - 창고 관리 시스템</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="data.js"></script><script src="shared.js"></script>
+  <style id="commonStyle"></style>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-area">
+      <div class="header-bar">
+        <h1>상품 리스트</h1>
+        <button class="btn-primary ml-auto" onclick="alert('데모: 준비 중')">+ 상품 등록</button>
+      </div>
+      <div class="content-area">
+        <div class="overflow-x-auto">
+          <table>
+            <thead><tr><th>상품코드</th><th>상품명</th><th>등록일</th><th>현재고</th><th>액션</th></tr></thead>
+            <tbody id="productBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('commonStyle').textContent = getCommonStyles();
+    requireAuth();
+    renderLayout('products');
+    document.getElementById('productBody').innerHTML = products.map(p => {
+      const total = inventoryItems.filter(i=>i.product_id===p.id).reduce((s,i)=>s+i.quantity,0);
+      return `<tr>
+        <td style="font-family:'JetBrains Mono',monospace;">${p.code}</td>
+        <td>${p.name}</td>
+        <td>${p.created_at}</td>
+        <td>${total}개</td>
+        <td><button style="color:var(--cyan);font-size:0.875rem;margin-right:8px;">수정</button><button style="color:var(--red);font-size:0.875rem;">삭제</button></td>
+      </tr>`;
+    }).join('');
+  </script>
+</body>
+</html>
