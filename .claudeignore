@@ -1,0 +1,21 @@
+# 환경설정 (민감 정보)
+.env
+.env.*
+
+# IDE / 에디터
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 로그 파일
+*.log
+
+# 테스트 커버리지 리포트
+coverage/
+.coverage
+htmlcov/
