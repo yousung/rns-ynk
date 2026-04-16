@@ -228,6 +228,18 @@
       "accessCount": 1,
       "lastAccessed": 1776365221584,
       "type": "file"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-16-warehouse-management-design.md",
+      "accessCount": 1,
+      "lastAccessed": 1776370023997,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 1,
+      "lastAccessed": 1776370045959,
+      "type": "file"
     }
   ],
   "userDirectives": []
