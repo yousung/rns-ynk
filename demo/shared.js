@@ -24,6 +24,21 @@ function setTheme(theme) {
   localStorage.setItem('wms_theme', theme);
   document.documentElement.setAttribute('data-theme', theme);
 }
+function getWarehouseType() { return localStorage.getItem('wms_warehouse_type') || 'b'; }
+function setWarehouseType(type) { localStorage.setItem('wms_warehouse_type', type); }
+function switchWarehouseType(type, menu) {
+  setWarehouseType(type);
+  if (menu === 'inbound-execute') {
+    window.location.href = type === 'a' ? 'samples/type-a/inbound-execute.html' : 'samples/type-b/inbound-execute.html';
+  } else if (menu === 'outbound-execute') {
+    window.location.href = type === 'a' ? 'samples/type-a/outbound-execute.html' : 'samples/type-b/outbound-execute.html';
+  } else {
+    renderLayout(menu);
+    if (typeof window.__onWhTypeChange === 'function') {
+      window.__onWhTypeChange();
+    }
+  }
+}
 
 function isSidebarSlim() {
   return localStorage.getItem('wms_sidebar_slim') === 'true';
@@ -60,9 +75,9 @@ function renderLayout(activeMenu) {
   const slim = isSidebarSlim();
   const menuItems = [
     { key: 'inbound-schedule',  label: '입고 예정',   href: 'inbound-schedule.html' },
-    { key: 'inbound-execute',   label: '입고 처리',   href: 'samples/type-b/inbound-execute.html' },
+    { key: 'inbound-execute',   label: '입고 처리',   href: getWarehouseType() === 'a' ? 'samples/type-a/inbound-execute.html' : 'samples/type-b/inbound-execute.html' },
     { key: 'outbound-schedule', label: '출고 예정',   href: 'outbound-schedule.html' },
-    { key: 'outbound-execute',  label: '출고 처리',   href: 'samples/type-b/outbound-execute.html' },
+    { key: 'outbound-execute',  label: '출고 처리',   href: getWarehouseType() === 'a' ? 'samples/type-a/outbound-execute.html' : 'samples/type-b/outbound-execute.html' },
     { key: 'inventory',         label: '재고 리스트', href: 'inventory.html' },
     { key: 'products',          label: '상품 리스트', href: 'products.html' },
     { key: 'activity-log',      label: '활동 로그',   href: 'activity-log.html' },
@@ -89,6 +104,13 @@ function renderLayout(activeMenu) {
     <nav class="flex-1 overflow-y-auto py-2">
       ${nav}
     </nav>
+    <div class="sidebar-wh-type">
+      <span class="nav-label" style="font-size:0.72rem;color:var(--text-secondary);padding:0 4px;">창고 타입</span>
+      <div class="wh-type-btns">
+        <button class="wh-type-btn ${getWarehouseType() === 'a' ? 'active' : ''}" onclick="switchWarehouseType('a','${activeMenu}')">A</button>
+        <button class="wh-type-btn ${getWarehouseType() === 'b' ? 'active' : ''}" onclick="switchWarehouseType('b','${activeMenu}')">B</button>
+      </div>
+    </div>
     <div class="sidebar-footer">
       <a href="settings.html" class="nav-item ${activeMenu === 'settings' ? 'active' : ''}" title="계정 설정">
         ${_MENU_ICONS['settings']}
@@ -152,6 +174,12 @@ function getCommonStyles() {
     .nav-label{transition:opacity 0.1s;}
     .sidebar.slim .nav-label{display:none;}
 
+    .sidebar-wh-type{padding:8px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+    .sidebar.slim .sidebar-wh-type{justify-content:center;}
+    .sidebar.slim .sidebar-wh-type .nav-label{display:none;}
+    .wh-type-btns{display:flex;gap:4px;}
+    .wh-type-btn{padding:3px 10px;border-radius:4px;font-size:0.75rem;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--bg-surface);color:var(--text-secondary);transition:all 0.15s;font-family:inherit;}
+    .wh-type-btn.active{background:var(--cyan);color:#000;border-color:var(--cyan);}
     .sidebar-footer{border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2px;padding:8px;flex-shrink:0;}
     .sidebar-logout-btn{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:6px;
       font-size:0.875rem;color:var(--text-secondary);cursor:pointer;background:transparent;

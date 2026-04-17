@@ -6,64 +6,17 @@
   <title>입고 처리 - 창고 관리 시스템</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="data.js"></script>
+  <script src="../../data.js"></script>
   <script src="shared.js"></script>
+  <script src="../../warehouse-styles.js"></script>
   <style id="commonStyle"></style>
+  <style id="warehouseStyle"></style>
   <style>
-    /* 창고 탭 */
-    .wh-tab { padding: 7px 16px; border-radius: 6px; font-size: 0.875rem; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s; background: var(--bg-surface); color: var(--text-secondary); }
-    .wh-tab.active { background: var(--cyan); color: #000; font-weight: 600; border-color: var(--cyan); box-shadow: 0 0 12px rgba(0,212,255,0.3); }
-
-    /* 창고 뷰 */
-    .wh3d-container { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-    .wh3d-scroll { overflow-x: auto; }
-    .wh3d-title { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .wh3d-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px rgba(0,212,255,0.8); }
-    .wh3d-scene { display: block; }
-    .wh3d-grid { display: grid; gap: 8px; }
-    /* 평면 카드 랙 */
-    .rack-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 8px; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; }
-    .rack-card:hover { border-color: var(--border-bright); background: var(--bg-hover); }
-    .rack-card.selected { border-color: var(--cyan); box-shadow: 0 0 14px rgba(0,212,255,0.45); background: var(--bg-base); }
-    .rack-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .rack-card-no { font-size: 0.72rem; font-weight: 700; color: var(--text-primary); font-family: 'JetBrains Mono', monospace; }
-    .rack-card.selected .rack-card-no { color: var(--cyan); }
-    .rack-card-lot { font-size: 0.68rem; font-weight: 600; color: #4ADE80; }
-    .rack-card-lot.empty { color: #334155; }
-    .rack-cell-grid { display: grid; gap: 2px; }
-    .rc { border-radius: 2px; height: 9px; }
-    .rc-empty { background: var(--bg-surface); border: 1px solid rgba(30,58,95,0.45); }
-    .rc-filled { background: rgba(55,48,163,0.35); border: 1px solid #6366F1; }
+    /* Type A specific styles (not in warehouse-styles.js) */
     @keyframes rack-pulse {
       0%,100% { box-shadow: 0 0 14px rgba(0,212,255,0.9), 0 0 28px rgba(0,212,255,0.4); }
       50%      { box-shadow: 0 0 22px rgba(0,212,255,1.0), 0 0 44px rgba(0,212,255,0.6); }
     }
-
-    /* 범례 */
-    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; }
-    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-secondary); }
-    .legend-box { width: 14px; height: 14px; border-radius: 2px; }
-
-    /* 슬롯 그리드 */
-    .slot-grid { display: grid; gap: 6px; margin-top: 12px; }
-    .slot {
-      width: 60px; height: 60px; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; border: 1px solid var(--border); border-radius: 4px;
-      cursor: pointer; transition: all 0.2s; font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    }
-    .slot-empty { background: var(--bg-panel); border-style: dashed; color: var(--text-secondary); }
-    .slot-filled { background: var(--cyan-dim); border-color: var(--cyan); color: var(--cyan); box-shadow: var(--cyan-glow); }
-    .slot-selected { background: rgba(0,212,255,0.3); border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,212,255,0.6); }
-    .slot:hover { transform: scale(1.1); z-index: 5; }
-    .floor-label { font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center; padding-right: 8px; font-family: 'JetBrains Mono', monospace; }
-    /* ── 라이트 테마 오버라이드 ── */
-    [data-theme="light"] .rack-card { background: #F8FAFC; border-color: var(--border); }
-    [data-theme="light"] .rack-card:hover { background: var(--bg-hover); border-color: var(--border-bright); }
-    [data-theme="light"] .rack-card.selected { background: #EFF6FF; }
-    [data-theme="light"] .rc-empty { background: #E2E8F0; border-color: rgba(148,163,184,0.6); }
-    [data-theme="light"] .rc-filled { background: rgba(55,48,163,0.25); border-color: rgba(99,102,241,0.6); }
-    [data-theme="light"] .slot-empty { background: var(--bg-surface); }
-    [data-theme="light"] .wh3d-container { background: var(--bg-panel); }
   </style>
 </head>
 <body>
@@ -72,10 +25,6 @@
     <div class="main-area">
       <div class="header-bar">
         <h1>입고 처리</h1>
-        <div class="ab-tabs">
-          <span class="ab-tab active">Type A</span>
-          <a href="../type-b/inbound-execute.html" class="ab-tab">Type B</a>
-        </div>
       </div>
       <div class="content-area">
         <!-- 창고 탭 -->
@@ -126,6 +75,7 @@
 
   <script>
     document.getElementById('commonStyle').textContent = getCommonStyles();
+    document.getElementById('warehouseStyle').textContent = getWarehouseStyles();
     requireAuth();
     renderLayout('inbound-execute');
 

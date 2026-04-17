@@ -5,8 +5,9 @@
   <title>재고 리스트 - 창고 관리 시스템</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="data.js"></script><script src="shared.js"></script>
+  <script src="data.js"></script><script src="shared.js"></script><script src="warehouse-styles.js"></script>
   <style id="commonStyle"></style>
+  <style id="warehouseStyle"></style>
   <style>
     /* 뷰 토글 버튼 */
     .view-toggle {
@@ -107,32 +108,6 @@
       flex-direction: column;
       overflow: hidden;
     }
-    .wh-tabs-row {
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 6px;
-      background: var(--bg-panel);
-      flex-shrink: 0;
-      overflow-x: auto;
-    }
-    .wh-tab {
-      padding: 5px 14px;
-      border-radius: 5px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--bg-surface);
-      color: var(--text-secondary);
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-    .wh-tab.active {
-      background: var(--cyan);
-      color: #000;
-      border-color: var(--cyan);
-    }
     .wh-rack-area {
       flex: 1;
       overflow: auto;
@@ -140,38 +115,7 @@
     }
     .wh-rack-grid {
       display: grid;
-      gap: 10px;
-    }
-    .rack-card {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px;
-      transition: all 0.15s;
-    }
-    .rack-card:hover {
-      border-color: var(--border-bright);
-    }
-    .rack-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      margin-bottom: 5px;
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .rack-cells {
-      display: grid;
-      gap: 2px;
-    }
-    .rack-cell {
-      height: 14px;
-      border-radius: 2px;
-    }
-    .rack-percentage {
-      text-align: center;
-      font-size: 0.68rem;
-      margin-top: 4px;
+      gap: 8px;
     }
 
     /* 범례 */
@@ -199,6 +143,17 @@
       border-radius: 2px;
       flex-shrink: 0;
     }
+
+    /* Type B 미니블록 스타일 */
+    .mini-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; width: 100%; box-sizing: border-box; }
+    .mini-block { border-radius: 2px; height: 10px; }
+    .mini-empty { background: rgba(30,58,95,0.25); border: 1px solid rgba(30,58,95,0.5); }
+    .mini-filled { background: rgba(30,80,200,0.5); border: 1px solid rgba(80,120,240,0.6); }
+    .mini-sel { background: rgba(0,212,255,0.75); border: 1px solid var(--cyan); }
+    .rm-cell.rm-multi { padding: 0; align-items: stretch; min-height: 48px; }
+    [data-theme="light"] .mini-empty { background: rgba(200,220,240,0.5); border: 1px solid rgba(150,180,210,0.7); }
+    [data-theme="light"] .mini-filled { background: rgba(60,100,200,0.25); border: 1px solid rgba(60,100,200,0.45); }
+
   </style>
 </head>
 <body>
@@ -265,8 +220,11 @@
 
   <script>
     document.getElementById('commonStyle').textContent = getCommonStyles();
+    document.getElementById('warehouseStyle').textContent = getWarehouseStyles();
     requireAuth();
     renderLayout('inventory');
+    const _wt = (typeof getWarehouseType === 'function') ? getWarehouseType() : (localStorage.getItem('wms_warehouse_type') || 'b');
+    document.body.setAttribute('data-warehouse-type', _wt);
 
     // 전역 상태
     let currentView = 'list';
@@ -359,6 +317,7 @@
     // 뷰 전환
     function showView(view) {
       currentView = view;
+      localStorage.setItem('wms_inventory_view', view);
       document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';
       document.getElementById('warehouseView').style.display = view === 'warehouse' ? 'flex' : 'none';
       document.getElementById('btnListView').classList.toggle('active', view === 'list');
@@ -375,20 +334,19 @@
 
     // 점유된 위치 정보 가져오기
     function getOccupiedLocations(warehouseId) {
-      const warehouseRacks = racks.filter(r => r.warehouse_id === warehouseId);
-      const occupied = {}; // key: rack_no, value: [{floor, group, productNames, palletId}]
+      const occupied = {}; // key: rack.id, value: [{floor, group, productNames, palletId}]
 
       pallets.forEach(pallet => {
         const parts = pallet.location.split('-');
         if (parts.length !== 3) return;
-        const rackNo = parseInt(parts[0]);
+        const rackId = parseInt(parts[0]);
         const floor = parseInt(parts[1]);
         const group = parseInt(parts[2]);
 
-        const rack = warehouseRacks.find(r => r.rack_no === rackNo);
-        if (!rack) return;
+        const rack = racks.find(r => r.id === rackId);
+        if (!rack || rack.warehouse_id !== warehouseId) return;
 
-        const key = rackNo;
+        const key = rack.id;
         if (!occupied[key]) occupied[key] = [];
 
         const items = inventoryItems.filter(i => i.pallet_id === pallet.id);
@@ -429,94 +387,154 @@
 
     // 범례 렌더링
     function renderWhLegend() {
-      const legendItems = [
-        { label: '비어있음', bg: '#05101C', border: '1px solid #1E3A5F' },
-        { label: '1-33%', bg: 'rgba(16,185,129,0.3)', border: 'none' },
-        { label: '34-66%', bg: 'rgba(245,158,11,0.35)', border: 'none' },
-        { label: '67-99%', bg: 'rgba(239,100,50,0.4)', border: 'none' },
-        { label: '100%', bg: 'rgba(239,68,68,0.45)', border: 'none' },
-      ];
-      let html = '<span style="margin-right:4px;">채움 정도:</span>';
-      legendItems.forEach(item => {
-        html += `
-          <div class="legend-item">
-            <div class="legend-dot" style="background:${item.bg};border:${item.border};"></div>
-            ${item.label}
-          </div>
-        `;
+      const wt = (typeof getWarehouseType === 'function') ? getWarehouseType() : (localStorage.getItem('wms_warehouse_type') || 'b');
+      let items, label;
+
+      if (wt === 'a') {
+        label = '셀 상태:';
+        items = [
+          { label: '비어있음', bg: 'var(--bg-surface)', border: '1px solid rgba(30,58,95,0.45)' },
+          { label: '재고 있음', bg: 'rgba(55,48,163,0.35)', border: '1px solid #6366F1' },
+          { label: '선택 상품', bg: 'rgba(0,212,255,0.5)', border: '1px solid var(--cyan)' },
+        ];
+      } else {
+        label = '채움 정도:';
+        items = [
+          { label: '비어있음', bg: '#05101C', border: '1px solid rgba(30,58,95,0.5)' },
+          { label: '낮음',     bg: 'rgba(30,80,200,0.2)', border: 'none' },
+          { label: '중간',     bg: 'rgba(30,80,200,0.4)', border: 'none' },
+          { label: '높음',     bg: 'rgba(30,80,200,0.65)', border: 'none' },
+          { label: '가득',     bg: 'rgba(30,80,200,0.88)', border: 'none' },
+          { label: '선택 상품', bg: 'rgba(0,212,255,0.22)', border: '2px solid var(--cyan)' },
+        ];
+      }
+
+      let html = `<span style="margin-right:4px;">${label}</span>`;
+      items.forEach(item => {
+        html += `<div class="legend-item"><div class="legend-dot" style="background:${item.bg};border:${item.border};"></div>${item.label}</div>`;
       });
-      html += `
-        <div class="legend-item" style="margin-left:8px;">
-          <div class="legend-dot" style="background:rgba(0,212,255,0.4);border:1px solid var(--cyan);"></div>
-          선택 상품
-        </div>
-      `;
       document.getElementById('whLegend').innerHTML = html;
     }
 
     // 창고 랙 시각화 렌더링
     function renderWhWarehouse() {
+      const wt = (typeof getWarehouseType === 'function') ? getWarehouseType() : (localStorage.getItem('wms_warehouse_type') || 'b');
       const warehouseRacks = racks.filter(r => r.warehouse_id === selectedWarehouseId);
       const occupied = getOccupiedLocations(selectedWarehouseId);
 
-      // 정렬 (rack_no 순서대로)
       warehouseRacks.sort((a, b) => a.rack_no - b.rack_no);
 
-      // 그리드 설정 (모두 6열)
-      const cols = 6;
+      if (wt === 'a') {
+        renderTypeARacks(warehouseRacks, occupied);
+      } else {
+        renderTypeB(warehouseRacks, occupied);
+      }
+    }
 
+    // Type A: render3DRacks 방식 - 랙 카드 그리드
+    function renderTypeARacks(warehouseRacks, occupied) {
+      const cols = selectedWarehouseId === 3 ? 6 : 3;
       let html = `<div class="wh-rack-grid" style="grid-template-columns:repeat(${cols},1fr);">`;
 
+      const selPalletIds = selectedProductId
+        ? new Set(inventoryItems.filter(i => i.product_id === selectedProductId).map(i => i.pallet_id))
+        : null;
+
       warehouseRacks.forEach(rack => {
-        const totalCells = rack.floors * rack.groups;
-        const occupiedCells = (occupied[rack.rack_no] || []).length;
-        const ratio = totalCells > 0 ? occupiedCells / totalCells : 0;
-        const { bg, color } = getFillColor(ratio);
-        const pct = Math.round(ratio * 100);
-
-        // 선택된 상품이 이 랙에 있는지 확인
-        let isHighlighted = false;
-        if (selectedProductId) {
-          const relevantPalletIds = inventoryItems
-            .filter(i => i.product_id === selectedProductId)
-            .map(i => i.pallet_id);
-          const occupiedList = occupied[rack.rack_no] || [];
-          isHighlighted = occupiedList.some(o => relevantPalletIds.includes(o.palletId));
-        }
-
-        const border = isHighlighted ? '2px solid var(--cyan)' : '1px solid var(--border)';
-
-        // 셀 그리드 생성 (floors × groups)
-        let cellsHtml = `<div class="rack-cells" style="grid-template-columns:repeat(${rack.groups},1fr);">`;
-        for (let f = rack.floors; f >= 1; f--) {
-          for (let g = 1; g <= rack.groups; g++) {
-            const cellOccupied = (occupied[rack.rack_no] || []).some(o => o.floor === f && o.group === g);
-            const highlighted = isHighlighted && (occupied[rack.rack_no] || [])
-              .filter(o => o.floor === f && o.group === g)
-              .some(o => inventoryItems.filter(i => i.product_id === selectedProductId).map(i => i.pallet_id).includes(o.palletId));
-            const cellBg = highlighted ? 'rgba(0,212,255,0.4)' : (cellOccupied ? bg : '#05101C');
-            cellsHtml += `<div class="rack-cell" style="background:${cellBg};"></div>`;
+        let cells = '';
+        for (let floor = rack.floors; floor >= 1; floor--) {
+          for (let grp = 1; grp <= rack.groups; grp++) {
+            const cellOccupied = (occupied[rack.id] || []).some(o => o.floor === floor && o.group === grp);
+            const isHighlighted = selPalletIds && (occupied[rack.id] || [])
+              .filter(o => o.floor === floor && o.group === grp)
+              .some(o => selPalletIds.has(o.palletId));
+            const cls = isHighlighted ? 'rc rc-highlight' : (cellOccupied ? 'rc rc-filled' : 'rc rc-empty');
+            cells += `<div class="${cls}"></div>`;
           }
         }
-        cellsHtml += '</div>';
 
-        const productNames = (occupied[rack.rack_no] || [])
-          .flatMap(o => o.productNames)
-          .filter((v,i,a) => a.indexOf(v) === i)
-          .slice(0, 3)
-          .join('\n');
-        const tooltipText = `${pct}% 사용${productNames ? '\n' + productNames : ''}`;
+        const filledCount = (occupied[rack.id] || []).length;
+        const isHighlighted = selPalletIds && (occupied[rack.id] || []).some(o => selPalletIds.has(o.palletId));
+        const lotLabel = filledCount > 0
+          ? `<span class="rack-card-lot">${filledCount}Lot</span>`
+          : `<span class="rack-card-lot empty">빈칸</span>`;
 
         html += `
-          <div class="rack-card" style="border:${border};" title="${tooltipText}">
-            <div class="rack-label">랙 ${rack.rack_no}</div>
-            ${cellsHtml}
-            <div class="rack-percentage" style="color:${color};">${pct}%</div>
+          <div class="rack-card${isHighlighted ? ' highlighted' : ''}">
+            <div class="rack-card-header">
+              <span class="rack-card-no">${rack.rack_no}번</span>
+              ${lotLabel}
+            </div>
+            <div class="rack-cell-grid" style="grid-template-columns:repeat(${rack.groups},1fr);">${cells}</div>
           </div>
         `;
       });
 
       html += '</div>';
+      document.getElementById('whRackArea').innerHTML = html;
+    }
+
+    // Type B: renderMatrix 방식 - HTML table with mini-blocks
+    function renderTypeB(warehouseRacks, occupied) {
+      const maxFloors = Math.max(...warehouseRacks.map(r => r.floors));
+      const area = document.getElementById('whRackArea');
+      if (area && warehouseRacks.length > 0) {
+        const maxRackCount = Math.max(...warehouses.map(w => racks.filter(r => r.warehouse_id === w.id).length));
+        const available = area.clientWidth - 60;
+        const cellSize = Math.max(60, Math.floor(available / maxRackCount));
+        area.style.setProperty('--rm-cell-size', cellSize + 'px');
+      }
+
+      const selPalletIds = selectedProductId
+        ? new Set(inventoryItems.filter(i => i.product_id === selectedProductId).map(i => i.pallet_id))
+        : null;
+
+      let html = '<table class="rack-matrix"><thead><tr><th class="label-cell">층</th>';
+      for (const rack of warehouseRacks) {
+        html += `<th>R${rack.rack_no}</th>`;
+      }
+      html += '</tr></thead><tbody>';
+
+      for (let floor = maxFloors; floor >= 1; floor--) {
+        html += '<tr>';
+        html += `<td class="label-cell">${floor}층</td>`;
+
+        for (const rack of warehouseRacks) {
+          if (floor > rack.floors) {
+            html += `<td><div class="rm-cell rm-na"></div></td>`;
+          } else {
+            let miniHtml = '<div class="mini-blocks">';
+            for (let kan = 1; kan <= rack.groups; kan++) {
+              const occ = (occupied[rack.id] || []).find(o => o.floor === floor && o.group === kan);
+              const isHighlighted = selPalletIds && occ && selPalletIds.has(occ.palletId);
+              let miniCls = isHighlighted ? 'mini-block mini-sel' : (occ ? 'mini-block mini-filled' : 'mini-block mini-empty');
+              miniHtml += `<div class="${miniCls}" title="${kan}칸"></div>`;
+            }
+            miniHtml += '</div>';
+
+            const isSelected = selPalletIds && (occupied[rack.id] || [])
+              .filter(o => o.floor === floor)
+              .some(o => selPalletIds.has(o.palletId));
+
+            let cls = 'rm-cell rm-multi';
+            if (isSelected) cls += ' rm-selected';
+
+            html += `<td><div class="${cls}">${miniHtml}</div></td>`;
+          }
+        }
+
+        html += '</tr>';
+      }
+
+      html += '</tbody><tfoot>';
+      html += '<tr><td class="label-cell">랙번호</td>';
+      for (const rack of warehouseRacks) html += `<td>${rack.rack_no}</td>`;
+      html += '</tr>';
+      html += '<tr><td class="label-cell">층수</td>';
+      for (const rack of warehouseRacks) html += `<td>${rack.floors}</td>`;
+      html += '</tr>';
+      html += '</tfoot></table>';
+
       document.getElementById('whRackArea').innerHTML = html;
     }
 
@@ -568,7 +586,25 @@
 
     // 초기화
     initializeCategories();
-    renderListView();
+    const _savedView = localStorage.getItem('wms_inventory_view') || 'list';
+    showView(_savedView);
+
+    // 창고 타입 변경 콜백
+    window.__onWhTypeChange = function() {
+      if (currentView === 'warehouse') {
+        renderWhWarehouse();
+        renderWhLegend();
+      }
+    };
+
+    // Type B resize 반응
+    let _resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(_resizeTimer);
+      _resizeTimer = setTimeout(() => {
+        if (currentView === 'warehouse') renderWhWarehouse();
+      }, 150);
+    });
   </script>
 </body>
 </html>

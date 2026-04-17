@@ -39,14 +39,36 @@ function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
 }
 
+// 창고 타입
+function getWarehouseType() {
+  return localStorage.getItem('wms_warehouse_type') || 'b';
+}
+
+function setWarehouseType(type) {
+  localStorage.setItem('wms_warehouse_type', type);
+}
+function switchWarehouseType(type, menu) {
+  setWarehouseType(type);
+  if (menu === 'inbound-execute') {
+    window.location.href = type === 'a' ? 'inbound-execute.html' : '../type-b/inbound-execute.html';
+  } else if (menu === 'outbound-execute') {
+    window.location.href = type === 'a' ? 'outbound-execute.html' : '../type-b/outbound-execute.html';
+  } else {
+    renderLayout(menu);
+    if (typeof window.__onWhTypeChange === 'function') {
+      window.__onWhTypeChange();
+    }
+  }
+}
+
 // 사이드바 + 헤더 렌더링
 function renderLayout(activeMenu) {
   const user = getCurrentUser();
   const menuItems = [
     { key: 'inbound-schedule',  label: '입고 예정',   href: '../../inbound-schedule.html' },
-    { key: 'inbound-execute',   label: '입고 처리',   href: 'inbound-execute.html' },
+    { key: 'inbound-execute',   label: '입고 처리',   href: getWarehouseType() === 'a' ? 'inbound-execute.html' : '../type-b/inbound-execute.html' },
     { key: 'outbound-schedule', label: '출고 예정',   href: '../../outbound-schedule.html' },
-    { key: 'outbound-execute',  label: '출고 처리',   href: 'outbound-execute.html' },
+    { key: 'outbound-execute',  label: '출고 처리',   href: getWarehouseType() === 'a' ? 'outbound-execute.html' : '../type-b/outbound-execute.html' },
     { key: 'inventory',         label: '재고 리스트', href: '../../inventory.html' },
     { key: 'products',          label: '상품 리스트', href: '../../products.html' },
     { key: 'activity-log',      label: '활동 로그',   href: '../../activity-log.html' },
@@ -65,6 +87,13 @@ function renderLayout(activeMenu) {
     <nav class="flex-1 overflow-y-auto py-2">
       ${nav}
     </nav>
+    <div class="sidebar-wh-type">
+      <span class="nav-label" style="font-size:0.72rem;color:var(--text-secondary);padding:0 4px;">창고 타입</span>
+      <div class="wh-type-btns">
+        <button class="wh-type-btn ${getWarehouseType() === 'a' ? 'active' : ''}" onclick="switchWarehouseType('a','${activeMenu}')">A</button>
+        <button class="wh-type-btn ${getWarehouseType() === 'b' ? 'active' : ''}" onclick="switchWarehouseType('b','${activeMenu}')">B</button>
+      </div>
+    </div>
     <div style="border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;padding:16px;">
       <a href="../../settings.html" class="nav-item ${activeMenu === 'settings' ? 'active' : ''}" style="border-radius:6px;padding:9px 14px;">⚙ 계정 설정</a>
       <button class="btn-secondary w-full text-sm" onclick="logout()">로그아웃</button>
@@ -127,6 +156,12 @@ function getCommonStyles() {
     .ab-tab{padding:3px 12px;border-radius:4px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg-surface);color:var(--text-secondary);text-decoration:none;transition:all 0.15s;}
     .ab-tab.active{background:var(--cyan-dim);color:var(--cyan);border-color:var(--cyan);cursor:default;}
     .ab-tab:not(.active):hover{border-color:var(--border-bright);color:var(--text-primary);}
+    .sidebar-wh-type{padding:8px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+    .sidebar.slim .sidebar-wh-type{justify-content:center;}
+    .sidebar.slim .sidebar-wh-type .nav-label{display:none;}
+    .wh-type-btns{display:flex;gap:4px;}
+    .wh-type-btn{padding:3px 10px;border-radius:4px;font-size:0.75rem;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--bg-surface);color:var(--text-secondary);transition:all 0.15s;font-family:inherit;}
+    .wh-type-btn.active{background:var(--cyan);color:#000;border-color:var(--cyan);}
     /* ── 라이트 테마 ── */
     [data-theme="light"] {
       --bg-base:#F0F4F8; --bg-panel:#FFFFFF; --bg-surface:#F1F5F9; --bg-hover:#E2E8F0;

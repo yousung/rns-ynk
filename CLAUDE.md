@@ -36,6 +36,18 @@ qmd query "자연어 질문"  # 시맨틱 검색 (의미 기반)
 
 ---
 
+## 멀티 에이전트 워크플로 (iTerm2)
+
+- 에이전트가 **2개 이상**이면 iTerm2 화면을 에이전트 수만큼 수직 분할(vertical split)하여 각 에이전트의 진행을 창별로 표시한다.
+- 에이전트가 **1개**이면 메인 스레드에서 그냥 실행한다. 화면 분할 없음.
+- 각 에이전트 작업이 완료되면 해당 창을 닫는다.
+- 분할 명령 예시 (AppleScript / iTerm2 API):
+  ```bash
+  osascript -e 'tell application "iTerm2" to tell current window to tell current session to split vertically with default profile'
+  ```
+
+---
+
 <!-- rtk-instructions v2 -->
 # RTK (Rust Token Killer) - Token-Optimized Commands
 

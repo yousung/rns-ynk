@@ -9,15 +9,32 @@ const warehouses = [
 ];
 
 const racks = [
-  // 완제품창고 (4개, 3층 4그룹)
-  { id: 1, warehouse_id: 1, rack_no: 1,  floors: 3, groups: 4 },
-  { id: 2, warehouse_id: 1, rack_no: 2,  floors: 3, groups: 4 },
-  { id: 3, warehouse_id: 1, rack_no: 3,  floors: 3, groups: 4 },
-  { id: 4, warehouse_id: 1, rack_no: 4,  floors: 3, groups: 4 },
-  // 부자재창고 (3개, 3층 4그룹)
-  { id: 5, warehouse_id: 2, rack_no: 1,  floors: 3, groups: 4 },
-  { id: 6, warehouse_id: 2, rack_no: 2,  floors: 3, groups: 4 },
-  { id: 7, warehouse_id: 2, rack_no: 3,  floors: 3, groups: 4 },
+  // 완제품창고 (12개, 4층 4칸)
+  { id: 1,  warehouse_id: 1, rack_no: 1,  floors: 4, groups: 4 },
+  { id: 2,  warehouse_id: 1, rack_no: 2,  floors: 4, groups: 4 },
+  { id: 3,  warehouse_id: 1, rack_no: 3,  floors: 4, groups: 4 },
+  { id: 4,  warehouse_id: 1, rack_no: 4,  floors: 4, groups: 4 },
+  { id: 40, warehouse_id: 1, rack_no: 5,  floors: 4, groups: 4 },
+  { id: 41, warehouse_id: 1, rack_no: 6,  floors: 4, groups: 4 },
+  { id: 42, warehouse_id: 1, rack_no: 7,  floors: 4, groups: 4 },
+  { id: 43, warehouse_id: 1, rack_no: 8,  floors: 4, groups: 4 },
+  { id: 44, warehouse_id: 1, rack_no: 9,  floors: 4, groups: 4 },
+  { id: 45, warehouse_id: 1, rack_no: 10, floors: 4, groups: 4 },
+  { id: 46, warehouse_id: 1, rack_no: 11, floors: 4, groups: 4 },
+  { id: 47, warehouse_id: 1, rack_no: 12, floors: 4, groups: 4 },
+  // 부자재창고 (12개, 4층 4칸)
+  { id: 5,  warehouse_id: 2, rack_no: 1,  floors: 4, groups: 4 },
+  { id: 6,  warehouse_id: 2, rack_no: 2,  floors: 4, groups: 4 },
+  { id: 7,  warehouse_id: 2, rack_no: 3,  floors: 4, groups: 4 },
+  { id: 48, warehouse_id: 2, rack_no: 4,  floors: 4, groups: 4 },
+  { id: 49, warehouse_id: 2, rack_no: 5,  floors: 4, groups: 4 },
+  { id: 50, warehouse_id: 2, rack_no: 6,  floors: 4, groups: 4 },
+  { id: 51, warehouse_id: 2, rack_no: 7,  floors: 4, groups: 4 },
+  { id: 52, warehouse_id: 2, rack_no: 8,  floors: 4, groups: 4 },
+  { id: 53, warehouse_id: 2, rack_no: 9,  floors: 4, groups: 4 },
+  { id: 54, warehouse_id: 2, rack_no: 10, floors: 4, groups: 4 },
+  { id: 55, warehouse_id: 2, rack_no: 11, floors: 4, groups: 4 },
+  { id: 56, warehouse_id: 2, rack_no: 12, floors: 4, groups: 4 },
   // 전동랙창고 (30개 — rack_no 1~15: 4층, 16~30: 6층, 모두 4그룹)
   { id: 10, warehouse_id: 3, rack_no: 1,  floors: 4, groups: 4 },
   { id: 11, warehouse_id: 3, rack_no: 2,  floors: 4, groups: 4 },
@@ -52,23 +69,41 @@ const racks = [
 ];
 
 const pallets = [
-  // 완제품창고
-  { id: 1,  location: '1-3-1' },
-  { id: 2,  location: '1-3-2' },
-  { id: 3,  location: '1-2-1' },
-  { id: 4,  location: '2-1-3' },
-  { id: 5,  location: '2-2-2' },
-  { id: 6,  location: '3-3-4' },
-  // 부자재창고
-  { id: 7,  location: '1-1-1' },
-  { id: 8,  location: '2-3-2' },
-  // 전동랙창고
-  { id: 9,  location: '10-2-1' },
-  { id: 10, location: '10-4-3' },
-  { id: 11, location: '12-1-2' },
-  { id: 12, location: '15-3-4' },
-  { id: 13, location: '20-2-2' },
-  { id: 14, location: '25-5-1' },
+  // 완제품창고 (12개)
+  { id: 1,  location: '1-3-1'  },
+  { id: 2,  location: '1-3-2'  },
+  { id: 3,  location: '2-2-1'  },
+  { id: 4,  location: '2-1-3'  },
+  { id: 5,  location: '3-2-2'  },
+  { id: 6,  location: '3-3-4'  },
+  { id: 7,  location: '4-1-2'  },
+  { id: 8,  location: '40-2-3' },
+  { id: 9,  location: '41-3-1' },
+  { id: 10, location: '42-1-4' },
+  { id: 11, location: '44-2-2' },
+  { id: 12, location: '46-1-3' },
+  // 부자재창고 (12개)
+  { id: 13, location: '5-1-1'  },
+  { id: 14, location: '5-2-3'  },
+  { id: 15, location: '6-1-2'  },
+  { id: 16, location: '6-3-4'  },
+  { id: 17, location: '7-2-2'  },
+  { id: 18, location: '48-1-3' },
+  { id: 19, location: '49-2-1' },
+  { id: 20, location: '50-3-4' },
+  { id: 21, location: '51-1-2' },
+  { id: 22, location: '52-2-3' },
+  { id: 23, location: '54-1-1' },
+  { id: 24, location: '55-3-2' },
+  // 전동랙창고 (8개)
+  { id: 25, location: '10-2-1' },
+  { id: 26, location: '10-4-3' },
+  { id: 27, location: '12-1-2' },
+  { id: 28, location: '15-3-4' },
+  { id: 29, location: '20-2-2' },
+  { id: 30, location: '25-5-1' },
+  { id: 31, location: '30-6-3' },
+  { id: 32, location: '35-4-2' },
 ];
 
 const products = [
@@ -86,29 +121,47 @@ const products = [
   // 부자재 (RM: Raw Material)
   { id: 11, code: 'RM-001', name: '탄성 직물 원단 (롤/50m)',  category: '원단/소재',   created_at: '2025-06-01' },
   { id: 12, code: 'RM-002', name: '의료용 접착제 (통/5L)',    category: '접착제',      created_at: '2025-06-01' },
-  { id: 13, code: 'RM-003', name: '거즈 원단 (롤/100m)',     category: '원단/소재',   created_at: '2025-06-15' },
-  { id: 14, code: 'RM-004', name: '벨크로 테이프 (롤/25m)',  category: '원단/소재',   created_at: '2025-07-01' },
-  { id: 15, code: 'RM-005', name: '포장 비닐 (박스/1000개)', category: '포장재',      created_at: '2025-08-01' },
+  { id: 13, code: 'RM-003', name: '거즈 원단 (롤/100m)',      category: '원단/소재',   created_at: '2025-06-15' },
+  { id: 14, code: 'RM-004', name: '벨크로 테이프 (롤/25m)',   category: '원단/소재',   created_at: '2025-07-01' },
+  { id: 15, code: 'RM-005', name: '포장 비닐 (박스/1000개)',  category: '포장재',      created_at: '2025-08-01' },
 ];
 
 const inventoryItems = [
-  // 완제품창고 재고
+  // 완제품창고 재고 (pallet 1~12)
   { id: 1,  product_id: 1,  pallet_id: 1,  quantity: 2400, received_at: '2026-03-10' },
   { id: 2,  product_id: 2,  pallet_id: 2,  quantity: 1800, received_at: '2026-03-10' },
   { id: 3,  product_id: 3,  pallet_id: 3,  quantity: 1200, received_at: '2026-03-12' },
   { id: 4,  product_id: 4,  pallet_id: 4,  quantity: 960,  received_at: '2026-03-15' },
   { id: 5,  product_id: 5,  pallet_id: 5,  quantity: 720,  received_at: '2026-03-22' },
   { id: 6,  product_id: 6,  pallet_id: 6,  quantity: 480,  received_at: '2026-04-05' },
-  // 부자재창고 재고
-  { id: 7,  product_id: 11, pallet_id: 7,  quantity: 40,   received_at: '2026-02-20' },
-  { id: 8,  product_id: 12, pallet_id: 8,  quantity: 25,   received_at: '2026-02-20' },
-  // 전동랙창고 재고
-  { id: 9,  product_id: 1,  pallet_id: 9,  quantity: 4800, received_at: '2026-04-08' },
-  { id: 10, product_id: 7,  pallet_id: 10, quantity: 600,  received_at: '2026-04-10' },
-  { id: 11, product_id: 9,  pallet_id: 11, quantity: 1200, received_at: '2026-04-10' },
-  { id: 12, product_id: 13, pallet_id: 12, quantity: 60,   received_at: '2026-03-05' },
-  { id: 13, product_id: 14, pallet_id: 13, quantity: 80,   received_at: '2026-03-15' },
-  { id: 14, product_id: 15, pallet_id: 14, quantity: 300,  received_at: '2026-04-01' },
+  { id: 7,  product_id: 7,  pallet_id: 7,  quantity: 600,  received_at: '2026-04-06' },
+  { id: 8,  product_id: 8,  pallet_id: 8,  quantity: 540,  received_at: '2026-04-07' },
+  { id: 9,  product_id: 9,  pallet_id: 9,  quantity: 1080, received_at: '2026-04-08' },
+  { id: 10, product_id: 10, pallet_id: 10, quantity: 360,  received_at: '2026-04-09' },
+  { id: 11, product_id: 1,  pallet_id: 11, quantity: 1200, received_at: '2026-04-10' },
+  { id: 12, product_id: 3,  pallet_id: 12, quantity: 900,  received_at: '2026-04-11' },
+  // 부자재창고 재고 (pallet 13~24)
+  { id: 13, product_id: 11, pallet_id: 13, quantity: 40,   received_at: '2026-02-20' },
+  { id: 14, product_id: 12, pallet_id: 14, quantity: 25,   received_at: '2026-02-20' },
+  { id: 15, product_id: 13, pallet_id: 15, quantity: 30,   received_at: '2026-03-05' },
+  { id: 16, product_id: 14, pallet_id: 16, quantity: 20,   received_at: '2026-03-10' },
+  { id: 17, product_id: 15, pallet_id: 17, quantity: 35,   received_at: '2026-03-18' },
+  { id: 18, product_id: 11, pallet_id: 18, quantity: 50,   received_at: '2026-03-20' },
+  { id: 19, product_id: 12, pallet_id: 19, quantity: 30,   received_at: '2026-03-25' },
+  { id: 20, product_id: 13, pallet_id: 20, quantity: 45,   received_at: '2026-03-28' },
+  { id: 21, product_id: 14, pallet_id: 21, quantity: 28,   received_at: '2026-04-02' },
+  { id: 22, product_id: 15, pallet_id: 22, quantity: 60,   received_at: '2026-04-05' },
+  { id: 23, product_id: 11, pallet_id: 23, quantity: 35,   received_at: '2026-04-08' },
+  { id: 24, product_id: 12, pallet_id: 24, quantity: 22,   received_at: '2026-04-10' },
+  // 전동랙창고 재고 (pallet 25~32)
+  { id: 25, product_id: 1,  pallet_id: 25, quantity: 4800, received_at: '2026-04-08' },
+  { id: 26, product_id: 7,  pallet_id: 26, quantity: 600,  received_at: '2026-04-10' },
+  { id: 27, product_id: 9,  pallet_id: 27, quantity: 1200, received_at: '2026-04-10' },
+  { id: 28, product_id: 13, pallet_id: 28, quantity: 60,   received_at: '2026-03-05' },
+  { id: 29, product_id: 14, pallet_id: 29, quantity: 80,   received_at: '2026-03-15' },
+  { id: 30, product_id: 15, pallet_id: 30, quantity: 300,  received_at: '2026-04-01' },
+  { id: 31, product_id: 2,  pallet_id: 31, quantity: 2400, received_at: '2026-04-12' },
+  { id: 32, product_id: 8,  pallet_id: 32, quantity: 420,  received_at: '2026-04-13' },
 ];
 
 const inboundSchedules = [
