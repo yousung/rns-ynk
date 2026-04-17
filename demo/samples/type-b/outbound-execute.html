@@ -44,6 +44,9 @@
     .mini-fifon { background: rgba(100,180,255,0.4); border: 1px solid rgba(100,180,255,0.6); }
     .mini-occupied { background: rgba(245,158,11,0.4); border: 1px solid rgba(245,158,11,0.6); }
     .rm-cell.rm-multi { padding: 0; align-items: stretch; cursor: pointer; }
+    .rm-cell.rm-fifo1 { outline: 2px solid #00c878; outline-offset: -2px; }
+    .rm-cell.rm-fifo2 { outline: 2px solid var(--cyan); outline-offset: -2px; }
+    .rm-cell.rm-fifon { outline: 2px solid rgba(100,180,255,0.8); outline-offset: -2px; }
     [data-theme="light"] .mini-empty { background: rgba(200,220,240,0.5); border: 1px solid rgba(150,180,210,0.7); }
   </style>
 </head>
@@ -221,8 +224,34 @@
       }).join('');
     }
 
+    function warehouseHasProduct(warehouseId, productId) {
+      const whRackIds = new Set(racks.filter(r => r.warehouse_id === warehouseId).map(r => r.id));
+      return pallets.some(p => {
+        const rackId = parseInt(p.location.split('-')[0]);
+        return whRackIds.has(rackId) && inventoryItems.some(i => i.pallet_id === p.id && i.product_id === productId);
+      });
+    }
+
+    function findWarehouseWithProduct(productId) {
+      const palletIds = new Set(inventoryItems.filter(i => i.product_id === productId).map(i => i.pallet_id));
+      for (const p of pallets) {
+        if (palletIds.has(p.id)) {
+          const rack = racks.find(r => r.id === parseInt(p.location.split('-')[0]));
+          if (rack) return rack.warehouse_id;
+        }
+      }
+      return null;
+    }
+
     function selectSchedule(id) {
       selectedScheduleId = selectedScheduleId === id ? null : id;
+      if (selectedScheduleId) {
+        const schedule = outboundSchedules.find(s => s.id === selectedScheduleId);
+        if (!warehouseHasProduct(selectedWarehouse, schedule.product_id)) {
+          const whId = findWarehouseWithProduct(schedule.product_id);
+          if (whId) { selectedWarehouse = whId; }
+        }
+      }
       computeFifo();
       renderAll();
     }
@@ -258,11 +287,9 @@
             cls = 'rm-na';
             inner = '—';
           } else if (info.type === 'fifo') {
-            if (info.rank === 1) cls = 'rm-fifo1';
-            else if (info.rank === 2) cls = 'rm-fifo2';
-            else cls = 'rm-fifon';
+            const rankCls = info.rank === 1 ? 'rm-fifo1' : info.rank === 2 ? 'rm-fifo2' : 'rm-fifon';
+            cls = `rm-cell rm-multi ${rankCls}`;
             inner = getMiniBlocksOutbound(rack.id, floor);
-            cls = 'rm-cell rm-multi';
           } else if (info.type === 'occupied') {
             cls = 'rm-cell rm-multi';
             inner = getMiniBlocksOutbound(rack.id, floor);

@@ -71,6 +71,11 @@ function getWarehouseStyles() {
       background: var(--bg-base);
     }
 
+    .rack-card.highlighted {
+      border-color: var(--amber);
+      box-shadow: 0 0 8px rgba(245,158,11,0.3);
+    }
+
     /* 카드 헤더 */
     .rack-card-header {
       display: flex;
@@ -631,8 +636,9 @@ function getWarehouseStyles() {
     }
 
     .dan-btn.occupied {
-      opacity: 0.35;
-      cursor: not-allowed;
+      border-color: var(--amber);
+      color: var(--amber);
+      opacity: 0.7;
     }
 
     .btn-exec {

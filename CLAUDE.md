@@ -48,6 +48,49 @@ qmd query "자연어 질문"  # 시맨틱 검색 (의미 기반)
 
 ---
 
+## 창고(Warehouse) 관련 파일 목록
+
+창고 기능 수정 시 아래 파일만 스캔하면 된다. 전체 코드베이스 탐색 불필요.
+
+### 공유 데이터 / 스타일
+| 파일 | 역할 |
+|------|------|
+| `demo/data.js` | 창고·랙·재고·팔레트 데이터, `max_rack_count` 상수 |
+| `demo/warehouse-styles.js` | 창고 공통 CSS 주입 (rack-matrix, rm-cell, label-cell 등) |
+| `demo/shared.js` | 공통 유틸 (사이드바, 테마 등) |
+
+### 재고 리스트
+| 파일 | 역할 |
+|------|------|
+| `demo/inventory.html` | 목록형 + 창고형(Type A / Type B) 뷰, 상품 클릭 시 위치 강조 |
+
+### 입고 처리
+| 파일 | 역할 |
+|------|------|
+| `demo/samples/type-b/inbound-execute.html` | Type B 전동랙 입고, 셀/칸 선택, 팔레트 배치 |
+| `demo/samples/type-a/inbound-execute.html` | Type A 일반 창고 입고 |
+| `demo/inbound-execute.html` | 메인 입고 화면 (라우팅/분기) |
+| `demo/inbound-schedule.html` | 입고 예정 목록 |
+
+### 출고 처리
+| 파일 | 역할 |
+|------|------|
+| `demo/samples/type-b/outbound-execute.html` | Type B 전동랙 출고, FIFO 강조, 층+칸 포인트 |
+| `demo/samples/type-a/outbound-execute.html` | Type A 일반 창고 출고 |
+| `demo/outbound-execute.html` | 메인 출고 화면 |
+| `demo/outbound-schedule.html` | 출고 예정 목록 |
+
+### 주요 CSS 클래스 / JS 패턴
+- `renderTypeB()` — Type B 창고 매트릭스 렌더링 (inventory.html)
+- `renderMatrix()` — 입고/출고 매트릭스 렌더링 (inbound/outbound execute)
+- `getMiniBlocksOutbound()` — 출고용 미니블록 (FIFO 색상)
+- `--rm-cell-size` CSS 변수 — 셀 너비 (기준: `max_rack_count = 30`)
+- `rm-selected` — 층 포인트 (셀 테두리 강조)
+- `mini-sel / mini-fifo1/2/n` — 칸 포인트 (미니블록 색상)
+- `rm-na` — 존재하지 않는 층 (pointer-events: none)
+
+---
+
 <!-- rtk-instructions v2 -->
 # RTK (Rust Token Killer) - Token-Optimized Commands
 

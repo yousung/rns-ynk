@@ -112,7 +112,7 @@
     .wh-rack-area {
       flex: 1;
       overflow-y: auto;
-      overflow-x: hidden;
+      overflow-x: auto;
       padding: 16px;
       display: flex;
       justify-content: center;
@@ -149,6 +149,8 @@
       border-radius: 2px;
       flex-shrink: 0;
     }
+
+    .rm-click-sel { outline: 2px solid var(--cyan); outline-offset: -2px; }
 
     /* Type B 미니블록 스타일 */
     .mini-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; width: 100%; box-sizing: border-box; }
@@ -218,6 +220,7 @@
             <div class="wh-tabs-row" id="whTabsRow"></div>
             <div class="wh-rack-area" id="whRackArea"></div>
             <div class="wh-legend" id="whLegend"></div>
+            <div id="whRackDetail" style="display:none;padding:12px 16px;border-top:1px solid var(--border);background:var(--bg-panel);flex-shrink:0;"></div>
           </div>
         </div>
       </div>
@@ -236,6 +239,8 @@
     let currentView = 'list';
     let selectedWarehouseId = 1;
     let selectedProductId = null;
+    let selectedInventoryRackId = null;
+    let selectedInventoryCell = null; // { rackId, floor }
 
     // 리스트 뷰 - 분류 초기화
     function initializeCategories() {
@@ -328,7 +333,9 @@
       document.getElementById('warehouseView').style.display = view === 'warehouse' ? 'flex' : 'none';
       document.getElementById('btnListView').classList.toggle('active', view === 'list');
       document.getElementById('btnWarehouseView').classList.toggle('active', view === 'warehouse');
-      if (view === 'warehouse') {
+      if (view === 'list') {
+        renderListView();
+      } else if (view === 'warehouse') {
         renderWhSearch();
         renderWhWarehouse();
         renderWhTabs();
@@ -465,8 +472,10 @@
           ? `<span class="rack-card-lot">${filledCount}Lot</span>`
           : `<span class="rack-card-lot empty">빈칸</span>`;
 
+        const isRackSelected = rack.id === selectedInventoryRackId;
+        const cardCls = ['rack-card', isHighlighted ? 'highlighted' : '', isRackSelected ? 'selected' : ''].filter(Boolean).join(' ');
         html += `
-          <div class="rack-card${isHighlighted ? ' highlighted' : ''}">
+          <div class="${cardCls}" onclick="selectInventoryRack(${rack.id})" style="cursor:pointer;">
             <div class="rack-card-header">
               <span class="rack-card-no">${rack.rack_no}번</span>
               ${lotLabel}
@@ -498,7 +507,8 @@
 
       let html = '<table class="rack-matrix"><thead><tr><th class="label-cell">층</th>';
       for (const rack of warehouseRacks) {
-        html += `<th>R${rack.rack_no}</th>`;
+        const isSelRack = rack.id === selectedInventoryRackId;
+        html += `<th onclick="selectInventoryRack(${rack.id})" style="cursor:pointer;${isSelRack ? 'color:var(--amber);border-bottom:2px solid var(--amber);' : ''}">R${rack.rack_no}</th>`;
       }
       html += '</tr></thead><tbody>';
 
@@ -525,8 +535,10 @@
 
             let cls = 'rm-cell rm-multi';
             if (isSelected) cls += ' rm-selected';
+            const isCellSel = selectedInventoryCell && selectedInventoryCell.rackId === rack.id && selectedInventoryCell.floor === floor;
+            if (isCellSel) cls += ' rm-click-sel';
 
-            html += `<td><div class="${cls}">${miniHtml}</div></td>`;
+            html += `<td><div class="${cls}" onclick="selectInventoryCell(${rack.id},${floor})" style="cursor:pointer;">${miniHtml}</div></td>`;
           }
         }
 
@@ -535,7 +547,10 @@
 
       html += '</tbody><tfoot>';
       html += '<tr><td class="label-cell">랙번호</td>';
-      for (const rack of warehouseRacks) html += `<td>${rack.rack_no}</td>`;
+      for (const rack of warehouseRacks) {
+        const isSelRack = rack.id === selectedInventoryRackId;
+        html += `<td onclick="selectInventoryRack(${rack.id})" style="cursor:pointer;${isSelRack ? 'color:var(--amber);font-weight:700;' : ''}">${rack.rack_no}</td>`;
+      }
       html += '</tr>';
       html += '<tr><td class="label-cell">층수</td>';
       for (const rack of warehouseRacks) html += `<td>${rack.floors}</td>`;
@@ -575,9 +590,151 @@
       document.getElementById('whProductList').innerHTML = html;
     }
 
+    // Type B 셀 선택 (rack+floor 클릭)
+    function selectInventoryCell(rackId, floor) {
+      if (selectedInventoryCell && selectedInventoryCell.rackId === rackId && selectedInventoryCell.floor === floor) {
+        selectedInventoryCell = null;
+        document.getElementById('whRackDetail').style.display = 'none';
+      } else {
+        selectedInventoryCell = { rackId, floor };
+        selectedInventoryRackId = null;
+        renderCellDetail();
+      }
+      renderWhWarehouse();
+    }
+
+    function renderCellDetail() {
+      const { rackId, floor } = selectedInventoryCell;
+      const rack = racks.find(r => r.id === rackId);
+      if (!rack) return;
+
+      let rows = '';
+      for (let kan = 1; kan <= rack.groups; kan++) {
+        const key = `${rackId}-${floor}-${kan}`;
+        const pallet = pallets.find(p => p.location === key);
+        if (!pallet) {
+          rows += `<tr><td>${kan}칸</td><td colspan="3" style="color:var(--text-secondary);font-size:0.8rem;">비어있음</td></tr>`;
+          continue;
+        }
+        const items = inventoryItems.filter(i => i.pallet_id === pallet.id);
+        items.forEach(item => {
+          const prod = products.find(p => p.id === item.product_id);
+          const isTarget = selectedProductId && item.product_id === selectedProductId;
+          rows += `<tr style="${isTarget ? 'color:var(--amber);font-weight:600;' : ''}">
+            <td>${kan}칸</td>
+            <td>${prod ? prod.name : '-'}</td>
+            <td>${item.quantity}개</td>
+            <td style="font-size:0.75rem;color:var(--text-secondary);">${item.received_at}</td>
+          </tr>`;
+        });
+        if (items.length === 0) {
+          rows += `<tr><td>${kan}칸</td><td colspan="3" style="color:var(--text-secondary);font-size:0.8rem;">비어있음</td></tr>`;
+        }
+      }
+
+      const panel = document.getElementById('whRackDetail');
+      panel.innerHTML = `
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:8px;">${rack.rack_no}번 랙 ${floor}층 — 칸별 현황</div>
+        <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+          <thead><tr style="color:var(--text-secondary);">
+            <th style="text-align:left;padding:3px 8px;">칸</th>
+            <th style="text-align:left;padding:3px 8px;">상품</th>
+            <th style="text-align:left;padding:3px 8px;">수량</th>
+            <th style="text-align:left;padding:3px 8px;">입고일</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      panel.style.display = 'block';
+    }
+
+    // 랙 선택 (Type A 창고뷰)
+    function selectInventoryRack(rackId) {
+      selectedInventoryRackId = selectedInventoryRackId === rackId ? null : rackId;
+      selectedInventoryCell = null;
+      renderWhWarehouse();
+      if (selectedInventoryRackId) renderRackDetail();
+      else document.getElementById('whRackDetail').style.display = 'none';
+    }
+
+    function renderRackDetail() {
+      const rack = racks.find(r => r.id === selectedInventoryRackId);
+      if (!rack) return;
+
+      const palletsInRack = pallets.filter(p => parseInt(p.location.split('-')[0]) === rack.id);
+      let rows = '';
+      for (let floor = rack.floors; floor >= 1; floor--) {
+        for (let grp = 1; grp <= rack.groups; grp++) {
+          const key = `${rack.id}-${floor}-${grp}`;
+          const pallet = palletsInRack.find(p => p.location === key);
+          if (!pallet) {
+            rows += `<tr><td>${floor}층 ${grp}번</td><td colspan="3" style="color:var(--text-secondary);font-size:0.8rem;">비어있음</td></tr>`;
+            continue;
+          }
+          const items = inventoryItems.filter(i => i.pallet_id === pallet.id);
+          items.forEach(item => {
+            const prod = products.find(p => p.id === item.product_id);
+            const isTarget = selectedProductId && item.product_id === selectedProductId;
+            rows += `<tr style="${isTarget ? 'color:var(--amber);font-weight:600;' : ''}">
+              <td>${floor}층 ${grp}번</td>
+              <td>${prod ? prod.name : '-'}</td>
+              <td>${item.quantity}개</td>
+              <td style="font-size:0.75rem;color:var(--text-secondary);">${item.received_at}</td>
+            </tr>`;
+          });
+        }
+      }
+
+      const panel = document.getElementById('whRackDetail');
+      panel.innerHTML = `
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:8px;">${rack.rack_no}번 랙 — 슬롯 현황 (${rack.floors}층 × ${rack.groups}그룹)</div>
+        <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+          <thead><tr style="color:var(--text-secondary);">
+            <th style="text-align:left;padding:3px 8px;">위치</th>
+            <th style="text-align:left;padding:3px 8px;">상품</th>
+            <th style="text-align:left;padding:3px 8px;">수량</th>
+            <th style="text-align:left;padding:3px 8px;">입고일</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      panel.style.display = 'block';
+    }
+
+    function warehouseHasProduct(warehouseId, productId) {
+      const whRackIds = new Set(racks.filter(r => r.warehouse_id === warehouseId).map(r => r.id));
+      return pallets.some(p => {
+        const rackId = parseInt(p.location.split('-')[0]);
+        return whRackIds.has(rackId) && inventoryItems.some(i => i.pallet_id === p.id && i.product_id === productId);
+      });
+    }
+
+    function findWarehouseWithProduct(productId) {
+      const palletIds = new Set(inventoryItems.filter(i => i.product_id === productId).map(i => i.pallet_id));
+      for (const p of pallets) {
+        if (palletIds.has(p.id)) {
+          const rack = racks.find(r => r.id === parseInt(p.location.split('-')[0]));
+          if (rack) return rack.warehouse_id;
+        }
+      }
+      return null;
+    }
+
     // 상품 선택 토글
     function selectProduct(productId) {
       selectedProductId = selectedProductId === productId ? null : productId;
+      selectedInventoryRackId = null;
+      selectedInventoryCell = null;
+      document.getElementById('whRackDetail').style.display = 'none';
+      if (selectedProductId && !warehouseHasProduct(selectedWarehouseId, selectedProductId)) {
+        const whId = findWarehouseWithProduct(selectedProductId);
+        if (whId) {
+          selectedWarehouseId = whId;
+          document.querySelectorAll('.wh-tab').forEach(t => {
+            t.classList.toggle('active', parseInt(t.dataset.wid) === whId);
+          });
+        }
+      }
       renderWhSearch();
       renderWhWarehouse();
     }
@@ -585,6 +742,9 @@
     // 창고 탭 선택
     function selectWarehouseTab(id) {
       selectedWarehouseId = id;
+      selectedInventoryRackId = null;
+      selectedInventoryCell = null;
+      document.getElementById('whRackDetail').style.display = 'none';
       document.querySelectorAll('.wh-tab').forEach(t => {
         t.classList.toggle('active', parseInt(t.dataset.wid) === id);
       });

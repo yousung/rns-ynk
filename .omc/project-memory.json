@@ -70,9 +70,15 @@
   "hotPaths": [
     {
       "path": "demo/inventory.html",
-      "accessCount": 163,
-      "lastAccessed": 1776457449917,
+      "accessCount": 204,
+      "lastAccessed": 1776461750433,
       "type": "file"
+    },
+    {
+      "path": "demo/samples/type-b/inbound-execute.html",
+      "accessCount": 93,
+      "lastAccessed": 1776461886954,
+      "type": "directory"
     },
     {
       "path": "samples/type-b/outbound-execute.html",
@@ -81,28 +87,28 @@
       "type": "file"
     },
     {
+      "path": "demo/samples/type-b/outbound-execute.html",
+      "accessCount": 80,
+      "lastAccessed": 1776461750126,
+      "type": "directory"
+    },
+    {
       "path": "samples/type-b/inbound-execute.html",
       "accessCount": 71,
       "lastAccessed": 1776369444627,
       "type": "file"
     },
     {
-      "path": "demo/samples/type-b/inbound-execute.html",
-      "accessCount": 70,
-      "lastAccessed": 1776457451195,
-      "type": "directory"
-    },
-    {
-      "path": "demo/samples/type-b/outbound-execute.html",
-      "accessCount": 68,
-      "lastAccessed": 1776457452468,
-      "type": "directory"
-    },
-    {
       "path": "demo/warehouse-styles.js",
-      "accessCount": 47,
-      "lastAccessed": 1776456629193,
+      "accessCount": 61,
+      "lastAccessed": 1776460592080,
       "type": "file"
+    },
+    {
+      "path": "demo/samples/type-a/inbound-execute.html",
+      "accessCount": 49,
+      "lastAccessed": 1776461879241,
+      "type": "directory"
     },
     {
       "path": "demo/shared.js",
@@ -121,12 +127,6 @@
       "accessCount": 44,
       "lastAccessed": 1776457447651,
       "type": "file"
-    },
-    {
-      "path": "demo/samples/type-a/inbound-execute.html",
-      "accessCount": 39,
-      "lastAccessed": 1776432578010,
-      "type": "directory"
     },
     {
       "path": "demo/index.html",
@@ -148,8 +148,8 @@
     },
     {
       "path": "demo/samples/type-a/outbound-execute.html",
-      "accessCount": 27,
-      "lastAccessed": 1776432608377,
+      "accessCount": 32,
+      "lastAccessed": 1776461749665,
       "type": "directory"
     },
     {
@@ -190,14 +190,20 @@
     },
     {
       "path": "demo",
-      "accessCount": 9,
-      "lastAccessed": 1776456179312,
+      "accessCount": 10,
+      "lastAccessed": 1776459637401,
       "type": "directory"
     },
     {
       "path": "demo/samples/type-a/data.js",
       "accessCount": 8,
       "lastAccessed": 1776432393517,
+      "type": "file"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-16-warehouse-management-design.md",
+      "accessCount": 7,
+      "lastAccessed": 1776461897188,
       "type": "file"
     },
     {
@@ -211,6 +217,24 @@
       "accessCount": 4,
       "lastAccessed": 1776366424432,
       "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 4,
+      "lastAccessed": 1776458441069,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples",
+      "accessCount": 4,
+      "lastAccessed": 1776461408368,
+      "type": "directory"
+    },
+    {
+      "path": "",
+      "accessCount": 4,
+      "lastAccessed": 1776461514199,
+      "type": "directory"
     },
     {
       "path": "example/입고.jpg",
@@ -243,24 +267,6 @@
       "type": "file"
     },
     {
-      "path": "demo/samples",
-      "accessCount": 2,
-      "lastAccessed": 1776426661329,
-      "type": "directory"
-    },
-    {
-      "path": "docs/superpowers/specs/2026-04-16-warehouse-management-design.md",
-      "accessCount": 2,
-      "lastAccessed": 1776428635760,
-      "type": "file"
-    },
-    {
-      "path": "CLAUDE.md",
-      "accessCount": 2,
-      "lastAccessed": 1776430761843,
-      "type": "file"
-    },
-    {
       "path": "demo/outbound-schedule.html",
       "accessCount": 1,
       "lastAccessed": 1776330383637,
@@ -271,12 +277,6 @@
       "accessCount": 1,
       "lastAccessed": 1776330553842,
       "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 1,
-      "lastAccessed": 1776330703435,
-      "type": "directory"
     },
     {
       "path": "samples/type-b/index.html",
@@ -319,6 +319,12 @@
       "accessCount": 1,
       "lastAccessed": 1776456579039,
       "type": "file"
+    },
+    {
+      "path": "demo/samples/type-a",
+      "accessCount": 1,
+      "lastAccessed": 1776458864101,
+      "type": "directory"
     }
   ],
   "userDirectives": []

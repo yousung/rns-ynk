@@ -29,7 +29,9 @@
     .mini-empty { background: rgba(30,58,95,0.25); border: 1px solid rgba(30,58,95,0.5); }
     .mini-filled { background: rgba(0,212,255,0.35); border: 1px solid rgba(0,212,255,0.5); }
     .mini-sel { background: rgba(0,212,255,0.8); border: 1px solid var(--cyan); }
+    .mini-product { background: rgba(245,158,11,0.7); border: 1px solid var(--amber); }
     .rm-cell.rm-multi { padding: 0; align-items: stretch; cursor: pointer; }
+    .rm-cell.rm-has-product { outline: 2px solid var(--amber); outline-offset: -2px; }
 
     [data-theme="light"] .mini-empty { background: rgba(200,220,240,0.5); border: 1px solid rgba(150,180,210,0.7); }
     [data-theme="light"] .mini-filled { background: rgba(0,120,190,0.25); border: 1px solid rgba(0,120,190,0.5); }
@@ -129,12 +131,31 @@
 
     function getMiniBlocks(rackId, floor) {
       const rack = racks.find(r => r.id === rackId);
+      // 선택된 예정 상품이 있는 팔레트 위치 목록
+      const productKans = new Set();
+      if (selectedScheduleId) {
+        const s = inboundSchedules.find(x => x.id === selectedScheduleId);
+        if (s) {
+          pallets.forEach(p => {
+            const [pr, pf, pk] = p.location.split('-').map(Number);
+            if (pr === rackId && pf === floor) {
+              const hasProduct = inventoryItems.some(i => i.pallet_id === p.id && i.product_id === s.product_id);
+              if (hasProduct) productKans.add(pk);
+            }
+          });
+        }
+      }
+
       let html = '<div class="mini-blocks">';
       for (let kan = 1; kan <= rack.groups; kan++) {
         const key = `${rackId}-${floor}-${kan}`;
         const pallet = pallets.find(p => p.location === key);
         const isSelKan = selectedCell && selectedCell.rackId === rackId && selectedCell.floor === floor && selectedCell.kan === kan;
-        let cls = isSelKan ? 'mini-block mini-sel' : (pallet ? 'mini-block mini-filled' : 'mini-block mini-empty');
+        const isProductKan = productKans.has(kan);
+        let cls;
+        if (isSelKan) cls = 'mini-block mini-sel';
+        else if (isProductKan) cls = 'mini-block mini-product';
+        else cls = pallet ? 'mini-block mini-filled' : 'mini-block mini-empty';
         html += `<div class="${cls}" title="${kan}칸"></div>`;
       }
       html += '</div>';
@@ -187,6 +208,7 @@
       selectedScheduleId = selectedScheduleId === id ? null : id;
       renderScheduleList();
       renderActionBar();
+      renderMatrix();
       updateExecBtn();
     }
 
@@ -226,6 +248,17 @@
 
             let cls = 'rm-multi';
             if (isSelected) cls += ' rm-selected';
+            else if (selectedScheduleId) {
+              const s = inboundSchedules.find(x => x.id === selectedScheduleId);
+              if (s) {
+                const hasProduct = pallets.some(p => {
+                  const [pr, pf] = p.location.split('-').map(Number);
+                  return pr === rack.id && pf === floor &&
+                    inventoryItems.some(i => i.pallet_id === p.id && i.product_id === s.product_id);
+                });
+                if (hasProduct) cls += ' rm-has-product';
+              }
+            }
 
             const miniBlocksHtml = getMiniBlocks(rack.id, floor);
             html += `<td><div class="rm-cell ${cls}" onclick="selectCell(${rack.id},${floor})">${miniBlocksHtml}</div></td>`;
@@ -287,13 +320,8 @@
         if (!occupiedKans.includes(kan)) emptyKans.push(kan);
       }
 
-      if (emptyKans.length === 0) {
-        alert('이 위치는 이미 가득 찼습니다.');
-        return;
-      }
-
-      // 가장 낮은 칸번호 선택
-      selectedCell = { rackId, floor, kan: emptyKans[0] };
+      // 가장 낮은 빈 칸번호 선택 (없으면 1칸 기본)
+      selectedCell = { rackId, floor, kan: emptyKans.length > 0 ? emptyKans[0] : 1 };
       renderAll();
     }
 
@@ -370,7 +398,7 @@
           const isOccupied = occupiedKans.includes(kan);
           const isActive = selectedCell.kan === kan;
           const cls = `dan-btn ${isActive ? 'active' : ''} ${isOccupied ? 'occupied' : ''}`;
-          kanBtns += `<button class="${cls}" onclick="selectKan(${kan})" ${isOccupied ? 'disabled' : ''}>${kan}칸</button>`;
+          kanBtns += `<button class="${cls}" onclick="selectKan(${kan})">${kan}칸</button>`;
         }
 
         html += `<span style="margin-left:8px;">위치: <span class="action-highlight">${rack.rack_no}번 랙 · ${selectedCell.floor}층</span></span>`;

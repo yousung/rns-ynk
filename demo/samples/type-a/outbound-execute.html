@@ -110,9 +110,35 @@
       }).join('');
     }
 
+    function warehouseHasProduct(warehouseId, productId) {
+      const whRackIds = new Set(racks.filter(r => r.warehouse_id === warehouseId).map(r => r.id));
+      return pallets.some(p => {
+        const rackId = parseInt(p.location.split('-')[0]);
+        return whRackIds.has(rackId) && inventoryItems.some(i => i.pallet_id === p.id && i.product_id === productId);
+      });
+    }
+
+    function findWarehouseWithProduct(productId) {
+      const palletIds = new Set(inventoryItems.filter(i => i.product_id === productId).map(i => i.pallet_id));
+      for (const p of pallets) {
+        if (palletIds.has(p.id)) {
+          const rack = racks.find(r => r.id === parseInt(p.location.split('-')[0]));
+          if (rack) return rack.warehouse_id;
+        }
+      }
+      return null;
+    }
+
     function selectSchedule(id) {
       selectedScheduleId = id;
       selectedRackId = null;
+      if (selectedScheduleId) {
+        const schedule = outboundSchedules.find(s => s.id === selectedScheduleId);
+        if (!warehouseHasProduct(selectedWarehouse, schedule.product_id)) {
+          const whId = findWarehouseWithProduct(schedule.product_id);
+          if (whId) { selectedWarehouse = whId; renderWhTabs(); }
+        }
+      }
       renderScheduleList();
       render3DRacks();
       renderFifoPreview();

@@ -138,17 +138,27 @@
       const grid = document.getElementById('rackGrid');
       grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
+      const schedule = selectedScheduleId ? inboundSchedules.find(s => s.id === selectedScheduleId) : null;
+      const productPalletIds = schedule
+        ? new Set(inventoryItems.filter(i => i.product_id === schedule.product_id).map(i => i.pallet_id))
+        : null;
+
       grid.innerHTML = whRacks.map(rack => {
         const isSelected = rack.id === selectedRackId;
         const palletsInRack = pallets.filter(p => parseInt(p.location.split('-')[0]) === rack.id);
         const filledCount = palletsInRack.length;
+        const hasProduct = productPalletIds && palletsInRack.some(p => productPalletIds.has(p.id));
 
         let cells = '';
         for (let floor = rack.floors; floor >= 1; floor--) {
           for (let grp = 1; grp <= rack.groups; grp++) {
             const key = `${rack.id}-${floor}-${grp}`;
             const pallet = pallets.find(p => p.location === key);
-            cells += `<div class="rc ${pallet ? 'rc-filled' : 'rc-empty'}" title="${floor}층 ${grp}그룹"></div>`;
+            let cls = 'rc-empty';
+            if (pallet) {
+              cls = (productPalletIds && productPalletIds.has(pallet.id)) ? 'rc-highlight' : 'rc-filled';
+            }
+            cells += `<div class="rc ${cls}" title="${floor}층 ${grp}그룹"></div>`;
           }
         }
 
@@ -156,7 +166,9 @@
           ? `<span class="rack-card-lot">${filledCount}Lot</span>`
           : `<span class="rack-card-lot empty">빈칸</span>`;
 
-        return `<div class="rack-card${isSelected ? ' selected' : ''}" onclick="selectRack(${rack.id})" title="${rack.rack_no}번 랙 | ${rack.floors}층×${rack.groups}그룹">
+        const cardCls = ['rack-card', isSelected ? 'selected' : '', hasProduct ? 'highlighted' : ''].filter(Boolean).join(' ');
+
+        return `<div class="${cardCls}" onclick="selectRack(${rack.id})" title="${rack.rack_no}번 랙 | ${rack.floors}층×${rack.groups}그룹">
           <div class="rack-card-header">
             <span class="rack-card-no">${rack.rack_no}번</span>
             ${lotLabel}
