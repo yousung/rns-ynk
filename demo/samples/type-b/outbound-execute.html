@@ -95,6 +95,24 @@
     .stat-label { font-size: 0.75rem; color: var(--text-secondary); }
     .stat-value { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.95rem; }
     .stat-unit { font-size: 0.68rem; color: var(--text-secondary); }
+
+    /* ── 라이트 테마 오버라이드 ── */
+    [data-theme="light"] .sched-section { background: var(--bg-surface); }
+    [data-theme="light"] .action-bar { background: var(--bg-hover); }
+    [data-theme="light"] .rack-matrix thead th { background: var(--bg-surface); color: var(--text-secondary); border-color: var(--border); }
+    [data-theme="light"] .rack-matrix tfoot td { background: var(--bg-surface); color: var(--text-secondary); border-color: var(--border); }
+    [data-theme="light"] .label-cell { background: var(--bg-hover); color: var(--text-secondary); border-color: var(--border); }
+    [data-theme="light"] tfoot .label-cell { background: var(--bg-hover); }
+    [data-theme="light"] .rack-matrix td { border-color: var(--border); }
+    [data-theme="light"] .rm-na { background: var(--bg-hover); color: var(--border-bright); }
+    [data-theme="light"] .rm-empty { background: #F1F5F9; color: #94A3B8; }
+    [data-theme="light"] .rm-occupied { background: #E2E8F0; color: #64748B; }
+    [data-theme="light"] .stats-bar { background: var(--bg-surface); }
+    [data-theme="light"] .cell-details { background: var(--bg-panel); }
+    [data-theme="light"] .cell-details table.cd-table thead th { background: var(--bg-surface); color: var(--text-secondary); }
+    [data-theme="light"] .cell-details table.cd-table td { color: var(--text-primary); }
+    [data-theme="light"] .rm-dummy { background: var(--bg-hover); color: var(--border); }
+    [data-theme="light"] .rm-dummy-th { background: var(--bg-surface); color: var(--border); }
   </style>
 </head>
 <body>

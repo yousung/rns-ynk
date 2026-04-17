@@ -2,6 +2,11 @@
 // 창고 관리 시스템 - 공유 유틸리티
 // ============================================================
 
+// 테마 초기화 (스크립트 로드 즉시 적용 — FOUC 방지)
+(function () {
+  document.documentElement.setAttribute('data-theme', localStorage.getItem('wms_theme') || 'dark');
+})();
+
 // 인증
 function getCurrentUser() {
   try {
@@ -24,6 +29,16 @@ function getRoleText(role) {
   return { developer: '개발자', super_admin: '슈퍼관리자', admin: '관리자', user: '사용자' }[role] || role;
 }
 
+// 테마
+function getTheme() {
+  return localStorage.getItem('wms_theme') || 'dark';
+}
+
+function setTheme(theme) {
+  localStorage.setItem('wms_theme', theme);
+  document.documentElement.setAttribute('data-theme', theme);
+}
+
 // 사이드바 + 헤더 렌더링
 function renderLayout(activeMenu) {
   const user = getCurrentUser();
@@ -43,14 +58,15 @@ function renderLayout(activeMenu) {
   `).join('');
 
   document.getElementById('sidebar').innerHTML = `
-    <div class="p-4 border-b border-slate-700">
+    <div class="p-4" style="border-bottom:1px solid var(--border);">
       <h2 class="text-lg font-bold" style="color:var(--cyan);text-shadow:0 0 8px rgba(0,212,255,0.6);">창고 관리</h2>
       <p class="text-xs mt-1" style="color:var(--text-secondary);">${user ? user.name : ''}</p>
     </div>
     <nav class="flex-1 overflow-y-auto py-2">
       ${nav}
     </nav>
-    <div class="p-4 border-t border-slate-700">
+    <div class="p-3" style="border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;">
+      <a href="../../settings.html" class="nav-item ${activeMenu === 'settings' ? 'active' : ''}" style="border-radius:6px;padding:9px 14px;">⚙ 계정 설정</a>
       <button class="btn-secondary w-full text-sm" onclick="logout()">로그아웃</button>
     </div>
   `;
@@ -111,5 +127,28 @@ function getCommonStyles() {
     .ab-tab{padding:3px 12px;border-radius:4px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg-surface);color:var(--text-secondary);text-decoration:none;transition:all 0.15s;}
     .ab-tab.active{background:var(--cyan-dim);color:var(--cyan);border-color:var(--cyan);cursor:default;}
     .ab-tab:not(.active):hover{border-color:var(--border-bright);color:var(--text-primary);}
+
+    /* ── 라이트 테마 ── */
+    [data-theme="light"] {
+      --bg-base:#F0F4F8; --bg-panel:#FFFFFF; --bg-surface:#F1F5F9; --bg-hover:#E2E8F0;
+      --border:#CBD5E1; --border-bright:#94A3B8;
+      --cyan:#0284C7; --cyan-dim:rgba(2,132,199,0.12); --cyan-glow:0 0 12px rgba(2,132,199,0.3);
+      --text-primary:#1E293B; --text-secondary:#64748B; --text-accent:#0284C7;
+    }
+    [data-theme="light"] body {
+      background-color:var(--bg-base);
+      background-image:linear-gradient(rgba(0,0,0,0.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px);
+      background-size:40px 40px;
+    }
+    [data-theme="light"] .sidebar {
+      background:linear-gradient(180deg,#FFFFFF 0%,#F1F5F9 100%);
+    }
+    [data-theme="light"] .header-bar { background:var(--bg-panel); }
+    [data-theme="light"] .sched-section { background:var(--bg-surface); }
+    [data-theme="light"] a.nav-item.active { background:var(--cyan-dim); color:var(--cyan); border-left-color:var(--cyan); }
+    [data-theme="light"] input,[data-theme="light"] select { background:var(--bg-surface); color:var(--text-primary); }
+    [data-theme="light"] th { background:var(--bg-surface); }
+    [data-theme="light"] tr:hover td { background:var(--bg-hover); }
   `;
 }

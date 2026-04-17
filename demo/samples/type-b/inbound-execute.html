@@ -90,6 +90,29 @@
     .rm-dummy { background: #030A14; color: #0D1F35; cursor: default; pointer-events: none; }
     .rm-dummy-th { background: #06101A; color: #0D1F35; border: 1px solid rgba(30,58,95,0.3) !important; min-width: 42px; }
 
+    /* ── 라이트 테마 오버라이드 ── */
+    [data-theme="light"] .sched-section { background: var(--bg-surface); }
+    [data-theme="light"] .action-bar { background: var(--bg-hover); }
+    [data-theme="light"] .rack-matrix thead th { background: var(--bg-surface); color: var(--text-secondary); border-color: var(--border); }
+    [data-theme="light"] .rack-matrix tfoot td { background: var(--bg-surface); color: var(--text-secondary); border-color: var(--border); }
+    [data-theme="light"] .label-cell { background: var(--bg-hover); color: var(--text-secondary); border-color: var(--border); }
+    [data-theme="light"] tfoot .label-cell { background: var(--bg-hover); }
+    [data-theme="light"] .rack-matrix td { border-color: var(--border); }
+    [data-theme="light"] .rm-na { background: var(--bg-hover); color: var(--border-bright); }
+    [data-theme="light"] .rm-empty { background: #F1F5F9; color: #94A3B8; }
+    [data-theme="light"] .rm-empty:hover { background: #E2E8F0; }
+    [data-theme="light"] .rm-fill-1 { background: rgba(59,130,246,0.15); color: #2563EB; }
+    [data-theme="light"] .rm-fill-2 { background: rgba(59,130,246,0.3); color: #1D4ED8; }
+    [data-theme="light"] .rm-fill-3 { background: rgba(59,130,246,0.5); color: #1E40AF; }
+    [data-theme="light"] .rm-full { background: rgba(59,130,246,0.75); color: #DBEAFE; }
+    [data-theme="light"] .stats-bar { background: var(--bg-surface); }
+    [data-theme="light"] .cell-details { background: var(--bg-panel); }
+    [data-theme="light"] .cell-details table.cd-table thead th { background: var(--bg-surface); color: var(--text-secondary); }
+    [data-theme="light"] .cell-details table.cd-table tbody tr:hover td { background: var(--bg-hover); }
+    [data-theme="light"] .cd-dan-header { background: var(--bg-surface); color: var(--amber); }
+    [data-theme="light"] .rm-dummy { background: var(--bg-hover); color: var(--border); }
+    [data-theme="light"] .rm-dummy-th { background: var(--bg-surface); color: var(--border); }
+
     /* Cell detail panel */
     .cell-details { flex: 0 0 auto; height: 200px; display: flex; flex-direction: column; border-top: 1px solid var(--border); background: #060F1A; padding: 10px 14px; }
     .cell-details .cd-empty { color: var(--text-secondary); font-size: 0.78rem; text-align: center; padding: 20px 0; }
