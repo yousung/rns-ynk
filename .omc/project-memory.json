@@ -70,8 +70,8 @@
   "hotPaths": [
     {
       "path": "demo/inventory.html",
-      "accessCount": 126,
-      "lastAccessed": 1776434399543,
+      "accessCount": 163,
+      "lastAccessed": 1776457449917,
       "type": "file"
     },
     {
@@ -88,26 +88,38 @@
     },
     {
       "path": "demo/samples/type-b/inbound-execute.html",
-      "accessCount": 52,
-      "lastAccessed": 1776434397173,
+      "accessCount": 70,
+      "lastAccessed": 1776457451195,
       "type": "directory"
-    },
-    {
-      "path": "demo/shared.js",
-      "accessCount": 43,
-      "lastAccessed": 1776431575721,
-      "type": "file"
     },
     {
       "path": "demo/samples/type-b/outbound-execute.html",
-      "accessCount": 43,
-      "lastAccessed": 1776434409718,
+      "accessCount": 68,
+      "lastAccessed": 1776457452468,
       "type": "directory"
     },
     {
+      "path": "demo/warehouse-styles.js",
+      "accessCount": 47,
+      "lastAccessed": 1776456629193,
+      "type": "file"
+    },
+    {
+      "path": "demo/shared.js",
+      "accessCount": 45,
+      "lastAccessed": 1776456637974,
+      "type": "file"
+    },
+    {
       "path": "demo/samples/type-b/shared.js",
-      "accessCount": 42,
-      "lastAccessed": 1776434262918,
+      "accessCount": 44,
+      "lastAccessed": 1776456576718,
+      "type": "file"
+    },
+    {
+      "path": "demo/data.js",
+      "accessCount": 44,
+      "lastAccessed": 1776457447651,
       "type": "file"
     },
     {
@@ -115,12 +127,6 @@
       "accessCount": 39,
       "lastAccessed": 1776432578010,
       "type": "directory"
-    },
-    {
-      "path": "demo/data.js",
-      "accessCount": 39,
-      "lastAccessed": 1776434215112,
-      "type": "file"
     },
     {
       "path": "demo/index.html",
@@ -136,8 +142,8 @@
     },
     {
       "path": "demo/inbound-execute.html",
-      "accessCount": 32,
-      "lastAccessed": 1776432202107,
+      "accessCount": 33,
+      "lastAccessed": 1776456626078,
       "type": "file"
     },
     {
@@ -154,14 +160,8 @@
     },
     {
       "path": "demo/outbound-execute.html",
-      "accessCount": 25,
-      "lastAccessed": 1776432209804,
-      "type": "file"
-    },
-    {
-      "path": "demo/warehouse-styles.js",
-      "accessCount": 18,
-      "lastAccessed": 1776434268665,
+      "accessCount": 26,
+      "lastAccessed": 1776456626265,
       "type": "file"
     },
     {
@@ -189,16 +189,16 @@
       "type": "file"
     },
     {
+      "path": "demo",
+      "accessCount": 9,
+      "lastAccessed": 1776456179312,
+      "type": "directory"
+    },
+    {
       "path": "demo/samples/type-a/data.js",
       "accessCount": 8,
       "lastAccessed": 1776432393517,
       "type": "file"
-    },
-    {
-      "path": "demo",
-      "accessCount": 6,
-      "lastAccessed": 1776431581097,
-      "type": "directory"
     },
     {
       "path": "samples/type-b/shared.js",
@@ -306,6 +306,18 @@
       "path": "demo/WAREHOUSE_STYLES_GUIDE.md",
       "accessCount": 1,
       "lastAccessed": 1776431265828,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-b",
+      "accessCount": 1,
+      "lastAccessed": 1776456182075,
+      "type": "directory"
+    },
+    {
+      "path": ".claude/settings.local.json",
+      "accessCount": 1,
+      "lastAccessed": 1776456579039,
       "type": "file"
     }
   ],

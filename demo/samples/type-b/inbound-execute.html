@@ -13,7 +13,15 @@
   <style id="warehouseStyle"></style>
   <style>
     /* Type B specific styles (not in warehouse-styles.js) */
-    .content-area { padding: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; }
+    .content-area { padding: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; min-height: 0 !important; }
+
+    /* Layout sections: fixed and flexible sizing */
+    .wh-tabs-row { flex-shrink: 0; }
+    .sched-section { flex-shrink: 0; max-height: 80px; overflow: hidden; }
+    .matrix-section { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .matrix-scroll { min-height: 0; overflow: auto; display: flex; justify-content: center; }
+    .cell-details { flex-shrink: 0; max-height: 280px; overflow-y: auto; }
+    .stats-bar { flex-shrink: 0; }
 
     /* Mini-blocks grid for floor matrix cells */
     .mini-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; width: 100%; box-sizing: border-box; }
@@ -21,7 +29,7 @@
     .mini-empty { background: rgba(30,58,95,0.25); border: 1px solid rgba(30,58,95,0.5); }
     .mini-filled { background: rgba(0,212,255,0.35); border: 1px solid rgba(0,212,255,0.5); }
     .mini-sel { background: rgba(0,212,255,0.8); border: 1px solid var(--cyan); }
-    .rm-cell.rm-multi { padding: 0; align-items: stretch; min-height: 48px; cursor: pointer; }
+    .rm-cell.rm-multi { padding: 0; align-items: stretch; cursor: pointer; }
 
     [data-theme="light"] .mini-empty { background: rgba(200,220,240,0.5); border: 1px solid rgba(150,180,210,0.7); }
     [data-theme="light"] .mini-filled { background: rgba(0,120,190,0.25); border: 1px solid rgba(0,120,190,0.5); }
@@ -191,7 +199,7 @@
       const scrollEl = document.querySelector('.matrix-scroll');
       if (scrollEl && whRacks.length > 0) {
         const available = scrollEl.clientWidth - 60;
-        const cellSize = Math.floor(available / whRacks.length);
+        const cellSize = Math.floor(available / max_rack_count);
         scrollEl.style.setProperty('--rm-cell-size', cellSize + 'px');
       }
 

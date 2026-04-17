@@ -156,7 +156,7 @@
     .mini-empty { background: rgba(30,58,95,0.25); border: 1px solid rgba(30,58,95,0.5); }
     .mini-filled { background: rgba(30,80,200,0.5); border: 1px solid rgba(80,120,240,0.6); }
     .mini-sel { background: rgba(0,212,255,0.75); border: 1px solid var(--cyan); }
-    .rm-cell.rm-multi { padding: 0; align-items: stretch; min-height: 48px; }
+    .rm-cell.rm-multi { padding: 0; align-items: stretch; }
     [data-theme="light"] .mini-empty { background: rgba(200,220,240,0.5); border: 1px solid rgba(150,180,210,0.7); }
     [data-theme="light"] .mini-filled { background: rgba(60,100,200,0.25); border: 1px solid rgba(60,100,200,0.45); }
 
@@ -485,9 +485,11 @@
       const maxFloors = Math.max(...warehouseRacks.map(r => r.floors));
       const area = document.getElementById('whRackArea');
       if (area && warehouseRacks.length > 0) {
-        const available = area.clientWidth - 70;
-        const cellSize = Math.floor(available / warehouseRacks.length);
-        area.style.setProperty('--rm-cell-size', cellSize + 'px');
+        const available = area.clientWidth - 100;
+        const cellSize = Math.floor(available / max_rack_count);
+        if (cellSize > 0) {
+          area.style.setProperty('--rm-cell-size', cellSize + 'px');
+        }
       }
 
       const selPalletIds = selectedProductId

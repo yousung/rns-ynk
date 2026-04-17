@@ -2,10 +2,12 @@
 // 창고 관리 시스템 - 공유 데이터 (의료용 밴드류 제조사)
 // ============================================================
 
+const max_rack_count = 30; // 전동랙창고 최대 랙 수 (셀 크기 기준)
+
 const warehouses = [
   { id: 1, name: '완제품창고', type: 'normal' },
   { id: 2, name: '부자재창고', type: 'normal' },
-  { id: 3, name: '전동랙창고', type: 'electric' },
+  { id: 3, name: '전동랙창고', type: 'electric', max_rack_count: 30 },
 ];
 
 const racks = [
