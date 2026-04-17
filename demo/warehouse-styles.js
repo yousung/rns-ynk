@@ -274,12 +274,12 @@ function getWarehouseStyles() {
 
     .rack-matrix thead th:not(.label-cell),
     .rm-table thead th:not(.label-cell) {
-      width: var(--rm-cell-size, 42px);
+      width: var(--rm-cell-size);
     }
 
     .rack-matrix tbody td:not(.label-cell),
     .rm-table tbody td:not(.label-cell) {
-      width: var(--rm-cell-size, 42px);
+      width: var(--rm-cell-size);
     }
 
     .rack-matrix tfoot td,
@@ -296,7 +296,7 @@ function getWarehouseStyles() {
 
     .rack-matrix tfoot td:not(.label-cell),
     .rm-table tfoot td:not(.label-cell) {
-      width: var(--rm-cell-size, 42px);
+      width: var(--rm-cell-size);
     }
 
     /* 라벨 컬럼 (고정) */
