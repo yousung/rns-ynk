@@ -1,24 +1,24 @@
 // ============================================================
-// 창고 관리 시스템 - 공유 데이터
+// 창고 관리 시스템 - 공유 데이터 (밴드류 의류 제조사)
 // ============================================================
 
 const warehouses = [
-  { id: 1, name: '창고1', type: 'normal' },
-  { id: 2, name: '창고2', type: 'normal' },
-  { id: 3, name: '창고3', type: 'electric' },
+  { id: 1, name: '완제품창고', type: 'normal' },
+  { id: 2, name: '부자재창고', type: 'normal' },
+  { id: 3, name: '전동랙창고', type: 'electric' },
 ];
 
 const racks = [
-  // 창고1 (4개, 3층 4그룹)
+  // 완제품창고 (4개, 3층 4그룹)
   { id: 1, warehouse_id: 1, rack_no: 1,  floors: 3, groups: 4 },
   { id: 2, warehouse_id: 1, rack_no: 2,  floors: 3, groups: 4 },
   { id: 3, warehouse_id: 1, rack_no: 3,  floors: 3, groups: 4 },
   { id: 4, warehouse_id: 1, rack_no: 4,  floors: 3, groups: 4 },
-  // 창고2 (3개, 3층 4그룹)
+  // 부자재창고 (3개, 3층 4그룹)
   { id: 5, warehouse_id: 2, rack_no: 1,  floors: 3, groups: 4 },
   { id: 6, warehouse_id: 2, rack_no: 2,  floors: 3, groups: 4 },
   { id: 7, warehouse_id: 2, rack_no: 3,  floors: 3, groups: 4 },
-  // 창고3 (30개 — rack_no 1~15: 4층, 16~30: 6층, 모두 4그룹)
+  // 전동랙창고 (30개 — rack_no 1~15: 4층 4그룹, rack_no 16~30: 6층 4그룹)
   { id: 10, warehouse_id: 3, rack_no: 1,  floors: 4, groups: 4 },
   { id: 11, warehouse_id: 3, rack_no: 2,  floors: 4, groups: 4 },
   { id: 12, warehouse_id: 3, rack_no: 3,  floors: 4, groups: 4 },
@@ -52,63 +52,81 @@ const racks = [
 ];
 
 const pallets = [
+  // 완제품창고
   { id: 1,  location: '1-3-1' },
   { id: 2,  location: '1-3-2' },
   { id: 3,  location: '1-2-1' },
   { id: 4,  location: '2-1-3' },
   { id: 5,  location: '2-2-2' },
   { id: 6,  location: '3-3-4' },
-  { id: 7,  location: '10-2-1' },
-  { id: 8,  location: '10-4-3' },
-  { id: 9,  location: '12-1-2' },
-  { id: 10, location: '15-3-4' },
-  { id: 11, location: '20-2-2' },
+  // 부자재창고
+  { id: 7,  location: '1-1-1' },
+  { id: 8,  location: '2-3-2' },
+  // 전동랙창고
+  { id: 9,  location: '10-2-1' },
+  { id: 10, location: '10-4-3' },
+  { id: 11, location: '12-1-2' },
   { id: 12, location: '25-5-1' },
   { id: 13, location: '30-6-3' },
-  { id: 14, location: '35-4-2' },
 ];
 
 const products = [
-  { id: 1, code: 'P001', name: '상품A', created_at: '2026-01-10' },
-  { id: 2, code: 'P002', name: '상품B', created_at: '2026-01-15' },
-  { id: 3, code: 'P003', name: '상품C', created_at: '2026-02-01' },
+  // 완제품 (FP: Finished Product)
+  { id: 1,  code: 'FP-001', name: '헤어밴드 블랙 S',        created_at: '2025-06-01' },
+  { id: 2,  code: 'FP-002', name: '헤어밴드 화이트 S',       created_at: '2025-06-01' },
+  { id: 3,  code: 'FP-003', name: '헤어밴드 네이비 M',       created_at: '2025-06-15' },
+  { id: 4,  code: 'FP-004', name: '허리밴드 블랙 M',         created_at: '2025-07-01' },
+  { id: 5,  code: 'FP-005', name: '손목밴드 블랙 Free',      created_at: '2025-08-01' },
+  { id: 6,  code: 'FP-006', name: '헤어타이 혼합 10입',      created_at: '2025-10-01' },
+  // 부자재 (RM: Raw Material)
+  { id: 7,  code: 'RM-001', name: '탄성원단 블랙 (롤/50m)',  created_at: '2025-06-01' },
+  { id: 8,  code: 'RM-002', name: '탄성원단 화이트 (롤/50m)',created_at: '2025-06-01' },
+  { id: 9,  code: 'RM-003', name: '고무원사 3mm (롤/200m)',  created_at: '2025-06-15' },
 ];
 
 const inventoryItems = [
-  { id: 1, product_id: 1, pallet_id: 1,  quantity: 8,  received_at: '2026-03-01' },
-  { id: 2, product_id: 1, pallet_id: 2,  quantity: 5,  received_at: '2026-02-15' },
-  { id: 3, product_id: 2, pallet_id: 2,  quantity: 3,  received_at: '2026-03-10' },
-  { id: 4, product_id: 1, pallet_id: 3,  quantity: 10, received_at: '2026-01-20' },
-  { id: 5, product_id: 2, pallet_id: 4,  quantity: 7,  received_at: '2026-03-05' },
-  { id: 6, product_id: 3, pallet_id: 5,  quantity: 12, received_at: '2026-02-28' },
-  { id: 7, product_id: 1, pallet_id: 6,  quantity: 4,  received_at: '2026-03-15' },
-  { id: 8, product_id: 2, pallet_id: 7,  quantity: 6,  received_at: '2026-03-20' },
-  { id: 9, product_id: 3, pallet_id: 12, quantity: 9,  received_at: '2026-04-01' },
+  // 완제품창고 재고
+  { id: 1, product_id: 1, pallet_id: 1,  quantity: 120, received_at: '2026-03-10' },
+  { id: 2, product_id: 2, pallet_id: 2,  quantity: 80,  received_at: '2026-03-10' },
+  { id: 3, product_id: 3, pallet_id: 3,  quantity: 95,  received_at: '2026-03-12' },
+  { id: 4, product_id: 4, pallet_id: 4,  quantity: 60,  received_at: '2026-03-15' },
+  { id: 5, product_id: 5, pallet_id: 5,  quantity: 200, received_at: '2026-03-22' },
+  { id: 6, product_id: 6, pallet_id: 6,  quantity: 300, received_at: '2026-04-05' },
+  // 부자재창고 재고
+  { id: 7, product_id: 7, pallet_id: 7,  quantity: 30,  received_at: '2026-02-20' },
+  { id: 8, product_id: 8, pallet_id: 8,  quantity: 25,  received_at: '2026-02-20' },
+  // 전동랙창고 재고
+  { id: 9, product_id: 1, pallet_id: 9,  quantity: 240, received_at: '2026-04-08' },
+  { id: 10, product_id: 5, pallet_id: 10, quantity: 500, received_at: '2026-04-10' },
+  { id: 11, product_id: 6, pallet_id: 11, quantity: 600, received_at: '2026-04-10' },
+  { id: 12, product_id: 9, pallet_id: 12, quantity: 50,  received_at: '2026-03-05' },
 ];
 
 const inboundSchedules = [
-  { id: 1, product_id: 1, quantity: 20, scheduled_date: '2026-04-16', status: 'pending', note: '긴급' },
-  { id: 2, product_id: 2, quantity: 15, scheduled_date: '2026-04-16', status: 'pending', note: '' },
-  { id: 3, product_id: 3, quantity: 10, scheduled_date: '2026-04-17', status: 'pending', note: '' },
-  { id: 4, product_id: 1, quantity: 8,  scheduled_date: '2026-04-15', status: 'done',    note: '' },
+  { id: 1, product_id: 7, quantity: 40,  scheduled_date: '2026-04-16', status: 'pending', note: '긴급 — (주)탄성텍스타일' },
+  { id: 2, product_id: 9, quantity: 60,  scheduled_date: '2026-04-16', status: 'pending', note: '동양고무원사' },
+  { id: 3, product_id: 1, quantity: 300, scheduled_date: '2026-04-17', status: 'pending', note: '자사 생산' },
+  { id: 4, product_id: 3, quantity: 200, scheduled_date: '2026-04-15', status: 'done',    note: '자사 생산' },
 ];
 
 const outboundSchedules = [
-  { id: 1, product_id: 1, quantity: 15, scheduled_date: '2026-04-16', status: 'pending', note: '급송' },
-  { id: 2, product_id: 2, quantity: 5,  scheduled_date: '2026-04-16', status: 'pending', note: '' },
-  { id: 3, product_id: 1, quantity: 5,  scheduled_date: '2026-04-15', status: 'done',    note: '' },
+  { id: 1, product_id: 1, quantity: 200, scheduled_date: '2026-04-16', status: 'pending', note: '올리브영 정기납품' },
+  { id: 2, product_id: 6, quantity: 500, scheduled_date: '2026-04-16', status: 'pending', note: '다이소 긴급' },
+  { id: 3, product_id: 5, quantity: 150, scheduled_date: '2026-04-17', status: 'pending', note: 'CJ오쇼핑 방송분' },
+  { id: 4, product_id: 2, quantity: 80,  scheduled_date: '2026-04-15', status: 'done',    note: '올리브영 정기납품' },
 ];
 
 const activityLogs = [
-  { id: 1, user: '김관리', action: '입고 처리', feature: 'inbound_execute',  detail: '상품A 20개 → 창고1 1번랙 2층 3번', created_at: '2026-04-15 14:32' },
-  { id: 2, user: '이사용', action: '출고 처리', feature: 'outbound_execute', detail: '상품B 10개 출고',                    created_at: '2026-04-15 11:10' },
-  { id: 3, user: '김관리', action: '입고 예정 등록', feature: 'inbound_schedule', detail: '상품C 30개 예정',              created_at: '2026-04-14 09:00' },
+  { id: 1, user: '김민준', action: '입고 처리',     feature: 'inbound_execute',   detail: '헤어밴드 네이비 M 200개 → 완제품창고 3번랙 2층 1번',  created_at: '2026-04-15 15:42' },
+  { id: 2, user: '이지훈', action: '출고 처리',     feature: 'outbound_execute',  detail: '헤어밴드 화이트 S 80개 출고 — 올리브영 정기납품',    created_at: '2026-04-15 14:10' },
+  { id: 3, user: '최현우', action: '입고 예정 등록', feature: 'inbound_schedule', detail: '고무원사 3mm 60롤 예정 등록 — 동양고무원사',           created_at: '2026-04-14 09:30' },
 ];
 
 const users = [
-  { id: 1, name: '김개발', email: 'dev@example.com',   role: 'developer',   is_approved: true  },
-  { id: 2, name: '이관리', email: 'super@example.com', role: 'super_admin', is_approved: true  },
-  { id: 3, name: '박관리', email: 'admin@example.com', role: 'admin',       is_approved: true  },
-  { id: 4, name: '김사용', email: 'user1@example.com', role: 'user',        is_approved: true  },
-  { id: 5, name: '이신규', email: 'user2@example.com', role: 'user',        is_approved: false },
+  { id: 1, name: '김개발',  email: 'dev@ynk-band.com',    role: 'developer',   is_approved: true  },
+  { id: 2, name: '이관리',  email: 'super@ynk-band.com',  role: 'super_admin', is_approved: true  },
+  { id: 3, name: '최현우',  email: 'admin@ynk-band.com',  role: 'admin',       is_approved: true  },
+  { id: 4, name: '김민준',  email: 'minjun@ynk-band.com', role: 'user',        is_approved: true  },
+  { id: 5, name: '이지훈',  email: 'jihun@ynk-band.com',  role: 'user',        is_approved: true  },
+  { id: 6, name: '정승현',  email: 'sh.jung@ynk-band.com',role: 'user',        is_approved: false },
 ];

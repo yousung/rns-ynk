@@ -63,8 +63,8 @@
     },
     {
       "path": "demo/index.html",
-      "accessCount": 32,
-      "lastAccessed": 1776387034915,
+      "accessCount": 34,
+      "lastAccessed": 1776391901191,
       "type": "file"
     },
     {
@@ -74,9 +74,33 @@
       "type": "file"
     },
     {
+      "path": "demo/inventory.html",
+      "accessCount": 27,
+      "lastAccessed": 1776410690903,
+      "type": "file"
+    },
+    {
+      "path": "demo/activity-log.html",
+      "accessCount": 26,
+      "lastAccessed": 1776410623923,
+      "type": "file"
+    },
+    {
       "path": "demo/outbound-execute.html",
       "accessCount": 23,
       "lastAccessed": 1776336357198,
+      "type": "file"
+    },
+    {
+      "path": "demo/data.js",
+      "accessCount": 19,
+      "lastAccessed": 1776410718889,
+      "type": "file"
+    },
+    {
+      "path": "demo/products.html",
+      "accessCount": 17,
+      "lastAccessed": 1776410690956,
       "type": "file"
     },
     {
@@ -84,6 +108,12 @@
       "accessCount": 16,
       "lastAccessed": 1776387027183,
       "type": "directory"
+    },
+    {
+      "path": "demo/shared.js",
+      "accessCount": 16,
+      "lastAccessed": 1776409580127,
+      "type": "file"
     },
     {
       "path": "demo/samples/type-a/shared.js",
@@ -110,21 +140,15 @@
       "type": "file"
     },
     {
-      "path": "demo/shared.js",
+      "path": "demo/samples/type-b/outbound-execute.html",
       "accessCount": 12,
-      "lastAccessed": 1776387023352,
-      "type": "file"
+      "lastAccessed": 1776391894169,
+      "type": "directory"
     },
     {
       "path": "demo/samples/type-b/inbound-execute.html",
       "accessCount": 11,
       "lastAccessed": 1776387027114,
-      "type": "directory"
-    },
-    {
-      "path": "demo/samples/type-b/outbound-execute.html",
-      "accessCount": 10,
-      "lastAccessed": 1776387031354,
       "type": "directory"
     },
     {
@@ -137,12 +161,6 @@
       "path": ".claude/launch.json",
       "accessCount": 4,
       "lastAccessed": 1776366424432,
-      "type": "file"
-    },
-    {
-      "path": "demo/data.js",
-      "accessCount": 3,
-      "lastAccessed": 1776339104643,
       "type": "file"
     },
     {
@@ -164,6 +182,12 @@
       "type": "file"
     },
     {
+      "path": "demo/samples/type-b/data.js",
+      "accessCount": 3,
+      "lastAccessed": 1776409847731,
+      "type": "file"
+    },
+    {
       "path": "example/전동랙 설계도.jpg",
       "accessCount": 2,
       "lastAccessed": 1776361475038,
@@ -176,33 +200,27 @@
       "type": "file"
     },
     {
-      "path": "demo/inventory.html",
-      "accessCount": 2,
-      "lastAccessed": 1776386010624,
-      "type": "file"
-    },
-    {
       "path": "demo/inbound-schedule.html",
       "accessCount": 2,
       "lastAccessed": 1776387035156,
       "type": "file"
     },
     {
+      "path": "demo",
+      "accessCount": 2,
+      "lastAccessed": 1776409860698,
+      "type": "directory"
+    },
+    {
+      "path": "demo/samples/type-a/data.js",
+      "accessCount": 2,
+      "lastAccessed": 1776409885569,
+      "type": "file"
+    },
+    {
       "path": "demo/outbound-schedule.html",
       "accessCount": 1,
       "lastAccessed": 1776330383637,
-      "type": "file"
-    },
-    {
-      "path": "demo/products.html",
-      "accessCount": 1,
-      "lastAccessed": 1776330540303,
-      "type": "file"
-    },
-    {
-      "path": "demo/activity-log.html",
-      "accessCount": 1,
-      "lastAccessed": 1776330546069,
       "type": "file"
     },
     {
@@ -246,12 +264,6 @@
       "accessCount": 1,
       "lastAccessed": 1776370045959,
       "type": "file"
-    },
-    {
-      "path": "demo",
-      "accessCount": 1,
-      "lastAccessed": 1776387035457,
-      "type": "directory"
     }
   ],
   "userDirectives": []

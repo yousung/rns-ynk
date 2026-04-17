@@ -144,5 +144,14 @@ function getCommonStyles() {
     [data-theme="light"] input,[data-theme="light"] select { background:var(--bg-surface); color:var(--text-primary); }
     [data-theme="light"] th { background:var(--bg-surface); }
     [data-theme="light"] tr:hover td { background:var(--bg-hover); }
+
+    /* ── 필터바 스타일 ── */
+    .filter-bar{display:flex;gap:12px;margin-bottom:20px;align-items:center;}
+    .search-input{flex:1;max-width:300px;}
+    .category-select{flex:0 0 200px;}
+    .btn-reset{background:var(--bg-surface);color:var(--text-secondary);padding:8px 16px;
+      border-radius:6px;font-size:0.875rem;cursor:pointer;border:1px solid var(--border);transition:all 0.2s;
+      white-space:nowrap;}
+    .btn-reset:hover{border-color:var(--border-bright);color:var(--text-primary);}
   `;
 }

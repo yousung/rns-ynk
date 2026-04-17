@@ -15,6 +15,22 @@
       --cyan:#00D4FF; --cyan-dim:rgba(0,212,255,0.15); --cyan-glow:0 0 12px rgba(0,212,255,0.5);
       --text-primary:#E8F0FE; --text-secondary:#7B91AD;
     }
+    [data-theme="light"] {
+      --bg-base:#F0F4F8; --bg-panel:#FFFFFF; --bg-surface:#F1F5F9;
+      --border:#CBD5E1; --border-bright:#94A3B8;
+      --cyan:#0284C7; --cyan-dim:rgba(2,132,199,0.12); --cyan-glow:0 0 12px rgba(2,132,199,0.3);
+      --text-primary:#1E293B; --text-secondary:#64748B;
+    }
+    [data-theme="light"] body {
+      background-image:
+        radial-gradient(ellipse at 30% 50%, rgba(2,132,199,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(100,150,200,0.05) 0%, transparent 60%),
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+    }
+    [data-theme="light"] .login-card {
+      box-shadow: 0 0 40px rgba(2,132,199,0.08), 0 20px 60px rgba(0,0,0,0.1);
+    }
     * { word-break: keep-all; }
     body {
       font-family: 'Noto Sans KR', sans-serif;
