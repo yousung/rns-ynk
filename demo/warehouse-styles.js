@@ -252,8 +252,9 @@ function getWarehouseStyles() {
     .rm-table {
       border-collapse: collapse;
       font-family: 'JetBrains Mono', monospace;
-      width: max-content;
+      width: auto;
       margin: 0 auto;
+      table-layout: fixed;
     }
 
     .rack-matrix thead th,
@@ -273,7 +274,6 @@ function getWarehouseStyles() {
 
     .rack-matrix thead th:not(.label-cell),
     .rm-table thead th:not(.label-cell) {
-      min-width: var(--rm-cell-size, 42px);
       width: var(--rm-cell-size, 42px);
     }
 
@@ -359,6 +359,7 @@ function getWarehouseStyles() {
       background: #030A14;
       color: #0D1F35;
       cursor: default;
+      pointer-events: none;
     }
 
     /* 셀 상태: 비어있음 */

@@ -226,7 +226,7 @@
       const scrollEl = document.querySelector('.matrix-scroll');
       if (scrollEl && whRacks.length > 0) {
         const available = scrollEl.clientWidth - 60;
-        const cellSize = Math.max(36, Math.floor(available / whRacks.length));
+        const cellSize = Math.floor(available / whRacks.length);
         scrollEl.style.setProperty('--rm-cell-size', cellSize + 'px');
       }
 

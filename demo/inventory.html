@@ -107,11 +107,17 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      min-height: 0;
     }
     .wh-rack-area {
       flex: 1;
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
       padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 0;
     }
     .wh-rack-grid {
       display: grid;
@@ -479,9 +485,8 @@
       const maxFloors = Math.max(...warehouseRacks.map(r => r.floors));
       const area = document.getElementById('whRackArea');
       if (area && warehouseRacks.length > 0) {
-        const maxRackCount = Math.max(...warehouses.map(w => racks.filter(r => r.warehouse_id === w.id).length));
-        const available = area.clientWidth - 60;
-        const cellSize = Math.max(60, Math.floor(available / maxRackCount));
+        const available = area.clientWidth - 70;
+        const cellSize = Math.floor(available / warehouseRacks.length);
         area.style.setProperty('--rm-cell-size', cellSize + 'px');
       }
 
