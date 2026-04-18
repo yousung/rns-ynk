@@ -30,7 +30,7 @@ const ICONS = {
   'chevron-r':         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{width:15,height:15}}><polyline points="9 18 15 12 9 6"/></svg>,
 };
 
-export default function Sidebar() {
+export default function Sidebar({ mobileOpen = false, onClose }) {
   const currentUser = useAuthStore((s) => s.currentUser);
   const logout = useAuthStore((s) => s.logout);
   const { sidebarSlim, warehouseType, toggleSidebar, setWarehouseType } = useUIStore();
@@ -39,13 +39,14 @@ export default function Sidebar() {
 
   function handleLogout() {
     logout();
+    if (onClose) onClose();
     navigate('/login');
   }
 
   const activeKey = location.pathname.replace('/', '');
 
   return (
-    <div className={`sidebar${sidebarSlim ? ' slim' : ''}`}>
+    <div className={`sidebar${sidebarSlim ? ' slim' : ''}${mobileOpen ? ' mobile-open' : ''}`}>
       <div className="sidebar-header">
         <div className="sidebar-brand">
           <span className="sidebar-brand-title">창고 관리</span>
@@ -63,6 +64,7 @@ export default function Sidebar() {
             to={item.path}
             className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
             title={item.label}
+            onClick={onClose}
           >
             {ICONS[item.key]}
             <span className="nav-label">{item.label}</span>
