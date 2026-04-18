@@ -62,3 +62,4 @@ htmlcov/
 # 빌드 타임 생성 파일 (CI에서만 생성)
 # ===========================
 src/build-time.js
+.gstack/

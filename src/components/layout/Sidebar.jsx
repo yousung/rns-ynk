@@ -52,7 +52,7 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
           <span className="sidebar-brand-title">창고 관리</span>
           <span className="sidebar-brand-user">{currentUser?.name || ''}</span>
         </div>
-        <button className="sidebar-toggle-btn" onClick={toggleSidebar} title="사이드바 접기/펼치기">
+        <button className="sidebar-toggle-btn" onClick={mobileOpen ? onClose : toggleSidebar} title="사이드바 접기/펼치기">
           {sidebarSlim ? ICONS['chevron-r'] : ICONS['chevron-l']}
         </button>
       </div>
