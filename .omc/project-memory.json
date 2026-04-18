@@ -70,14 +70,14 @@
   "hotPaths": [
     {
       "path": "demo/inventory.html",
-      "accessCount": 204,
-      "lastAccessed": 1776461750433,
+      "accessCount": 206,
+      "lastAccessed": 1776465088727,
       "type": "file"
     },
     {
       "path": "demo/samples/type-b/inbound-execute.html",
-      "accessCount": 93,
-      "lastAccessed": 1776461886954,
+      "accessCount": 95,
+      "lastAccessed": 1776465075565,
       "type": "directory"
     },
     {
@@ -88,8 +88,8 @@
     },
     {
       "path": "demo/samples/type-b/outbound-execute.html",
-      "accessCount": 80,
-      "lastAccessed": 1776461750126,
+      "accessCount": 82,
+      "lastAccessed": 1776465075656,
       "type": "directory"
     },
     {
@@ -100,8 +100,8 @@
     },
     {
       "path": "demo/warehouse-styles.js",
-      "accessCount": 61,
-      "lastAccessed": 1776460592080,
+      "accessCount": 64,
+      "lastAccessed": 1776465204022,
       "type": "file"
     },
     {
@@ -112,8 +112,14 @@
     },
     {
       "path": "demo/shared.js",
-      "accessCount": 45,
-      "lastAccessed": 1776456637974,
+      "accessCount": 48,
+      "lastAccessed": 1776465203969,
+      "type": "file"
+    },
+    {
+      "path": "demo/data.js",
+      "accessCount": 47,
+      "lastAccessed": 1776465209403,
       "type": "file"
     },
     {
@@ -123,15 +129,9 @@
       "type": "file"
     },
     {
-      "path": "demo/data.js",
-      "accessCount": 44,
-      "lastAccessed": 1776457447651,
-      "type": "file"
-    },
-    {
       "path": "demo/index.html",
-      "accessCount": 35,
-      "lastAccessed": 1776412017681,
+      "accessCount": 38,
+      "lastAccessed": 1776465209524,
       "type": "file"
     },
     {
@@ -154,8 +154,8 @@
     },
     {
       "path": "demo/activity-log.html",
-      "accessCount": 26,
-      "lastAccessed": 1776410623923,
+      "accessCount": 27,
+      "lastAccessed": 1776464961659,
       "type": "file"
     },
     {
@@ -166,14 +166,14 @@
     },
     {
       "path": "demo/products.html",
-      "accessCount": 17,
-      "lastAccessed": 1776410690956,
+      "accessCount": 18,
+      "lastAccessed": 1776464961445,
       "type": "file"
     },
     {
       "path": "demo/settings.html",
-      "accessCount": 16,
-      "lastAccessed": 1776427495775,
+      "accessCount": 17,
+      "lastAccessed": 1776464962537,
       "type": "file"
     },
     {
@@ -207,6 +207,18 @@
       "type": "file"
     },
     {
+      "path": "",
+      "accessCount": 5,
+      "lastAccessed": 1776465943217,
+      "type": "directory"
+    },
+    {
+      "path": "src/styles/warehouse.css",
+      "accessCount": 5,
+      "lastAccessed": 1776466066372,
+      "type": "file"
+    },
+    {
       "path": "samples/type-b/shared.js",
       "accessCount": 4,
       "lastAccessed": 1776366263764,
@@ -231,10 +243,16 @@
       "type": "directory"
     },
     {
-      "path": "",
+      "path": "src/styles/global.css",
       "accessCount": 4,
-      "lastAccessed": 1776461514199,
-      "type": "directory"
+      "lastAccessed": 1776466038240,
+      "type": "file"
+    },
+    {
+      "path": "src/store/useDataStore.js",
+      "accessCount": 4,
+      "lastAccessed": 1776466660118,
+      "type": "file"
     },
     {
       "path": "example/입고.jpg",
@@ -246,6 +264,12 @@
       "path": "example/출고.jpg",
       "accessCount": 3,
       "lastAccessed": 1776362534346,
+      "type": "file"
+    },
+    {
+      "path": "demo/inbound-schedule.html",
+      "accessCount": 3,
+      "lastAccessed": 1776464954278,
       "type": "file"
     },
     {
@@ -261,21 +285,21 @@
       "type": "file"
     },
     {
-      "path": "demo/inbound-schedule.html",
-      "accessCount": 2,
-      "lastAccessed": 1776387035156,
-      "type": "file"
-    },
-    {
       "path": "demo/outbound-schedule.html",
-      "accessCount": 1,
-      "lastAccessed": 1776330383637,
+      "accessCount": 2,
+      "lastAccessed": 1776464954323,
       "type": "file"
     },
     {
       "path": "demo/users.html",
-      "accessCount": 1,
-      "lastAccessed": 1776330553842,
+      "accessCount": 2,
+      "lastAccessed": 1776464962420,
+      "type": "file"
+    },
+    {
+      "path": "vite.config.js",
+      "accessCount": 2,
+      "lastAccessed": 1776466077271,
       "type": "file"
     },
     {
@@ -325,6 +349,24 @@
       "accessCount": 1,
       "lastAccessed": 1776458864101,
       "type": "directory"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 1,
+      "lastAccessed": 1776465103905,
+      "type": "file"
+    },
+    {
+      "path": "index.html",
+      "accessCount": 1,
+      "lastAccessed": 1776465107020,
+      "type": "file"
+    },
+    {
+      "path": "src/store/useAuthStore.js",
+      "accessCount": 1,
+      "lastAccessed": 1776465415895,
+      "type": "file"
     }
   ],
   "userDirectives": []
