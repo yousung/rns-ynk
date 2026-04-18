@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useDataStore } from '../store/useDataStore.js';
+import DateRangePicker from '../components/DateRangePicker.jsx';
 
 const FEATURE_LABEL = {
   inbound: '입고',
@@ -34,20 +35,6 @@ export default function ActivityLog() {
     });
   }, [activityLogs, search, dateRange, feature]);
 
-  function handleStartDate(val) {
-    setDateRange((prev) => {
-      const end = prev.end && val > prev.end ? val : prev.end;
-      return { start: val, end };
-    });
-  }
-
-  function handleEndDate(val) {
-    setDateRange((prev) => {
-      const start = prev.start && val < prev.start ? val : prev.start;
-      return { start, end: val };
-    });
-  }
-
   function reset() {
     setSearch('');
     setDateRange({ start: '', end: '' });
@@ -72,38 +59,14 @@ export default function ActivityLog() {
             />
           </div>
 
-          {/* 기간 선택 — 하나의 범위 박스 */}
+          {/* 기간 선택 — 달력 범위 피커 */}
           <div className="flex items-center gap-2">
             <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>기간</label>
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 0,
-              border: '1px solid var(--border)', borderRadius: '0.25rem',
-              background: 'var(--bg-surface)', overflow: 'hidden',
-            }}>
-              <input
-                type="date"
-                value={dateRange.start}
-                onChange={(e) => handleStartDate(e.target.value)}
-                max={dateRange.end || undefined}
-                style={{
-                  padding: '0.375rem 0.5rem', border: 'none', borderRadius: 0,
-                  fontSize: '0.8rem', background: 'transparent', color: 'var(--text-primary)',
-                  outline: 'none', width: 130,
-                }}
-              />
-              <span style={{ color: 'var(--text-secondary)', padding: '0 4px', fontSize: '0.8rem', flexShrink: 0 }}>~</span>
-              <input
-                type="date"
-                value={dateRange.end}
-                onChange={(e) => handleEndDate(e.target.value)}
-                min={dateRange.start || undefined}
-                style={{
-                  padding: '0.375rem 0.5rem', border: 'none', borderLeft: '1px solid var(--border)',
-                  borderRadius: 0, fontSize: '0.8rem', background: 'transparent',
-                  color: 'var(--text-primary)', outline: 'none', width: 130,
-                }}
-              />
-            </div>
+            <DateRangePicker
+              startDate={dateRange.start}
+              endDate={dateRange.end}
+              onChange={(range) => setDateRange(range)}
+            />
           </div>
 
           <div className="flex items-center gap-2">
