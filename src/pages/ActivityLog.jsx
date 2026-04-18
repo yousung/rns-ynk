@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useDataStore } from '../store/useDataStore.js';
-import DateRangePicker from '../components/DateRangePicker.jsx';
 
 const FEATURE_LABEL = {
   inbound: '입고',
@@ -11,9 +12,15 @@ const FEATURE_LABEL = {
   settings: '설정',
 };
 
+function toStr(date) {
+  if (!date) return '';
+  return date.toISOString().split('T')[0];
+}
+
 export default function ActivityLog() {
   const [search, setSearch] = useState('');
-  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [startDate, endDate] = dateRange;
   const [feature, setFeature] = useState('all');
   const { activityLogs } = useDataStore();
 
@@ -23,13 +30,15 @@ export default function ActivityLog() {
   );
 
   const filtered = useMemo(() => {
+    const startStr = toStr(startDate);
+    const endStr = toStr(endDate);
     return activityLogs.filter((l) => {
       const q = search.toLowerCase();
       const matchSearch =
         !q || l.user.toLowerCase().includes(q) || l.detail.toLowerCase().includes(q);
       const logDate = l.created_at.split(' ')[0];
-      const matchStart = !dateRange.start || logDate >= dateRange.start;
-      const matchEnd = !dateRange.end || logDate <= dateRange.end;
+      const matchStart = !startStr || logDate >= startStr;
+      const matchEnd = !endStr || logDate <= endStr;
       const matchFeature = feature === 'all' || l.feature === feature;
       return matchSearch && matchStart && matchEnd && matchFeature;
     });
@@ -37,7 +46,7 @@ export default function ActivityLog() {
 
   function reset() {
     setSearch('');
-    setDateRange({ start: '', end: '' });
+    setDateRange([null, null]);
     setFeature('all');
   }
 
@@ -59,13 +68,31 @@ export default function ActivityLog() {
             />
           </div>
 
-          {/* 기간 선택 — 달력 범위 피커 */}
           <div className="flex items-center gap-2">
             <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>기간</label>
-            <DateRangePicker
-              startDate={dateRange.start}
-              endDate={dateRange.end}
-              onChange={(range) => setDateRange(range)}
+            <DatePicker
+              selectsRange
+              startDate={startDate}
+              endDate={endDate}
+              onChange={(update) => setDateRange(update)}
+              isClearable
+              placeholderText="기간 선택"
+              dateFormat="yyyy.MM.dd"
+              customInput={
+                <input
+                  readOnly
+                  style={{
+                    padding: '0.375rem 0.5rem',
+                    border: '1px solid var(--border)',
+                    borderRadius: '0.25rem',
+                    fontSize: '0.875rem',
+                    background: 'var(--bg-surface)',
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer',
+                    width: 200,
+                  }}
+                />
+              }
             />
           </div>
 
