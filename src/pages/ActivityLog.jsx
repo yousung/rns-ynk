@@ -12,6 +12,14 @@ const FEATURE_LABEL = {
   settings: '설정',
 };
 
+function fmtDate(date) {
+  if (!date) return '-';
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}.${m}.${d}`;
+}
+
 function toStr(date) {
   if (!date) return '';
   return date.toISOString().split('T')[0];
@@ -55,9 +63,11 @@ export default function ActivityLog() {
       <div className="header-bar">
         <h1>활동 로그</h1>
       </div>
-      <div className="content-area">
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2">
+      <div className="content-area" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+
+        {/* 필터 행 */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>검색</label>
             <input
               type="text"
@@ -68,35 +78,7 @@ export default function ActivityLog() {
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>기간</label>
-            <DatePicker
-              selectsRange
-              startDate={startDate}
-              endDate={endDate}
-              onChange={(update) => setDateRange(update)}
-              isClearable
-              placeholderText="기간 선택"
-              dateFormat="yyyy.MM.dd"
-              customInput={
-                <input
-                  readOnly
-                  style={{
-                    padding: '0.375rem 0.5rem',
-                    border: '1px solid var(--border)',
-                    borderRadius: '0.25rem',
-                    fontSize: '0.875rem',
-                    background: 'var(--bg-surface)',
-                    color: 'var(--text-primary)',
-                    cursor: 'pointer',
-                    width: 200,
-                  }}
-                />
-              }
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>기능</label>
             <select
               value={feature}
@@ -118,41 +100,79 @@ export default function ActivityLog() {
           </button>
         </div>
 
-        <div style={{ flex: 1, overflow: 'auto' }}>
-          <table>
-            <thead>
-              <tr>
-                <th>일시</th>
-                <th>사용자</th>
-                <th>기능</th>
-                <th>액션</th>
-                <th>상세</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? (
+        {/* 날짜 범위 영역 */}
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {/* 시작일 / 종료일 카드 */}
+            <div style={{
+              display: 'flex',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              overflow: 'hidden',
+              background: 'var(--bg-surface)',
+            }}>
+              <div style={{ padding: '0.5rem 1.25rem', flex: 1, borderRight: '1px solid var(--border)' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>시작일</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: startDate ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                  {fmtDate(startDate)}
+                </div>
+              </div>
+              <div style={{ padding: '0.5rem 1.25rem', flex: 1 }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>종료일</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: endDate ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                  {fmtDate(endDate)}
+                </div>
+              </div>
+            </div>
+
+            {/* 인라인 달력 */}
+            <DatePicker
+              selectsRange
+              startDate={startDate}
+              endDate={endDate}
+              onChange={(update) => setDateRange(update)}
+              inline
+              monthsShown={1}
+            />
+          </div>
+
+          {/* 테이블 */}
+          <div style={{ flex: 1, overflow: 'auto', minWidth: 0 }}>
+            <table>
+              <thead>
                 <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', padding: '40px 14px', color: 'var(--text-secondary)' }}>
-                    검색 결과가 없습니다.
-                  </td>
+                  <th>일시</th>
+                  <th>사용자</th>
+                  <th>기능</th>
+                  <th>액션</th>
+                  <th>상세</th>
                 </tr>
-              ) : (
-                filtered.map((l) => (
-                  <tr key={l.id}>
-                    <td style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{l.created_at}</td>
-                    <td>{l.user}</td>
-                    <td>
-                      <span className="badge" style={{ background: 'var(--bg-surface)', color: 'var(--text-secondary)' }}>
-                        {FEATURE_LABEL[l.feature] || l.feature}
-                      </span>
+              </thead>
+              <tbody>
+                {filtered.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: 'center', padding: '40px 14px', color: 'var(--text-secondary)' }}>
+                      검색 결과가 없습니다.
                     </td>
-                    <td>{l.action}</td>
-                    <td style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{l.detail}</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filtered.map((l) => (
+                    <tr key={l.id}>
+                      <td style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{l.created_at}</td>
+                      <td>{l.user}</td>
+                      <td>
+                        <span className="badge" style={{ background: 'var(--bg-surface)', color: 'var(--text-secondary)' }}>
+                          {FEATURE_LABEL[l.feature] || l.feature}
+                        </span>
+                      </td>
+                      <td>{l.action}</td>
+                      <td style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{l.detail}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>
