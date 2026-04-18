@@ -4,7 +4,7 @@ function loadUser() {
   try { return JSON.parse(localStorage.getItem('wms_user')); } catch { return null; }
 }
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   currentUser: loadUser(),
 
   login(user) {
@@ -15,5 +15,11 @@ export const useAuthStore = create((set) => ({
   logout() {
     localStorage.removeItem('wms_user');
     set({ currentUser: null });
+  },
+
+  updateUser(updates) {
+    const updated = { ...get().currentUser, ...updates };
+    localStorage.setItem('wms_user', JSON.stringify(updated));
+    set({ currentUser: updated });
   },
 }));
