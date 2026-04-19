@@ -238,16 +238,7 @@ export default function OutboundExecute() {
             </button>
           </div>
 
-          {warehouseType === 'b' ? (
-            <WarehouseMatrix
-              warehouseId={selectedWarehouseId}
-              selectedCell={selectedCell}
-              onCellClick={(rackId, floor) => setSelectedCell({ rackId, floor })}
-              getCellFifoInfo={getCellFifoInfo}
-              getMiniBlocksFn={getMiniBlocksFn}
-              mode="outbound"
-            />
-          ) : (
+          {warehouseType === 'a' ? (
             <div style={{ flex: 1, overflow: 'auto', padding: 10 }}>
               <WarehouseRackGrid
                 warehouseId={selectedWarehouseId}
@@ -256,6 +247,15 @@ export default function OutboundExecute() {
                 getCellClass={getCellClass}
               />
             </div>
+          ) : (
+            <WarehouseMatrix
+              warehouseId={selectedWarehouseId}
+              selectedCell={selectedCell}
+              onCellClick={(rackId, floor) => setSelectedCell({ rackId, floor })}
+              getCellFifoInfo={getCellFifoInfo}
+              getMiniBlocksFn={getMiniBlocksFn}
+              mode="outbound"
+            />
           )}
 
           <CellDetailsPanel selectedCell={selectedCell} />

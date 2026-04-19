@@ -159,7 +159,7 @@ export default function InboundExecute() {
               {selectedCell && rack ? (
                 <>
                   <span style={{ marginLeft: 8 }}>위치: <span className="action-highlight">{rack.rack_no}번 랙 · {selectedCell.floor}층</span></span>
-                  {warehouseType === 'b' && (
+                  {warehouseType !== 'a' && (
                     <div className="dan-selector">
                       {Array.from({ length: rack.groups }, (_, i) => i + 1).map((kan) => (
                         <button
@@ -182,15 +182,7 @@ export default function InboundExecute() {
             </button>
           </div>
 
-          {warehouseType === 'b' ? (
-            <WarehouseMatrix
-              warehouseId={selectedWarehouseId}
-              selectedCell={selectedCell ? { rackId: selectedCell.rackId, floor: selectedCell.floor } : null}
-              onCellClick={handleCellClick}
-              getMiniBlocksFn={getMiniBlocksFn}
-              mode="inbound"
-            />
-          ) : (
+          {warehouseType === 'a' ? (
             <div style={{ flex: 1, overflow: 'auto', padding: 10 }}>
               <WarehouseRackGrid
                 warehouseId={selectedWarehouseId}
@@ -199,6 +191,14 @@ export default function InboundExecute() {
                 getCellClass={getCellClass}
               />
             </div>
+          ) : (
+            <WarehouseMatrix
+              warehouseId={selectedWarehouseId}
+              selectedCell={selectedCell ? { rackId: selectedCell.rackId, floor: selectedCell.floor } : null}
+              onCellClick={handleCellClick}
+              getMiniBlocksFn={getMiniBlocksFn}
+              mode="inbound"
+            />
           )}
 
           <CellDetailsPanel selectedCell={selectedCell} />
