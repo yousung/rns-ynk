@@ -147,14 +147,14 @@
   "hotPaths": [
     {
       "path": "src/pages/InboundExecute.jsx",
-      "accessCount": 65,
-      "lastAccessed": 1776606767982,
+      "accessCount": 71,
+      "lastAccessed": 1776607771399,
       "type": "file"
     },
     {
       "path": "src/pages/OutboundExecute.jsx",
-      "accessCount": 54,
-      "lastAccessed": 1776606810270,
+      "accessCount": 57,
+      "lastAccessed": 1776607779219,
       "type": "file"
     },
     {
@@ -176,15 +176,15 @@
       "type": "file"
     },
     {
-      "path": "src/components/warehouse/WarehouseElevation.jsx",
-      "accessCount": 11,
-      "lastAccessed": 1776605657714,
+      "path": "src/components/warehouse/WarehouseMinimap.jsx",
+      "accessCount": 14,
+      "lastAccessed": 1776607724438,
       "type": "file"
     },
     {
-      "path": "src/components/warehouse/WarehouseMinimap.jsx",
-      "accessCount": 10,
-      "lastAccessed": 1776607228385,
+      "path": "src/components/warehouse/WarehouseElevation.jsx",
+      "accessCount": 11,
+      "lastAccessed": 1776605657714,
       "type": "file"
     },
     {

@@ -267,7 +267,7 @@ export default function OutboundExecute() {
             <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               {/* 창고 시각화 */}
               <div style={{ flexShrink: 0, borderBottom: '1px solid var(--border)' }}>
-                <div style={{ height: 34, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
+                <div style={{ height: 28, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                 </div>
                 <div style={{ position: 'relative', paddingBottom: 6 }}>

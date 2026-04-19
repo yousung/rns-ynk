@@ -87,10 +87,13 @@ export default function WarehouseMinimap({ warehouseId, selectedRackId, selected
     label: 'rgba(94,226,198,0.7)',
     shadow: '0 6px 20px rgba(0,0,0,0.5)',
     hShadow: '0 10px 36px rgba(0,0,0,0.7), 0 0 0 1px rgba(94,226,198,0.2)',
-    aTop: 'rgba(94,226,198,0.55)', aFront: 'rgba(94,226,198,0.35)', aSide: 'rgba(94,226,198,0.22)',
-    aStroke: '#5EE2C6', aGlow: '0 0 3px rgba(94,226,198,0.9)',
-    hTop: 'rgba(94,226,198,0.35)', hFront: 'rgba(94,226,198,0.22)', hSide: 'rgba(94,226,198,0.14)',
-    hStroke: 'rgba(94,226,198,0.6)',
+    // 셀 선택 — black + white stroke
+    aTop: 'rgba(0,0,0,0.92)', aFront: 'rgba(0,0,0,0.78)', aSide: 'rgba(0,0,0,0.62)',
+    aStroke: 'rgba(255,255,255,0.88)', aGlow: '0 0 4px rgba(255,255,255,0.75)',
+    // 랙 호버/선택 — cyan
+    hTop: 'rgba(94,226,198,0.42)', hFront: 'rgba(94,226,198,0.26)', hSide: 'rgba(94,226,198,0.16)',
+    hStroke: 'rgba(94,226,198,0.7)',
+    // 기본
     iTop: 'rgba(94,226,198,0.18)', iFront: 'rgba(94,226,198,0.10)', iSide: 'rgba(94,226,198,0.06)',
     iStroke: 'rgba(140,163,196,0.45)',
   } : {
@@ -100,10 +103,13 @@ export default function WarehouseMinimap({ warehouseId, selectedRackId, selected
     label: 'rgba(59,130,246,0.75)',
     shadow: '0 4px 16px rgba(0,0,0,0.12)',
     hShadow: '0 8px 28px rgba(0,0,0,0.18), 0 0 0 1px rgba(59,130,246,0.2)',
-    aTop: 'rgba(59,130,246,0.45)', aFront: 'rgba(59,130,246,0.28)', aSide: 'rgba(59,130,246,0.18)',
-    aStroke: '#3B82F6', aGlow: '0 0 3px rgba(59,130,246,0.8)',
-    hTop: 'rgba(59,130,246,0.32)', hFront: 'rgba(59,130,246,0.20)', hSide: 'rgba(59,130,246,0.13)',
-    hStroke: 'rgba(59,130,246,0.55)',
+    // 셀 선택 — black
+    aTop: 'rgba(0,0,0,0.82)', aFront: 'rgba(0,0,0,0.62)', aSide: 'rgba(0,0,0,0.44)',
+    aStroke: '#000000', aGlow: '0 0 3px rgba(0,0,0,0.65)',
+    // 랙 호버/선택 — blue
+    hTop: 'rgba(59,130,246,0.38)', hFront: 'rgba(59,130,246,0.24)', hSide: 'rgba(59,130,246,0.15)',
+    hStroke: 'rgba(59,130,246,0.65)',
+    // 기본
     iTop: 'rgba(99,143,176,0.22)', iFront: 'rgba(99,143,176,0.13)', iSide: 'rgba(99,143,176,0.08)',
     iStroke: 'rgba(100,116,139,0.4)',
   };
@@ -141,12 +147,18 @@ export default function WarehouseMinimap({ warehouseId, selectedRackId, selected
       <svg viewBox={viewBox} width={svgW} height={svgH} style={{ display: 'block' }}>
         {cells.map(({ rackId, floor, kan, right, front, top }) => {
           const isCellActive = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.kan === kan;
-          const isRackActive = !isCellActive && (hoveredRackId === rackId || (!hoveredRackId && (selectedRackId === rackId || selectedCell?.rackId === rackId)));
+          const isFloorActive = !isCellActive && selectedCell?.rackId === rackId && selectedCell?.floor === floor && !hoveredRackId;
+          const isRackActive = !isCellActive && !isFloorActive && (hoveredRackId === rackId || (!hoveredRackId && (selectedRackId === rackId || selectedCell?.rackId === rackId)));
 
           let tF, fF, sF, stroke, glowStyle = {};
           if (isCellActive) {
             tF = c.aTop; fF = c.aFront; sF = c.aSide; stroke = c.aStroke;
             glowStyle = { filter: `drop-shadow(${c.aGlow})` };
+          } else if (isFloorActive) {
+            tF = isDark ? 'rgba(0,0,0,0.50)' : 'rgba(0,0,0,0.32)';
+            fF = isDark ? 'rgba(0,0,0,0.36)' : 'rgba(0,0,0,0.22)';
+            sF = isDark ? 'rgba(0,0,0,0.24)' : 'rgba(0,0,0,0.14)';
+            stroke = isDark ? 'rgba(255,255,255,0.48)' : 'rgba(0,0,0,0.52)';
           } else if (isRackActive) {
             tF = c.hTop; fF = c.hFront; sF = c.hSide; stroke = c.hStroke;
           } else {
