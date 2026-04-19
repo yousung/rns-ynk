@@ -4,6 +4,7 @@ export default function WarehouseRackGrid({
   warehouseId,
   selectedRackId,
   onRackClick,
+  onRackHover,
   highlightedRackIds = [],
   getCellClass,
 }) {
@@ -44,6 +45,8 @@ export default function WarehouseRackGrid({
                 key={rack.id}
                 className={`rack-card${isSelected ? ' selected' : ''}${isHighlighted ? ' highlighted' : ''}`}
                 onClick={() => onRackClick?.(rack.id)}
+                onMouseEnter={() => onRackHover?.(rack.id)}
+                onMouseLeave={() => onRackHover?.(null)}
               >
                 <div className="rack-card-header">
                   <span className="rack-card-no">R{String(rack.rack_no).padStart(2, '0')}</span>

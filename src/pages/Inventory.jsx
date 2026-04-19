@@ -6,7 +6,8 @@ import WarehouseMatrix from '../components/warehouse/WarehouseMatrix.jsx';
 import WarehouseRackGrid from '../components/warehouse/WarehouseRackGrid.jsx';
 import WarehouseFloorPlan, { FloorPlanRackDetail } from '../components/warehouse/WarehouseFloorPlan.jsx';
 import WarehouseElevation from '../components/warehouse/WarehouseElevation.jsx';
-import WarehouseSection from '../components/warehouse/WarehouseSection.jsx';
+import WarehouseMinimap from '../components/warehouse/WarehouseMinimap.jsx';
+import { KanDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
 
 export default function Inventory() {
   const [view, setView] = useState(() => localStorage.getItem('wms_inventory_view') || 'list');
@@ -19,7 +20,7 @@ export default function Inventory() {
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(1);
   const [selectedCell, setSelectedCell] = useState(null);
 
-  const [selectedRackId, setSelectedRackId] = useState(null);
+  const [hoveredRackId, setHoveredRackId] = useState(null);
 
   const { products, inventoryItems, pallets, racks } = useDataStore();
   const { warehouseType } = useUIStore();
@@ -113,9 +114,6 @@ export default function Inventory() {
     setView(v);
     localStorage.setItem('wms_inventory_view', v);
   }
-
-  // ─── 셀 상세 (창고 뷰 하단) ──────────────────────────────
-  const cellRack = selectedCell ? racks.find((r) => r.id === selectedCell.rackId) : null;
 
   return (
     <>
@@ -271,129 +269,87 @@ export default function Inventory() {
             </div>
 
             {/* 오른쪽: 창고 시각화 */}
-            <div className="wh-visual-panel">
+            <div className="wh-visual-panel" style={{ display: 'flex', flexDirection: 'column' }}>
               <WarehouseTabs
                 selectedWarehouseId={selectedWarehouseId}
                 onSelect={(id) => { setSelectedWarehouseId(id); setSelectedCell(null); }}
               />
-              <div className="wh-rack-area">
-                {warehouseType === 'a' ? (
-                  <WarehouseRackGrid
-                    warehouseId={selectedWarehouseId}
-                    highlightedRackIds={
-                      selectedProductId
-                        ? racks
-                            .filter((r) =>
-                              pallets.some((p) => {
-                                const rId = parseInt(p.location.split('-')[0]);
-                                return rId === r.id && inventoryItems.some((i) => i.pallet_id === p.id && i.product_id === selectedProductId);
-                              })
-                            )
-                            .map((r) => r.id)
-                        : []
-                    }
-                    getCellClass={getCellClass}
-                  />
-                ) : warehouseType === 'c' ? (
-                  <WarehouseFloorPlan
-                    warehouseId={selectedWarehouseId}
-                    selectedProductId={selectedProductId}
-                    selectedRackId={selectedRackId}
-                    onRackClick={(id) => setSelectedRackId((prev) => prev === id ? null : id)}
-                  />
-                ) : warehouseType === 'd' ? (
-                  <WarehouseElevation
-                    warehouseId={selectedWarehouseId}
-                    selectedProductId={selectedProductId}
-                    selectedRackId={selectedRackId}
-                    onRackClick={(id) => setSelectedRackId((prev) => prev === id ? null : id)}
-                  />
-                ) : warehouseType === 'e' ? (
-                  <WarehouseSection
-                    warehouseId={selectedWarehouseId}
-                    selectedProductId={selectedProductId}
-                    selectedRackId={selectedRackId}
-                    onRackSelect={(id) => setSelectedRackId((prev) => prev === id ? null : id)}
-                  />
-                ) : (
-                  <WarehouseMatrix
-                    warehouseId={selectedWarehouseId}
-                    selectedCell={selectedCell}
-                    onCellClick={(rackId, floor) =>
-                      setSelectedCell((prev) =>
-                        prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor }
-                      )
-                    }
-                    getMiniBlocksFn={getMiniBlocksFn}
-                    mode="inventory"
-                  />
-                )}
-              </div>
-
-              {/* C/D/E 랙 상세 */}
-              {['c', 'd'].includes(warehouseType) && selectedRackId && (
-                <FloorPlanRackDetail rackId={selectedRackId} />
-              )}
-
-              {/* 셀 상세 */}
-              {selectedCell && cellRack && (
-                <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', background: 'var(--bg-panel)', flexShrink: 0, maxHeight: 200, overflowY: 'auto' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: 8 }}>
-                    {cellRack.rack_no}번 랙 {selectedCell.floor}층 — 칸별 현황
-                  </div>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-                    <thead>
-                      <tr style={{ color: 'var(--text-secondary)' }}>
-                        <th style={{ textAlign: 'left', padding: '3px 8px' }}>칸</th>
-                        <th style={{ textAlign: 'left', padding: '3px 8px' }}>상품</th>
-                        <th style={{ textAlign: 'left', padding: '3px 8px' }}>수량</th>
-                        <th style={{ textAlign: 'left', padding: '3px 8px' }}>입고일</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Array.from({ length: cellRack.groups }, (_, i) => i + 1).map((kan) => {
-                        const pallet = pallets.find((p) => p.location === `${selectedCell.rackId}-${selectedCell.floor}-${kan}`);
-                        if (!pallet) {
-                          return (
-                            <tr key={kan}>
-                              <td style={{ padding: '3px 8px' }}>{kan}칸</td>
-                              <td colSpan={3} style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', padding: '3px 8px' }}>비어있음</td>
-                            </tr>
-                          );
+              <div className="wh-rack-area" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+                {/* 패널 1: 창고 시각화 */}
+                <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
+                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} />
+                  {warehouseType === 'a' ? (
+                    <div style={{ overflow: 'auto', padding: '10px 230px 10px 10px', height: '100%' }}>
+                      <WarehouseRackGrid
+                        warehouseId={selectedWarehouseId}
+                        selectedRackId={selectedCell?.rackId}
+                        onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                        onRackHover={setHoveredRackId}
+                        highlightedRackIds={
+                          selectedProductId
+                            ? racks
+                                .filter((r) =>
+                                  pallets.some((p) => {
+                                    const rId = parseInt(p.location.split('-')[0]);
+                                    return rId === r.id && inventoryItems.some((i) => i.pallet_id === p.id && i.product_id === selectedProductId);
+                                  })
+                                )
+                                .map((r) => r.id)
+                            : []
                         }
-                        return inventoryItems
-                          .filter((i) => i.pallet_id === pallet.id)
-                          .map((item) => {
-                            const prod = products.find((p) => p.id === item.product_id);
-                            const isTarget = selectedProductId && item.product_id === selectedProductId;
-                            return (
-                              <tr key={item.id} style={isTarget ? { color: 'var(--amber)', fontWeight: 600 } : {}}>
-                                <td style={{ padding: '3px 8px' }}>{kan}칸</td>
-                                <td style={{ padding: '3px 8px' }}>{prod?.name || '-'}</td>
-                                <td style={{ padding: '3px 8px' }}>{item.quantity}개</td>
-                                <td style={{ padding: '3px 8px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{item.received_at}</td>
-                              </tr>
-                            );
-                          });
-                      })}
-                    </tbody>
-                  </table>
+                        getCellClass={getCellClass}
+                      />
+                    </div>
+                  ) : warehouseType === 'c' ? (
+                    <div style={{ paddingRight: 230, overflow: 'auto', height: '100%' }}>
+                      <WarehouseFloorPlan
+                        warehouseId={selectedWarehouseId}
+                        selectedProductId={selectedProductId}
+                        selectedRackId={selectedCell?.rackId}
+                        onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                        onRackHover={setHoveredRackId}
+                      />
+                    </div>
+                  ) : warehouseType === 'd' ? (
+                    <div style={{ paddingRight: 230, overflow: 'auto', height: '100%' }}>
+                      <WarehouseElevation
+                        warehouseId={selectedWarehouseId}
+                        selectedProductId={selectedProductId}
+                        selectedRackId={selectedCell?.rackId}
+                        onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                        onRackHover={setHoveredRackId}
+                      />
+                    </div>
+                  ) : (
+                    <div style={{ paddingRight: 230, height: '100%', overflow: 'auto' }}>
+                      <WarehouseMatrix
+                        warehouseId={selectedWarehouseId}
+                        selectedCell={selectedCell}
+                        onCellClick={(rackId, floor) =>
+                          setSelectedCell((prev) =>
+                            prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor, kan: 1 }
+                          )
+                        }
+                        onCellHover={setHoveredRackId}
+                        getMiniBlocksFn={getMiniBlocksFn}
+                        mode="inventory"
+                      />
+                    </div>
+                  )}
                 </div>
-              )}
-
-              {/* 범례 */}
-              <div className="wh-legend">
-                <span style={{ marginRight: 4 }}>채움 정도:</span>
-                {[
-                  { label: '비어있음', bg: 'rgba(30,58,95,0.25)', border: '1px solid rgba(30,58,95,0.5)' },
-                  { label: '재고 있음', bg: 'rgba(30,80,200,0.5)', border: '1px solid rgba(80,120,240,0.6)' },
-                  { label: '선택 상품', bg: 'rgba(0,212,255,0.75)', border: '1px solid var(--cyan)' },
-                ].map((item) => (
-                  <div key={item.label} className="legend-item">
-                    <div className="legend-dot" style={{ background: item.bg, border: item.border }} />
-                    {item.label}
-                  </div>
-                ))}
+                {/* 패널 2: 칸별 현황 */}
+                <FloorPlanRackDetail
+                  rackId={selectedCell?.rackId}
+                  selectedFloor={selectedCell?.floor}
+                  selectedKan={selectedCell?.kan}
+                  onKanClick={(floor, kan) => setSelectedCell(prev => prev ? { ...prev, floor, kan } : null)}
+                />
+                {/* 패널 3: 적재 상세 */}
+                <KanDetailPanel
+                  rackId={selectedCell?.rackId}
+                  floor={selectedCell?.floor}
+                  kan={selectedCell?.kan}
+                />
               </div>
             </div>
           </div>

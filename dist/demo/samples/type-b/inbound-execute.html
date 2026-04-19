@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>입고 처리 - 창고 관리 시스템</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../../data.js"></script>
+  <script src="shared.js"></script>
+  <script src="../../warehouse-styles.js"></script>
+  <style id="commonStyle"></style>
+  <style id="warehouseStyle"></style>
+  <style>
+    /* Type B specific styles (not in warehouse-styles.js) */
+    .content-area { padding: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; min-height: 0 !important; }
+
+    /* Layout sections: fixed and flexible sizing */
+    .wh-tabs-row { flex-shrink: 0; }
+    .sched-section { flex-shrink: 0; max-height: 80px; overflow: hidden; }
+    .matrix-section { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .matrix-scroll { min-height: 0; overflow: auto; display: flex; justify-content: center; }
+    .cell-details { flex-shrink: 0; max-height: 280px; overflow-y: auto; }
+    .stats-bar { flex-shrink: 0; }
+
+    /* Mini-blocks grid for floor matrix cells */
+    .mini-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; width: 100%; box-sizing: border-box; }
+    .mini-block { border-radius: 2px; height: 10px; }
+    .mini-empty { background: rgba(30,58,95,0.25); border: 1px solid rgba(30,58,95,0.5); }
+    .mini-filled { background: rgba(0,212,255,0.35); border: 1px solid rgba(0,212,255,0.5); }
+    .mini-sel { background: rgba(0,212,255,0.8); border: 1px solid var(--cyan); }
+    .mini-product { background: rgba(245,158,11,0.7); border: 1px solid var(--amber); }
+    .rm-cell.rm-multi { padding: 0; align-items: stretch; cursor: pointer; }
+    .rm-cell.rm-has-product { outline: 2px solid var(--amber); outline-offset: -2px; }
+
+    [data-theme="light"] .mini-empty { background: rgba(200,220,240,0.5); border: 1px solid rgba(150,180,210,0.7); }
+    [data-theme="light"] .mini-filled { background: rgba(0,120,190,0.25); border: 1px solid rgba(0,120,190,0.5); }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-area">
+      <div class="header-bar">
+        <h1>입고 처리</h1>
+      </div>
+      <div class="content-area">
+        <!-- 창고 탭 -->
+        <div class="wh-tabs-row" id="whTabs"></div>
+
+        <!-- 입고 예정 목록 (가로 스크롤) -->
+        <div class="sched-section">
+          <div class="sched-scroll" id="schedList"></div>
+        </div>
+
+        <!-- 매트릭스 섹션 -->
+        <div class="matrix-section">
+          <!-- 액션 바 -->
+          <div class="action-bar">
+            <div class="action-info" id="actionInfo">...</div>
+            <button class="btn-exec" id="btnExec" onclick="executeInbound()" disabled>입고 실행</button>
+          </div>
+
+          <!-- 매트릭스 테이블 (스크롤 가능) -->
+          <div class="matrix-scroll">
+            <table class="rack-matrix" id="rackMatrix"></table>
+          </div>
+
+          <!-- 셀 상세 패널 -->
+          <div class="cell-details" id="cellDetails">
+            <div class="cd-empty">셀을 클릭하면 내용물이 여기에 표시됩니다</div>
+          </div>
+
+          <!-- 통계 바 -->
+          <div class="stats-bar">
+            <div class="stat-item">
+              <span class="stat-label">현재 입고</span>
+              <span class="stat-value" style="color:var(--cyan);" id="statFilled">0</span>
+              <span class="stat-unit">PLT</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">잔여 공간</span>
+              <span class="stat-value" style="color:var(--amber);" id="statRemain">0</span>
+              <span class="stat-unit">PLT</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">전체 용량</span>
+              <span class="stat-value" style="color:var(--text-secondary);" id="statTotal">0</span>
+              <span class="stat-unit">PLT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('commonStyle').textContent = getCommonStyles();
+    document.getElementById('warehouseStyle').textContent = getWarehouseStyles();
+    requireAuth();
+    renderLayout('inbound-execute');
+
+    // 상태
+    let selectedWarehouse = 1;
+    let selectedScheduleId = null;
+    let selectedCell = null; // { rackId, floor, kan }
+
+    // 유틸
+    function getWhRacks() { return racks.filter(r => r.warehouse_id === selectedWarehouse); }
+    function getMaxGroups() { return Math.max(...getWhRacks().map(r => r.groups)); }
+    function getMaxFloors() { return Math.max(...getWhRacks().map(r => r.floors)); }
+
+    function getCellInfo(rackId, floor) {
+      const rack = racks.find(r => r.id === rackId);
+      const occupiedKans = [];
+      const productSet = new Set();
+      let totalQty = 0;
+      for (let kan = 1; kan <= rack.groups; kan++) {
+        const key = `${rackId}-${floor}-${kan}`;
+        const pallet = pallets.find(p => p.location === key);
+        if (pallet) {
+          occupiedKans.push(kan);
+          inventoryItems.filter(i => i.pallet_id === pallet.id).forEach(i => {
+            productSet.add(i.product_id);
+            totalQty += i.quantity;
+          });
+        }
+      }
+      return { occupied: occupiedKans.length, total: rack.groups, occupiedKans, productTypes: productSet.size, totalQty };
+    }
+
+    function getMiniBlocks(rackId, floor) {
+      const rack = racks.find(r => r.id === rackId);
+      // 선택된 예정 상품이 있는 팔레트 위치 목록
+      const productKans = new Set();
+      if (selectedScheduleId) {
+        const s = inboundSchedules.find(x => x.id === selectedScheduleId);
+        if (s) {
+          pallets.forEach(p => {
+            const [pr, pf, pk] = p.location.split('-').map(Number);
+            if (pr === rackId && pf === floor) {
+              const hasProduct = inventoryItems.some(i => i.pallet_id === p.id && i.product_id === s.product_id);
+              if (hasProduct) productKans.add(pk);
+            }
+          });
+        }
+      }
+
+      let html = '<div class="mini-blocks">';
+      for (let kan = 1; kan <= rack.groups; kan++) {
+        const key = `${rackId}-${floor}-${kan}`;
+        const pallet = pallets.find(p => p.location === key);
+        const isSelKan = selectedCell && selectedCell.rackId === rackId && selectedCell.floor === floor && selectedCell.kan === kan;
+        const isProductKan = productKans.has(kan);
+        let cls;
+        if (isSelKan) cls = 'mini-block mini-sel';
+        else if (isProductKan) cls = 'mini-block mini-product';
+        else cls = pallet ? 'mini-block mini-filled' : 'mini-block mini-empty';
+        html += `<div class="${cls}" title="${kan}칸"></div>`;
+      }
+      html += '</div>';
+      return html;
+    }
+
+    // 창고 탭
+    function renderWhTabs() {
+      document.getElementById('whTabs').innerHTML = warehouses.map(w =>
+        `<button class="wh-tab ${w.id === selectedWarehouse ? 'active' : ''}" onclick="selectWarehouse(${w.id})">${w.name}</button>`
+      ).join('');
+    }
+
+    function selectWarehouse(id) {
+      selectedWarehouse = id;
+      selectedCell = null;
+      selectedScheduleId = null;
+      resetCellDetails();
+      renderAll();
+    }
+
+    function resetCellDetails() {
+      const panel = document.getElementById('cellDetails');
+      if (panel) panel.innerHTML = '<div class="cd-empty">셀을 클릭하면 내용물이 여기에 표시됩니다</div>';
+    }
+
+    // 예정 목록 (가로 스크롤 카드)
+    function renderScheduleList() {
+      const pending = inboundSchedules.filter(s => s.status === 'pending');
+      if (pending.length === 0) {
+        document.getElementById('schedList').innerHTML = '<div style="padding:8px 14px;font-size:0.8rem;color:var(--text-secondary);">입고 예정 없음</div>';
+        return;
+      }
+      document.getElementById('schedList').innerHTML = pending.map(s => {
+        const p = products.find(pr => pr.id === s.product_id);
+        const isSel = s.id === selectedScheduleId;
+        const noteHtml = s.note ? `<span class="sched-note">${s.note}</span>` : '';
+        return `<div class="sched-card ${isSel ? 'selected' : ''}" onclick="selectSchedule(${s.id})">
+          <div class="sched-card-name">${p.name}</div>
+          <div class="sched-card-meta">
+            <span>${s.quantity}개</span>
+            <span>${s.scheduled_date}</span>
+            ${noteHtml}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function selectSchedule(id) {
+      selectedScheduleId = selectedScheduleId === id ? null : id;
+      renderScheduleList();
+      renderActionBar();
+      renderMatrix();
+      updateExecBtn();
+    }
+
+    // 매트릭스 테이블 (층수별)
+    function renderMatrix() {
+      const whRacks = getWhRacks();
+      const maxFloors = getMaxFloors();
+
+      // 셀 크기 계산: 현재 창고 랙 수 기준으로 가용 너비를 균등 분배
+      const scrollEl = document.querySelector('.matrix-scroll');
+      if (scrollEl && whRacks.length > 0) {
+        const available = scrollEl.clientWidth - 60;
+        const cellSize = Math.floor(available / max_rack_count);
+        scrollEl.style.setProperty('--rm-cell-size', cellSize + 'px');
+      }
+
+      let html = '<thead><tr>';
+      html += '<th class="label-cell">층</th>';
+
+      for (const rack of whRacks) {
+        html += `<th>R${rack.rack_no}</th>`;
+      }
+
+      html += '</tr></thead><tbody>';
+
+      // 층수 역순: maxFloors → 1
+      for (let floor = maxFloors; floor >= 1; floor--) {
+        html += '<tr>';
+        html += `<td class="label-cell">${floor}층</td>`;
+
+        for (const rack of whRacks) {
+          if (floor > rack.floors) {
+            html += `<td><div class="rm-cell rm-na"></div></td>`;
+          } else {
+            const { occupied, total, occupiedKans, productTypes, totalQty } = getCellInfo(rack.id, floor);
+            const isSelected = selectedCell && selectedCell.rackId === rack.id && selectedCell.floor === floor;
+
+            let cls = 'rm-multi';
+            if (isSelected) cls += ' rm-selected';
+            else if (selectedScheduleId) {
+              const s = inboundSchedules.find(x => x.id === selectedScheduleId);
+              if (s) {
+                const hasProduct = pallets.some(p => {
+                  const [pr, pf] = p.location.split('-').map(Number);
+                  return pr === rack.id && pf === floor &&
+                    inventoryItems.some(i => i.pallet_id === p.id && i.product_id === s.product_id);
+                });
+                if (hasProduct) cls += ' rm-has-product';
+              }
+            }
+
+            const miniBlocksHtml = getMiniBlocks(rack.id, floor);
+            html += `<td><div class="rm-cell ${cls}" onclick="selectCell(${rack.id},${floor})">${miniBlocksHtml}</div></td>`;
+          }
+        }
+
+        html += '</tr>';
+      }
+
+      html += '</tbody><tfoot>';
+
+      // 랙번호 행
+      html += '<tr class="footer-row"><td class="label-cell">랙번호</td>';
+      for (const rack of whRacks) {
+        html += `<td>${rack.rack_no}</td>`;
+      }
+      html += '</tr>';
+
+      // 층수 행
+      html += '<tr class="footer-row"><td class="label-cell">층수</td>';
+      for (const rack of whRacks) {
+        html += `<td>${rack.floors}</td>`;
+      }
+      html += '</tr>';
+
+      // 유효공간 행 (floors * groups)
+      html += '<tr class="footer-row"><td class="label-cell">유효공간</td>';
+      for (const rack of whRacks) {
+        const capacity = rack.floors * rack.groups;
+        html += `<td>${capacity}</td>`;
+      }
+
+      html += '</tr>';
+
+      html += '</tfoot>';
+      document.getElementById('rackMatrix').innerHTML = html;
+    }
+
+    function selectCell(rackId, floor) {
+      const rack = racks.find(r => r.id === rackId);
+      if (floor > rack.floors) return;
+
+      const { occupied, total, occupiedKans, productTypes, totalQty } = getCellInfo(rackId, floor);
+
+      // 이미 같은 셀이면 토글
+      if (selectedCell && selectedCell.rackId === rackId && selectedCell.floor === floor) {
+        selectedCell = null;
+        resetCellDetails();
+        renderAll();
+        return;
+      }
+
+      // 상세 패널 항상 표시 (빈 셀이든 아니든)
+      showCellDetails(rackId, floor);
+
+      // 빈 칸 찾기
+      const emptyKans = [];
+      for (let kan = 1; kan <= total; kan++) {
+        if (!occupiedKans.includes(kan)) emptyKans.push(kan);
+      }
+
+      // 가장 낮은 빈 칸번호 선택 (없으면 1칸 기본)
+      selectedCell = { rackId, floor, kan: emptyKans.length > 0 ? emptyKans[0] : 1 };
+      renderAll();
+    }
+
+    // 셀 상세 패널 (칸별 적재 목록)
+    function showCellDetails(rackId, floor) {
+      const panel = document.getElementById('cellDetails');
+      if (!panel) return;
+      const rack = racks.find(r => r.id === rackId);
+      const wh = warehouses.find(w => w.id === rack.warehouse_id);
+
+      let rows = '';
+      let totalKinds = 0;
+      let totalQty = 0;
+      const seenProducts = new Set();
+
+      for (let kan = 1; kan <= rack.groups; kan++) {
+        const key = `${rackId}-${floor}-${kan}`;
+        const pallet = pallets.find(p => p.location === key);
+        if (!pallet) continue;
+        const items = inventoryItems.filter(i => i.pallet_id === pallet.id);
+        if (items.length === 0) continue;
+        rows += `<tr><td colspan="4" class="cd-dan-header">${kan}칸 · 팔레트 #${pallet.id}</td></tr>`;
+        items.forEach(it => {
+          const pr = products.find(p => p.id === it.product_id);
+          seenProducts.add(it.product_id);
+          totalQty += it.quantity;
+          rows += `<tr><td>${pr.code}</td><td>${pr.name}</td><td style="text-align:right;">${it.quantity}</td><td style="color:var(--text-secondary);">${it.received_at}</td></tr>`;
+        });
+      }
+      totalKinds = seenProducts.size;
+
+      if (rows === '') {
+        panel.innerHTML = `<div class="cd-header">${wh.name} · ${rack.rack_no}번 랙 · ${floor}층 (비어 있음)</div><div class="cd-empty">적재된 팔레트가 없습니다</div>`;
+        return;
+      }
+
+      panel.innerHTML = `
+        <div class="cd-header">${wh.name} · ${rack.rack_no}번 랙 · ${floor}층 · ${totalKinds}종 ${totalQty}개</div>
+        <div class="cd-table-wrap">
+          <table class="cd-table">
+            <thead><tr><th>상품코드</th><th>상품명</th><th style="text-align:right;">수량</th><th>입고일</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+
+    function selectKan(kan) {
+      if (!selectedCell) return;
+      selectedCell.kan = kan;
+      renderActionBar();
+      renderMatrix();
+    }
+
+    // 액션 바
+    function renderActionBar() {
+      const info = document.getElementById('actionInfo');
+      let html = '';
+
+      if (selectedScheduleId) {
+        const s = inboundSchedules.find(x => x.id === selectedScheduleId);
+        const p = products.find(x => x.id === s.product_id);
+        html += `<span>입고: <span class="action-highlight">${p.name} ${s.quantity}개</span> · ${s.scheduled_date}</span>`;
+      } else {
+        html += `<span style="color:#334155;">← 예정 목록에서 항목 선택</span>`;
+      }
+
+      if (selectedCell) {
+        const rack = racks.find(r => r.id === selectedCell.rackId);
+        const { total, occupiedKans, productTypes, totalQty } = getCellInfo(selectedCell.rackId, selectedCell.floor);
+
+        // 칸 선택 버튼들
+        let kanBtns = '';
+        for (let kan = 1; kan <= total; kan++) {
+          const isOccupied = occupiedKans.includes(kan);
+          const isActive = selectedCell.kan === kan;
+          const cls = `dan-btn ${isActive ? 'active' : ''} ${isOccupied ? 'occupied' : ''}`;
+          kanBtns += `<button class="${cls}" onclick="selectKan(${kan})">${kan}칸</button>`;
+        }
+
+        html += `<span style="margin-left:8px;">위치: <span class="action-highlight">${rack.rack_no}번 랙 · ${selectedCell.floor}층</span></span>`;
+        html += `<div class="dan-selector">${kanBtns}</div>`;
+      } else {
+        html += `<span style="color:#334155;margin-left:8px;">← 매트릭스에서 위치 클릭</span>`;
+      }
+
+      info.innerHTML = html;
+    }
+
+    // 통계
+    function updateStats() {
+      const whRacks = getWhRacks();
+      const rackIds = new Set(whRacks.map(r => r.id));
+      const filled = pallets.filter(p => rackIds.has(parseInt(p.location.split('-')[0]))).length;
+      const total = whRacks.reduce((s, r) => s + r.floors * r.groups, 0);
+      document.getElementById('statFilled').textContent = filled;
+      document.getElementById('statRemain').textContent = total - filled;
+      document.getElementById('statTotal').textContent = total;
+    }
+
+    // 실행 버튼 활성화
+    function updateExecBtn() {
+      document.getElementById('btnExec').disabled = !(selectedScheduleId && selectedCell);
+    }
+
+    // 입고 실행
+    function executeInbound() {
+      if (!selectedScheduleId || !selectedCell) return;
+      const s = inboundSchedules.find(x => x.id === selectedScheduleId);
+      const p = products.find(x => x.id === s.product_id);
+      const rack = racks.find(r => r.id === selectedCell.rackId);
+      alert(`✅ 입고 완료!\n${p.name} ${s.quantity}개\n→ ${rack.rack_no}번 랙 · ${selectedCell.floor}층 · ${selectedCell.kan}칸\n\n(데모: 실제 저장 없음)`);
+      selectedScheduleId = null;
+      selectedCell = null;
+      resetCellDetails();
+      renderAll();
+    }
+
+    // 전체 렌더링
+    function renderAll() {
+      renderWhTabs();
+      renderScheduleList();
+      renderMatrix();
+      renderActionBar();
+      updateStats();
+      updateExecBtn();
+    }
+
+    // 초기화
+    renderAll();
+    requestAnimationFrame(() => renderMatrix());
+    window.addEventListener('resize', () => renderMatrix());
+  </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useDataStore } from '../../store/useDataStore.js';
 
-const RACK_W = 42, RACK_G = 6, GROUP_H = 22, PAD_L = 44;
-const BACK_Y = 28, FRONT_Y = 170;
-const SVG_W = 800, SVG_H = 310;
+const RACK_W = 42, RACK_G = 6, GROUP_H = 18, PAD_L = 10;
+const BACK_Y = 12, FRONT_Y = 90; // 12 + 4*18 + 6px gap
+const SVG_W = 740, SVG_H = 180;
 
 const CAT_COLORS = {
   '의료용 밴드': '#60A5FA', '붕대류': '#F59E0B', '보호대류': '#34D399',
@@ -17,7 +17,7 @@ function heatColor(rate) {
   return 'rgba(248,113,113,0.65)';
 }
 
-export default function WarehouseFloorPlan({ warehouseId, selectedProductId, selectedRackId, onRackClick }) {
+export default function WarehouseFloorPlan({ warehouseId, selectedProductId, selectedRackId, onRackClick, onRackHover }) {
   const { racks, pallets, inventoryItems, products } = useDataStore();
 
   const whRacks = racks.filter(r => r.warehouse_id === warehouseId);
@@ -60,7 +60,7 @@ export default function WarehouseFloorPlan({ warehouseId, selectedProductId, sel
       );
     }
 
-    const labelY = isFront ? baseY + rackDepth + 13 : baseY - 5;
+    const labelY = isFront ? baseY + rackDepth + 12 : baseY - 4;
     const labelFill = (isSelected || hasProduct) ? 'var(--cyan)' : 'var(--text-secondary)';
     const labelWeight = (isSelected || hasProduct) ? 600 : 400;
     rackElements.push(
@@ -71,31 +71,42 @@ export default function WarehouseFloorPlan({ warehouseId, selectedProductId, sel
     rackElements.push(
       <rect key={`${rack.id}-hit`} x={x} y={baseY} width={RACK_W} height={rackDepth}
         fill="transparent" style={{ cursor: 'pointer' }}
-        onClick={() => onRackClick && onRackClick(rack.id)} />
+        onClick={() => onRackClick?.(rack.id)}
+        onMouseEnter={() => onRackHover?.(rack.id)}
+        onMouseLeave={() => onRackHover?.(null)} />
     );
   });
 
-  const aisleY = BACK_Y + 4 * GROUP_H + 10;
-
   return (
-    <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" style={{ minWidth: 480, display: 'block' }}>
-        <text x={4} y={FRONT_Y + 44 + 4} fill="var(--text-secondary)" fontSize={9} textAnchor="middle"
-          transform={`rotate(-90,14,${FRONT_Y + 44})`}>전면(R01~15)</text>
-        <text x={4} y={BACK_Y + 44 + 4} fill="var(--text-secondary)" fontSize={9} textAnchor="middle"
-          transform={`rotate(-90,14,${BACK_Y + 44})`}>후면(R16~30)</text>
-        <text x={400} y={aisleY + 15} textAnchor="middle" fill="var(--text-secondary)" fontSize={10} opacity={0.5}>← 통 로 →</text>
-        <text x={400} y={292} textAnchor="middle" fill="var(--cyan)" fontSize={11} opacity={0.8}>▼ 입구 / 출구</text>
+    <div style={{ width: '100%', height: '100%' }}>
+      <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" height="100%"
+        preserveAspectRatio="xMidYMid meet" style={{ display: 'block' }}>
         {rackElements}
       </svg>
     </div>
   );
 }
 
-export function FloorPlanRackDetail({ rackId }) {
+export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanClick, noScroll }) {
   const { racks, pallets, inventoryItems, products } = useDataStore();
+
+  const panelStyle = {
+    padding: '12px 16px',
+    borderTop: '1px solid var(--border)',
+    background: 'var(--bg-panel)',
+    flex: 1,
+    minHeight: 0,
+    overflowY: noScroll ? 'hidden' : 'auto',
+  };
+
   const rack = racks.find(r => r.id === rackId);
-  if (!rack) return null;
+  if (!rack) {
+    return (
+      <div style={panelStyle}>
+        <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>랙을 선택하면 칸별 현황이 표시됩니다</div>
+      </div>
+    );
+  }
 
   const rows = [];
   for (let fl = rack.floors; fl >= 1; fl--) {
@@ -106,14 +117,17 @@ export function FloorPlanRackDetail({ rackId }) {
       const items = pallet ? inventoryItems.filter(i => i.pallet_id === pallet.id) : [];
       const firstItem = items[0] ? products.find(pr => pr.id === items[0].product_id) : null;
       const catColor = firstItem ? (CAT_COLORS[firstItem.category] || 'var(--cyan)') : null;
+      const isSel = selectedFloor === fl && selectedKan === g;
       cells.push(
-        <div key={g} style={{
+        <div key={g} onClick={() => onKanClick?.(fl, g)} style={{
           display: 'inline-flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           width: 52, height: 42, borderRadius: 5,
-          border: `1px solid ${pallet ? (catColor || 'var(--cyan)') : 'var(--border)'}`,
-          background: pallet ? (catColor ? catColor + '22' : 'var(--cyan-dim)') : 'var(--bg-surface)',
-          color: pallet ? (catColor || 'var(--cyan)') : 'var(--text-secondary)',
+          border: isSel ? '2px solid var(--cyan)' : `1px solid ${pallet ? (catColor || 'var(--cyan)') : 'var(--border)'}`,
+          background: isSel ? 'var(--cyan-dim)' : (pallet ? (catColor ? catColor + '22' : 'var(--cyan-dim)') : 'var(--bg-surface)'),
+          color: isSel ? 'var(--cyan)' : (pallet ? (catColor || 'var(--cyan)') : 'var(--text-secondary)'),
           fontSize: '0.65rem', gap: 2,
+          cursor: onKanClick ? 'pointer' : 'default',
+          boxShadow: isSel ? '0 0 0 1px var(--cyan)' : 'none',
         }}>
           <span>K{g}</span>
           <span style={{ fontSize: '0.6rem' }}>{pallet ? items.length + '종' : '빈칸'}</span>
@@ -128,7 +142,7 @@ export function FloorPlanRackDetail({ rackId }) {
     );
   }
   return (
-    <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', background: 'var(--bg-panel)', flexShrink: 0, maxHeight: 220, overflowY: 'auto' }}>
+    <div style={panelStyle}>
       <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: 10 }}>{rack.rack_no}번 랙 — 칸별 현황</div>
       {rows}
     </div>

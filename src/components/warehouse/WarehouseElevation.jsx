@@ -1,8 +1,8 @@
 import { useDataStore } from '../../store/useDataStore.js';
 
-const RACK_W = 20, RACK_G = 4, FLOOR_H = 28, PAD_L = 40, PAD_T = 16;
-const GRP_GAP = 32, MAX_FLOORS = 6;
-const SVG_W = 820, SVG_H = 220;
+const RACK_W = 20, RACK_G = 4, FLOOR_H = 22, PAD_L = 40, PAD_T = 16;
+const MAX_FLOORS = 6;
+const SVG_W = 780, SVG_H = 160;
 
 function heatColor(rate) {
   if (rate <= 0) return 'rgba(94,226,198,0.25)';
@@ -12,15 +12,14 @@ function heatColor(rate) {
 }
 
 function getRackX(rackNo) {
-  if (rackNo <= 15) return PAD_L + (rackNo - 1) * (RACK_W + RACK_G);
-  return PAD_L + 15 * (RACK_W + RACK_G) + GRP_GAP + (rackNo - 16) * (RACK_W + RACK_G);
+  return PAD_L + (rackNo - 1) * (RACK_W + RACK_G);
 }
 
 function getFloorY(floor) {
   return PAD_T + (MAX_FLOORS - floor) * FLOOR_H;
 }
 
-export default function WarehouseElevation({ warehouseId, selectedProductId, selectedRackId, onRackClick }) {
+export default function WarehouseElevation({ warehouseId, selectedProductId, selectedRackId, onRackClick, onRackHover }) {
   const { racks, pallets, inventoryItems } = useDataStore();
 
   const whRacks = racks.filter(r => r.warehouse_id === warehouseId);
@@ -38,21 +37,6 @@ export default function WarehouseElevation({ warehouseId, selectedProductId, sel
         fill="var(--text-secondary)" fontSize={9}>{fl}F</text>
     );
   }
-
-  // group labels
-  const grp1X = PAD_L + 7 * (RACK_W + RACK_G) + RACK_W / 2;
-  const grp2X = PAD_L + 15 * (RACK_W + RACK_G) + GRP_GAP + 7 * (RACK_W + RACK_G) + RACK_W / 2;
-  const labelY = PAD_T + MAX_FLOORS * FLOOR_H + 16;
-  elements.push(
-    <text key="lbl1" x={grp1X} y={labelY} textAnchor="middle" fill="var(--text-secondary)" fontSize={9} opacity={0.7}>전면 (R01 ~ R15)</text>,
-    <text key="lbl2" x={grp2X} y={labelY} textAnchor="middle" fill="var(--text-secondary)" fontSize={9} opacity={0.7}>후면 (R16 ~ R30)</text>
-  );
-
-  const sepX = PAD_L + 15 * (RACK_W + RACK_G) + GRP_GAP / 2;
-  elements.push(
-    <line key="sep" x1={sepX} y1={PAD_T} x2={sepX} y2={PAD_T + MAX_FLOORS * FLOOR_H}
-      stroke="var(--border)" strokeWidth={1} strokeDasharray="3,3" />
-  );
 
   whRacks.forEach(rack => {
     const x = getRackX(rack.rack_no);
@@ -102,13 +86,16 @@ export default function WarehouseElevation({ warehouseId, selectedProductId, sel
     elements.push(
       <rect key={`${rack.id}-hit`} x={x} y={PAD_T} width={RACK_W} height={MAX_FLOORS * FLOOR_H}
         fill="transparent" style={{ cursor: 'pointer' }}
-        onClick={() => onRackClick && onRackClick(rack.id)} />
+        onClick={() => onRackClick?.(rack.id)}
+        onMouseEnter={() => onRackHover?.(rack.id)}
+        onMouseLeave={() => onRackHover?.(null)} />
     );
   });
 
   return (
-    <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" style={{ minWidth: 480, display: 'block' }}>
+    <div style={{ width: '100%', height: '100%' }}>
+      <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" height="100%"
+        preserveAspectRatio="xMidYMid meet" style={{ display: 'block' }}>
         {elements}
       </svg>
     </div>

@@ -23,6 +23,7 @@ export default function WarehouseMatrix({
   warehouseId,
   selectedCell,
   onCellClick,
+  onCellHover,
   getCellFifoInfo,
   getMiniBlocksFn,
   mode = 'inbound',
@@ -120,7 +121,7 @@ export default function WarehouseMatrix({
                   const miniBlocks = getMiniBlocks(rack.id, floor);
 
                   return (
-                    <td key={rack.id} onClick={() => onCellClick?.(rack.id, floor)}>
+                    <td key={rack.id} onClick={() => onCellClick?.(rack.id, floor)} onMouseEnter={() => onCellHover?.(rack.id)} onMouseLeave={() => onCellHover?.(null)}>
                       <div className={`rm-cell ${cellClass}${isSelected ? ' rm-selected' : ''}`}>
                         <MiniBlocks blocks={miniBlocks} />
                       </div>

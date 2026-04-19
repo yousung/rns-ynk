@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>출고 처리 - 창고 관리 시스템</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../../data.js"></script>
+  <script src="shared.js"></script>
+  <script src="../../warehouse-styles.js"></script>
+  <style id="commonStyle"></style>
+  <style id="warehouseStyle"></style>
+  <style>
+    .content-area { padding: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; min-height: 0 !important; }
+
+    /* Layout sections: fixed and flexible sizing */
+    .wh-tabs-row { flex-shrink: 0; }
+    .sched-section { flex-shrink: 0; max-height: 80px; }
+    .matrix-section { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .matrix-scroll { min-height: 0; overflow: auto; display: flex; justify-content: center; }
+    .cell-details { flex-shrink: 0; max-height: 200px; overflow-y: auto; }
+    .stats-bar { flex-shrink: 0; }
+
+    /* Remove any min-width constraints that could cause horizontal overflow */
+    .label-cell { min-width: 50px !important; }
+    .rack-matrix { margin: 0 auto; }
+
+    /* Type B specific cell details styling (not in warehouse-styles.js) */
+    .cell-details table.cd-table tbody tr:hover td {
+      background: #0A1420;
+    }
+
+    [data-theme="light"] .cell-details table.cd-table tbody tr:hover td {
+      background: var(--bg-hover);
+    }
+
+    /* Mini-blocks grid styling */
+    .mini-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; width: 100%; box-sizing: border-box; }
+    .mini-block { border-radius: 2px; height: 10px; }
+    .mini-empty { background: rgba(30,58,95,0.25); border: 1px solid rgba(30,58,95,0.5); }
+    .mini-fifo1 { background: rgba(0,255,150,0.65); border: 1px solid #00c878; }
+    .mini-fifo2 { background: rgba(0,212,255,0.55); border: 1px solid var(--cyan); }
+    .mini-fifon { background: rgba(100,180,255,0.4); border: 1px solid rgba(100,180,255,0.6); }
+    .mini-occupied { background: rgba(245,158,11,0.4); border: 1px solid rgba(245,158,11,0.6); }
+    .rm-cell.rm-multi { padding: 0; align-items: stretch; cursor: pointer; }
+    .rm-cell.rm-fifo1 { outline: 2px solid #00c878; outline-offset: -2px; }
+    .rm-cell.rm-fifo2 { outline: 2px solid var(--cyan); outline-offset: -2px; }
+    .rm-cell.rm-fifon { outline: 2px solid rgba(100,180,255,0.8); outline-offset: -2px; }
+    [data-theme="light"] .mini-empty { background: rgba(200,220,240,0.5); border: 1px solid rgba(150,180,210,0.7); }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-area">
+      <div class="header-bar">
+        <h1>출고 처리</h1>
+      </div>
+      <div class="content-area">
+        <div class="wh-tabs-row" id="whTabs"></div>
+        <div class="sched-section"><div class="sched-scroll" id="schedList"></div></div>
+        <div class="matrix-section">
+          <div class="action-bar">
+            <div class="action-info" id="actionInfo">상품을 선택하세요</div>
+            <button class="btn-exec" id="btnExec" onclick="executeOutbound()" disabled>출고 실행</button>
+          </div>
+          <div class="matrix-scroll">
+            <table class="rack-matrix" id="rackMatrix"></table>
+          </div>
+          <div class="cell-details" id="cellDetails">
+            <div class="cd-empty">셀을 클릭하면 내용물이 여기에 표시됩니다</div>
+          </div>
+          <div class="stats-bar">
+            <div class="stat-item">
+              <span class="stat-label">현재 재고</span>
+              <span class="stat-value" style="color:#60A5FA;" id="statStock">0</span>
+              <span class="stat-unit">PLT</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">출고 예정</span>
+              <span class="stat-value" style="color:var(--amber);" id="statPending">0</span>
+              <span class="stat-unit">건</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">잔여 용량</span>
+              <span class="stat-value" style="color:var(--text-secondary);" id="statRemain">0</span>
+              <span class="stat-unit">PLT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('commonStyle').textContent = getCommonStyles();
+    document.getElementById('warehouseStyle').textContent = getWarehouseStyles();
+    requireAuth();
+    renderLayout('outbound-execute');
+
+    let selectedWarehouse = 1;
+    let selectedScheduleId = null;
+    let fifoSlots = [];
+
+    function getWhRacks() {
+      return racks.filter(r => r.warehouse_id === selectedWarehouse);
+    }
+
+    function computeFifo() {
+      fifoSlots = [];
+      if (!selectedScheduleId) return;
+
+      const sched = outboundSchedules.find(s => s.id === selectedScheduleId);
+      if (!sched) return;
+
+      const whRacks = getWhRacks();
+      const rackIds = new Set(whRacks.map(r => r.id));
+
+      pallets.forEach(pallet => {
+        const [rId, floor, kan] = pallet.location.split('-').map(Number);
+        if (!rackIds.has(rId)) return;
+        const items = inventoryItems.filter(i => i.pallet_id === pallet.id && i.product_id === sched.product_id);
+        if (items.length === 0) return;
+        const earliest = items.reduce((min, i) => i.received_at < min ? i.received_at : min, items[0].received_at);
+        const qty = items.reduce((s, i) => s + i.quantity, 0);
+        fifoSlots.push({ rackId: rId, floor, kan, key: pallet.location, received_at: earliest, qty });
+      });
+
+      fifoSlots.sort((a, b) => a.received_at.localeCompare(b.received_at));
+      fifoSlots.forEach((s, i) => { s.rank = i + 1; });
+    }
+
+    function getCellFifoInfo(rackId, floor) {
+      const rack = racks.find(r => r.id === rackId);
+      if (floor > rack.floors) return { type: 'na' };
+
+      let bestFifo = null;
+      let hasOther = false, otherQty = 0, otherKinds = 0;
+
+      for (let kan = 1; kan <= rack.groups; kan++) {
+        const key = `${rackId}-${floor}-${kan}`;
+        const slot = fifoSlots.find(s => s.key === key);
+        if (slot) {
+          if (!bestFifo || slot.rank < bestFifo.rank) bestFifo = slot;
+        } else {
+          const pallet = pallets.find(p => p.location === key);
+          if (pallet) {
+            const items = inventoryItems.filter(i => i.pallet_id === pallet.id);
+            if (items.length) { hasOther = true; otherQty += items.reduce((s,i)=>s+i.quantity,0); otherKinds += items.length; }
+          }
+        }
+      }
+
+      if (bestFifo) return { type: 'fifo', rank: bestFifo.rank, qty: bestFifo.qty, received_at: bestFifo.received_at };
+      if (hasOther) return { type: 'occupied', qty: otherQty, kinds: otherKinds };
+
+      let hasPallet = false;
+      for (let kan = 1; kan <= rack.groups; kan++) {
+        if (pallets.find(p => p.location === `${rackId}-${floor}-${kan}`)) hasPallet = true;
+      }
+      if (hasPallet) return { type: 'occupied', qty: 0, kinds: 0 };
+
+      return { type: 'empty' };
+    }
+
+    function getMiniBlocksOutbound(rackId, floor) {
+      const rack = racks.find(r => r.id === rackId);
+      let html = '<div class="mini-blocks">';
+      for (let kan = 1; kan <= rack.groups; kan++) {
+        const key = `${rackId}-${floor}-${kan}`;
+        const slot = fifoSlots.find(s => s.key === key);
+        let cls = 'mini-block mini-empty';
+        if (slot) {
+          if (slot.rank === 1) cls = 'mini-block mini-fifo1';
+          else if (slot.rank === 2) cls = 'mini-block mini-fifo2';
+          else cls = 'mini-block mini-fifon';
+        } else {
+          const pallet = pallets.find(p => p.location === key);
+          if (pallet) {
+            const items = inventoryItems.filter(i => i.pallet_id === pallet.id);
+            if (items.length > 0) cls = 'mini-block mini-occupied';
+          }
+        }
+        html += `<div class="${cls}" title="${kan}칸"></div>`;
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderWhTabs() {
+      document.getElementById('whTabs').innerHTML = warehouses.map(w =>
+        `<button class="wh-tab ${w.id === selectedWarehouse ? 'active' : ''}" onclick="selectWarehouse(${w.id})">${w.name}</button>`
+      ).join('');
+    }
+
+    function selectWarehouse(id) {
+      selectedWarehouse = id;
+      selectedScheduleId = null;
+      fifoSlots = [];
+      resetCellDetails();
+      renderAll();
+    }
+
+    function resetCellDetails() {
+      const panel = document.getElementById('cellDetails');
+      if (panel) panel.innerHTML = '<div class="cd-empty">셀을 클릭하면 내용물이 여기에 표시됩니다</div>';
+    }
+
+    function renderScheduleList() {
+      const pending = outboundSchedules.filter(s => s.status === 'pending');
+      if (pending.length === 0) {
+        document.getElementById('schedList').innerHTML = '<div style="font-size:0.8rem;color:var(--text-secondary);padding:8px 14px;">출고 예정 없음</div>';
+        return;
+      }
+      document.getElementById('schedList').innerHTML = pending.map(s => {
+        const p = products.find(pr => pr.id === s.product_id);
+        const isSel = s.id === selectedScheduleId;
+        const noteStr = s.note ? `<span style="color:var(--amber);margin-left:4px;">[${s.note}]</span>` : '';
+        return `<div class="sched-card ${isSel ? 'selected' : ''}" onclick="selectSchedule(${s.id})">
+          <div class="sched-card-name">${p.name}</div>
+          <div class="sched-card-meta">${s.quantity}개 · ${s.scheduled_date} ${noteStr}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function warehouseHasProduct(warehouseId, productId) {
+      const whRackIds = new Set(racks.filter(r => r.warehouse_id === warehouseId).map(r => r.id));
+      return pallets.some(p => {
+        const rackId = parseInt(p.location.split('-')[0]);
+        return whRackIds.has(rackId) && inventoryItems.some(i => i.pallet_id === p.id && i.product_id === productId);
+      });
+    }
+
+    function findWarehouseWithProduct(productId) {
+      const palletIds = new Set(inventoryItems.filter(i => i.product_id === productId).map(i => i.pallet_id));
+      for (const p of pallets) {
+        if (palletIds.has(p.id)) {
+          const rack = racks.find(r => r.id === parseInt(p.location.split('-')[0]));
+          if (rack) return rack.warehouse_id;
+        }
+      }
+      return null;
+    }
+
+    function selectSchedule(id) {
+      selectedScheduleId = selectedScheduleId === id ? null : id;
+      if (selectedScheduleId) {
+        const schedule = outboundSchedules.find(s => s.id === selectedScheduleId);
+        if (!warehouseHasProduct(selectedWarehouse, schedule.product_id)) {
+          const whId = findWarehouseWithProduct(schedule.product_id);
+          if (whId) { selectedWarehouse = whId; }
+        }
+      }
+      computeFifo();
+      renderAll();
+    }
+
+    function renderMatrix() {
+      const whRacks = getWhRacks();
+      if (whRacks.length === 0) {
+        document.getElementById('rackMatrix').innerHTML = '<tr><td>창고 데이터 없음</td></tr>';
+        return;
+      }
+
+      const maxFloors = Math.max(...whRacks.map(r => r.floors));
+      const scrollEl = document.querySelector('.matrix-scroll');
+      if (scrollEl && whRacks.length > 0) {
+        const available = scrollEl.clientWidth - 60;
+        const cellSize = Math.floor(available / max_rack_count);
+        scrollEl.style.setProperty('--rm-cell-size', cellSize + 'px');
+      }
+
+      let html = '<thead><tr><th class="label-cell">층</th>';
+      for (let rack of whRacks) {
+        html += `<th>${rack.rack_no}번</th>`;
+      }
+      html += '</tr></thead><tbody>';
+
+      // 행: 층 (역순, 높은 층부터)
+      for (let floor = maxFloors; floor >= 1; floor--) {
+        html += `<tr><td class="label-cell">${floor}층</td>`;
+        for (let rack of whRacks) {
+          const info = getCellFifoInfo(rack.id, floor);
+          let cls, inner;
+          if (info.type === 'na') {
+            cls = 'rm-na';
+            inner = '—';
+          } else if (info.type === 'fifo') {
+            const rankCls = info.rank === 1 ? 'rm-fifo1' : info.rank === 2 ? 'rm-fifo2' : 'rm-fifon';
+            cls = `rm-cell rm-multi ${rankCls}`;
+            inner = getMiniBlocksOutbound(rack.id, floor);
+          } else if (info.type === 'occupied') {
+            cls = 'rm-cell rm-multi';
+            inner = getMiniBlocksOutbound(rack.id, floor);
+          } else {
+            cls = 'rm-cell rm-multi';
+            inner = getMiniBlocksOutbound(rack.id, floor);
+          }
+          const clickAttr = info.type === 'na' ? '' : ` onclick="showCellDetails(${rack.id}, ${floor})"`;
+          html += `<td><div class="${cls}"${clickAttr}>${inner}</div></td>`;
+        }
+        html += '</tr>';
+      }
+
+      html += '</tbody><tfoot>';
+      // 랙번호 행
+      html += '<tr><td class="label-cell">랙번호</td>';
+      for (let rack of whRacks) {
+        html += `<td>${rack.rack_no}</td>`;
+      }
+      html += '</tr>';
+
+      // 층수 행
+      html += '<tr><td class="label-cell">층수</td>';
+      for (let rack of whRacks) {
+        html += `<td>${rack.floors}</td>`;
+      }
+      html += '</tr>';
+
+      // 유효공간 행
+      html += '<tr><td class="label-cell">유효공간</td>';
+      for (let rack of whRacks) {
+        const totalSlots = rack.floors * rack.groups;
+        const filledSlots = pallets.filter(p => {
+          const [rId] = p.location.split('-').map(Number);
+          return rId === rack.id;
+        }).length;
+        const emptySlots = totalSlots - filledSlots;
+        html += `<td>${emptySlots}</td>`;
+      }
+      html += '</tr>';
+      html += '</tfoot>';
+
+      document.getElementById('rackMatrix').innerHTML = html;
+    }
+
+    function updateActionBar() {
+      const actionEl = document.getElementById('actionInfo');
+      if (!selectedScheduleId) {
+        actionEl.innerHTML = '상품을 선택하세요';
+        return;
+      }
+
+      const sched = outboundSchedules.find(s => s.id === selectedScheduleId);
+      const prod = products.find(p => p.id === sched.product_id);
+
+      let html = `<span>출고: <span class="action-highlight">${prod.name} ${sched.quantity}개</span>`;
+      if (sched.note) html += ` · <span class="action-highlight">${sched.note}</span>`;
+      html += '</span>';
+
+      if (fifoSlots.length > 0) {
+        const top = fifoSlots[0];
+        const totalAvailable = fifoSlots.reduce((sum, s) => sum + s.qty, 0);
+        const rack = racks.find(r => r.id === top.rackId);
+        html += ` | <span class="action-highlight">FIFO F${top.rank}: ${rack.rack_no}번 랙 · ${top.floor}층 · ${top.kan}칸 (${top.qty}개)</span>`;
+        if (totalAvailable < sched.quantity) {
+          html += ` <span style="color:var(--red);font-weight:700;">⚠ 재고 부족: ${totalAvailable}/${sched.quantity}개</span>`;
+        }
+      }
+
+      const legend = calcStockLegend();
+      html += ' | ';
+      html += `<span class="lg-badge lg-stock">현재 ${legend.stock}개</span>`;
+      html += `<span class="lg-badge lg-inbound">입고예정 ${legend.inbound}개</span>`;
+      html += `<span class="lg-badge lg-outbound">출고수량 ${legend.outbound}개</span>`;
+      html += `<span class="lg-badge lg-after">출고후잔여 ${legend.after}개</span>`;
+
+      actionEl.innerHTML = html;
+    }
+
+    function calcStockLegend() {
+      const whRacks = getWhRacks();
+      const rackIds = new Set(whRacks.map(r => r.id));
+
+      const totalItems = inventoryItems.filter(i => {
+        const p = pallets.find(pl => pl.id === i.pallet_id);
+        return p && rackIds.has(parseInt(p.location.split('-')[0]));
+      }).reduce((s, i) => s + i.quantity, 0);
+
+      const inboundPending = inboundSchedules
+        .filter(s => s.status === 'pending')
+        .reduce((sum, s) => sum + s.quantity, 0);
+
+      const outboundQty = selectedScheduleId
+        ? (outboundSchedules.find(s => s.id === selectedScheduleId)?.quantity ?? 0)
+        : 0;
+
+      return {
+        stock: totalItems,
+        inbound: inboundPending,
+        outbound: outboundQty,
+        after: Math.max(0, totalItems - outboundQty)
+      };
+    }
+
+    function updateStats() {
+      const whRacks = getWhRacks();
+      const rackIds = new Set(whRacks.map(r => r.id));
+      const filledPallets = pallets.filter(p => rackIds.has(parseInt(p.location.split('-')[0]))).length;
+      const totalSlots = whRacks.reduce((s, r) => s + r.floors * r.groups, 0);
+      const pendingCnt = outboundSchedules.filter(s => s.status === 'pending').length;
+
+      document.getElementById('statStock').textContent = filledPallets;
+      document.getElementById('statPending').textContent = pendingCnt;
+      document.getElementById('statRemain').textContent = totalSlots - filledPallets;
+    }
+
+    function updateExecBtn() {
+      if (!selectedScheduleId || fifoSlots.length === 0) {
+        document.getElementById('btnExec').disabled = true;
+        return;
+      }
+      const sched = outboundSchedules.find(s => s.id === selectedScheduleId);
+      const totalAvailable = fifoSlots.reduce((sum, s) => sum + s.qty, 0);
+      document.getElementById('btnExec').disabled = totalAvailable < sched.quantity;
+    }
+
+    function showCellDetails(rackId, floor) {
+      const rack = racks.find(r => r.id === rackId);
+      const panel = document.getElementById('cellDetails');
+      if (!rack || !panel) return;
+
+      const rows = [];
+      for (let kan = 1; kan <= rack.groups; kan++) {
+        const loc = `${rackId}-${floor}-${kan}`;
+        const pallet = pallets.find(p => p.location === loc);
+        if (!pallet) {
+          rows.push(`<tr class="cd-empty-row"><td>${kan}칸</td><td colspan="4">(빈 슬롯)</td></tr>`);
+          continue;
+        }
+        const items = inventoryItems.filter(i => i.pallet_id === pallet.id);
+        if (items.length === 0) {
+          rows.push(`<tr class="cd-empty-row"><td>${kan}칸</td><td colspan="4">(팔레트 비어있음)</td></tr>`);
+          continue;
+        }
+        items.forEach((it, idx) => {
+          const prod = products.find(p => p.id === it.product_id);
+          const name = prod ? prod.name : `상품#${it.product_id}`;
+          const code = prod ? (prod.code || '') : '';
+          const received = it.received_at ? it.received_at.substring(0, 10) : '-';
+          const fifoSlot = fifoSlots.find(s => s.key === loc);
+          const fifoLabel = fifoSlot ? `<span style="color:var(--cyan);font-size:0.75rem;margin-left:4px;">F${fifoSlot.rank}</span>` : '';
+          rows.push(`<tr><td>${idx === 0 ? `${kan}칸${fifoLabel}` : ''}</td><td>${code}</td><td>${name}</td><td style="text-align:right;">${it.quantity}개</td><td>${received}</td></tr>`);
+        });
+      }
+
+      const header = `${rack.rack_no}번 랙 · ${floor}층`;
+      panel.innerHTML = `<div class="cd-header">${header}</div><div class="cd-table-wrap"><table class="cd-table"><thead><tr><th style="width:70px;">칸</th><th style="width:90px;">코드</th><th>상품명</th><th style="width:70px;">수량</th><th style="width:110px;">입고일</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+    }
+
+    function executeOutbound() {
+      if (!selectedScheduleId || fifoSlots.length === 0) return;
+      const s = outboundSchedules.find(x => x.id === selectedScheduleId);
+      const p = products.find(x => x.id === s.product_id);
+      const topSlots = fifoSlots.slice(0, 3).map(sl => {
+        const rack = racks.find(r => r.id === sl.rackId);
+        return `  F${sl.rank}: ${rack.rack_no}번 랙 · ${sl.floor}층 · ${sl.kan}칸 (${sl.qty}개)`;
+      }).join('\n');
+      alert(`✅ 출고 완료!\n${p.name} ${s.quantity}개 출고\n\nFIFO 출고 위치:\n${topSlots}\n\n(데모: 실제 저장 없음)`);
+      selectedScheduleId = null;
+      fifoSlots = [];
+      renderAll();
+    }
+
+    function renderAll() {
+      renderWhTabs();
+      renderScheduleList();
+      computeFifo();
+      renderMatrix();
+      updateActionBar();
+      updateStats();
+      updateExecBtn();
+    }
+
+    renderAll();
+    // 레이아웃 확정 후 셀 크기 재계산
+    requestAnimationFrame(() => renderMatrix());
+    window.addEventListener('resize', () => renderMatrix());
+  </script>
+</body>
+</html>

@@ -5,8 +5,11 @@ import WarehouseTabs from '../components/warehouse/WarehouseTabs.jsx';
 import ScheduleScroll from '../components/warehouse/ScheduleScroll.jsx';
 import WarehouseMatrix from '../components/warehouse/WarehouseMatrix.jsx';
 import WarehouseRackGrid from '../components/warehouse/WarehouseRackGrid.jsx';
+import WarehouseFloorPlan, { FloorPlanRackDetail } from '../components/warehouse/WarehouseFloorPlan.jsx';
+import WarehouseElevation from '../components/warehouse/WarehouseElevation.jsx';
 import StatsBar from '../components/warehouse/StatsBar.jsx';
-import CellDetailsPanel from '../components/warehouse/CellDetailsPanel.jsx';
+import { KanDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
+import WarehouseMinimap from '../components/warehouse/WarehouseMinimap.jsx';
 
 export default function InboundExecute() {
   const { racks, pallets, inventoryItems, inboundSchedules, products } = useDataStore();
@@ -15,11 +18,17 @@ export default function InboundExecute() {
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(1);
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null); // { rackId, floor, kan }
+  const [hoveredRackId, setHoveredRackId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // ─── 스케줄 ───────────────────────────────────────────────
   const pendingSchedules = inboundSchedules
     .filter((s) => s.status === 'pending')
     .map((s) => ({ ...s, productName: products.find((p) => p.id === s.product_id)?.name || '' }));
+
+  const filteredSchedules = searchQuery
+    ? pendingSchedules.filter(s => s.productName.toLowerCase().includes(searchQuery.toLowerCase()) || (s.scheduled_date || '').includes(searchQuery))
+    : pendingSchedules;
 
   function toggleSchedule(id) {
     setSelectedScheduleId((prev) => (prev === id ? null : id));
@@ -134,83 +143,138 @@ export default function InboundExecute() {
       <div className="header-bar">
         <h1>입고 처리</h1>
       </div>
-      <div className="content-area" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        <WarehouseTabs
-          selectedWarehouseId={selectedWarehouseId}
-          onSelect={(id) => { setSelectedWarehouseId(id); setSelectedCell(null); setSelectedScheduleId(null); }}
-        />
-
-        <div style={{ flexShrink: 0, maxHeight: 80, overflow: 'hidden' }}>
+      <div className="content-area" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'row', minHeight: 0 }}>
+        {/* 스케줄 사이드패널 */}
+        <div style={{ width: 188, flexShrink: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', background: 'var(--bg-base)', overflow: 'hidden' }}>
+          <div style={{ flexShrink: 0, padding: '8px 8px 6px', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>입고 예정</div>
+            <input
+              type="text"
+              placeholder="검색..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 5, padding: '5px 8px', fontSize: '0.78rem', color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit' }}
+            />
+          </div>
           <ScheduleScroll
-            schedules={pendingSchedules}
+            schedules={filteredSchedules}
             selectedId={selectedScheduleId}
             onSelect={toggleSchedule}
+            vertical
           />
         </div>
 
-        <div className="matrix-section">
-          {/* 액션 바 */}
-          <div className="action-bar">
-            <div className="action-info">
-              {schedProduct ? (
-                <span>입고: <span className="action-highlight">{schedProduct.name} {sched.quantity}개</span> · {sched.scheduled_date}</span>
-              ) : (
-                <span style={{ color: 'var(--text-secondary)' }}>← 예정 목록에서 항목 선택</span>
-              )}
-              {selectedCell && rack ? (
-                <>
-                  <span style={{ marginLeft: 8 }}>위치: <span className="action-highlight">{rack.rack_no}번 랙 · {selectedCell.floor}층</span></span>
-                  {warehouseType !== 'a' && (
-                    <div className="dan-selector">
-                      {Array.from({ length: rack.groups }, (_, i) => i + 1).map((kan) => (
-                        <button
-                          key={kan}
-                          className={`dan-btn${selectedCell.kan === kan ? ' active' : ''}${occupiedKansInCell.includes(kan) ? ' occupied' : ''}`}
-                          onClick={() => selectKan(kan)}
-                        >
-                          {kan}칸
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <span style={{ color: 'var(--text-secondary)', marginLeft: 8 }}>← 매트릭스에서 위치 클릭</span>
-              )}
-            </div>
-            <button className="btn-exec" disabled={!canExecute} onClick={executeInbound}>
-              입고 실행
-            </button>
-          </div>
+        {/* 오른쪽 메인 영역 */}
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <WarehouseTabs
+            selectedWarehouseId={selectedWarehouseId}
+            onSelect={(id) => { setSelectedWarehouseId(id); setSelectedCell(null); setSelectedScheduleId(null); }}
+          />
 
-          {warehouseType === 'a' ? (
-            <div style={{ flex: 1, overflow: 'auto', padding: 10 }}>
-              <WarehouseRackGrid
-                warehouseId={selectedWarehouseId}
-                selectedRackId={selectedCell?.rackId}
-                onRackClick={handleRackClick}
-                getCellClass={getCellClass}
+          <div className="matrix-section">
+            {/* 액션 바 */}
+            <div className="action-bar">
+              <div className="action-info">
+                {schedProduct ? (
+                  <span>입고: <span className="action-highlight">{schedProduct.name} {sched.quantity}개</span> · {sched.scheduled_date}</span>
+                ) : (
+                  <span style={{ color: 'var(--text-secondary)' }}>← 예정 목록에서 항목 선택</span>
+                )}
+                {selectedCell && rack ? (
+                  <>
+                    <span style={{ marginLeft: 8 }}>위치: <span className="action-highlight">{rack.rack_no}번 랙 · {selectedCell.floor}층</span></span>
+                    {warehouseType !== 'a' && (
+                      <div className="dan-selector">
+                        {Array.from({ length: rack.groups }, (_, i) => i + 1).map((kan) => (
+                          <button
+                            key={kan}
+                            className={`dan-btn${selectedCell.kan === kan ? ' active' : ''}${occupiedKansInCell.includes(kan) ? ' occupied' : ''}`}
+                            onClick={() => selectKan(kan)}
+                          >
+                            {kan}칸
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <span style={{ color: 'var(--text-secondary)', marginLeft: 8 }}>← 매트릭스에서 위치 클릭</span>
+                )}
+              </div>
+              <button className="btn-exec" disabled={!canExecute} onClick={executeInbound}>
+                입고 실행
+              </button>
+            </div>
+
+            <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+              {/* 패널 1: 창고 시각화 (flex:2, 스크롤 없음) */}
+              <div style={{ flex: 2, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
+                <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} />
+                {warehouseType === 'a' ? (
+                  <div style={{ overflow: 'hidden', padding: '10px 230px 10px 10px', height: '100%' }}>
+                    <WarehouseRackGrid
+                      warehouseId={selectedWarehouseId}
+                      selectedRackId={selectedCell?.rackId}
+                      onRackClick={handleRackClick}
+                      onRackHover={setHoveredRackId}
+                      getCellClass={getCellClass}
+                    />
+                  </div>
+                ) : warehouseType === 'c' ? (
+                  <div style={{ paddingRight: 230, overflow: 'hidden', height: '100%' }}>
+                    <WarehouseFloorPlan
+                      warehouseId={selectedWarehouseId}
+                      selectedRackId={selectedCell?.rackId}
+                      onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                      onRackHover={setHoveredRackId}
+                    />
+                  </div>
+                ) : warehouseType === 'd' ? (
+                  <div style={{ paddingRight: 230, overflow: 'hidden', height: '100%' }}>
+                    <WarehouseElevation
+                      warehouseId={selectedWarehouseId}
+                      selectedRackId={selectedCell?.rackId}
+                      onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                      onRackHover={setHoveredRackId}
+                    />
+                  </div>
+                ) : (
+                  <div style={{ paddingRight: 230, height: '100%', overflow: 'hidden' }}>
+                    <WarehouseMatrix
+                      warehouseId={selectedWarehouseId}
+                      selectedCell={selectedCell ? { rackId: selectedCell.rackId, floor: selectedCell.floor } : null}
+                      onCellClick={handleCellClick}
+                      onCellHover={setHoveredRackId}
+                      getMiniBlocksFn={getMiniBlocksFn}
+                      mode="inbound"
+                    />
+                  </div>
+                )}
+              </div>
+              {/* 패널 2: 칸별 현황 (flex:1, 스크롤 없음) */}
+              <FloorPlanRackDetail
+                rackId={selectedCell?.rackId}
+                selectedFloor={selectedCell?.floor}
+                selectedKan={selectedCell?.kan}
+                onKanClick={(floor, kan) => setSelectedCell(prev => prev ? { ...prev, floor, kan } : null)}
+                noScroll
+              />
+              {/* 패널 3: 적재 상세 (flex:1, 스크롤 허용) */}
+              <KanDetailPanel
+                rackId={selectedCell?.rackId}
+                floor={selectedCell?.floor}
+                kan={selectedCell?.kan}
               />
             </div>
-          ) : (
-            <WarehouseMatrix
-              warehouseId={selectedWarehouseId}
-              selectedCell={selectedCell ? { rackId: selectedCell.rackId, floor: selectedCell.floor } : null}
-              onCellClick={handleCellClick}
-              getMiniBlocksFn={getMiniBlocksFn}
-              mode="inbound"
+
+            <StatsBar
+              items={[
+                { label: '현재 입고', value: filled, unit: 'PLT', color: 'var(--cyan)' },
+                { label: '잔여 공간', value: total - filled, unit: 'PLT', color: 'var(--amber)' },
+                { label: '전체 용량', value: total, unit: 'PLT', color: 'var(--text-secondary)' },
+              ]}
             />
-          )}
-
-          <CellDetailsPanel selectedCell={selectedCell} />
-
-          <StatsBar
-            items={[
-              { label: '현재 입고', value: filled, unit: 'PLT', color: 'var(--cyan)' },
-              { label: '잔여 공간', value: total - filled, unit: 'PLT', color: 'var(--amber)' },
-              { label: '전체 용량', value: total, unit: 'PLT', color: 'var(--text-secondary)' },
-            ]}
-          />
+          </div>
         </div>
       </div>
     </>

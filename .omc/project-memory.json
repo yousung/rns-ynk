@@ -1,31 +1,61 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1776423373856,
+  "lastScanned": 1776557926071,
   "projectRoot": "/Users/lovizu/Projects/outsourcing/ynk",
   "techStack": {
-    "languages": [],
-    "frameworks": [],
-    "packageManager": null,
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "react",
+        "version": "18.3.1",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "18.3.1",
+        "category": "frontend"
+      },
+      {
+        "name": "vite",
+        "version": "5.4.10",
+        "category": "build"
+      }
+    ],
+    "packageManager": "npm",
     "runtime": null
   },
   "build": {
-    "buildCommand": null,
+    "buildCommand": "npm run build",
     "testCommand": null,
     "lintCommand": null,
-    "devCommand": null,
-    "scripts": {}
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "preview": "vite preview"
+    }
   },
   "conventions": {
     "namingStyle": null,
     "importStyle": null,
     "testPattern": null,
-    "fileOrganization": null
+    "fileOrganization": "type-based"
   },
   "structure": {
     "isMonorepo": false,
     "workspaces": [],
     "mainDirectories": [
-      "docs"
+      "docs",
+      "src"
     ],
     "gitBranches": {
       "defaultBranch": "master",
@@ -37,13 +67,22 @@
     "demo": {
       "path": "demo",
       "purpose": null,
-      "fileCount": 12,
-      "lastAccessed": 1776423373851,
+      "fileCount": 14,
+      "lastAccessed": 1776557926028,
       "keyFiles": [
+        "WAREHOUSE_STYLES_GUIDE.md",
         "activity-log.html",
         "data.js",
         "inbound-execute.html",
-        "inbound-schedule.html",
+        "inbound-schedule.html"
+      ]
+    },
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 1,
+      "lastAccessed": 1776557926030,
+      "keyFiles": [
         "index.html"
       ]
     },
@@ -51,321 +90,293 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1776423373851,
+      "lastAccessed": 1776557926055,
       "keyFiles": []
     },
     "example": {
       "path": "example",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1776423373851,
+      "lastAccessed": 1776557926056,
       "keyFiles": [
         "다른 회사 화면.jpg",
         "입고.jpg",
         "전동랙 설계도.jpg",
         "출고.jpg"
       ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 2,
+      "lastAccessed": 1776557926056,
+      "keyFiles": [
+        "App.jsx",
+        "main.jsx"
+      ]
+    },
+    "dist/assets": {
+      "path": "dist/assets",
+      "purpose": "Static assets",
+      "fileCount": 2,
+      "lastAccessed": 1776557926057,
+      "keyFiles": [
+        "index-B1VkOooh.css",
+        "index-CKBSW2_K.js"
+      ]
+    },
+    "src/components": {
+      "path": "src/components",
+      "purpose": "UI components",
+      "fileCount": 0,
+      "lastAccessed": 1776557926059,
+      "keyFiles": []
+    },
+    "src/pages": {
+      "path": "src/pages",
+      "purpose": "Page components",
+      "fileCount": 11,
+      "lastAccessed": 1776557926061,
+      "keyFiles": [
+        "ActivityLog.jsx",
+        "Dashboard.jsx",
+        "InboundExecute.jsx"
+      ]
     }
   },
   "hotPaths": [
     {
-      "path": "demo/inventory.html",
-      "accessCount": 206,
-      "lastAccessed": 1776465088727,
+      "path": "src/pages/Inventory.jsx",
+      "accessCount": 37,
+      "lastAccessed": 1776596880366,
       "type": "file"
     },
     {
-      "path": "demo/samples/type-b/inbound-execute.html",
-      "accessCount": 95,
-      "lastAccessed": 1776465075565,
-      "type": "directory"
-    },
-    {
-      "path": "samples/type-b/outbound-execute.html",
-      "accessCount": 82,
-      "lastAccessed": 1776369444874,
+      "path": "src/pages/InboundExecute.jsx",
+      "accessCount": 25,
+      "lastAccessed": 1776598588601,
       "type": "file"
     },
     {
-      "path": "demo/samples/type-b/outbound-execute.html",
-      "accessCount": 82,
-      "lastAccessed": 1776465075656,
-      "type": "directory"
-    },
-    {
-      "path": "samples/type-b/inbound-execute.html",
-      "accessCount": 71,
-      "lastAccessed": 1776369444627,
+      "path": "src/pages/OutboundExecute.jsx",
+      "accessCount": 24,
+      "lastAccessed": 1776598589458,
       "type": "file"
     },
     {
-      "path": "demo/warehouse-styles.js",
-      "accessCount": 64,
-      "lastAccessed": 1776465204022,
+      "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "accessCount": 11,
+      "lastAccessed": 1776598138599,
       "type": "file"
     },
     {
-      "path": "demo/samples/type-a/inbound-execute.html",
-      "accessCount": 49,
-      "lastAccessed": 1776461879241,
-      "type": "directory"
-    },
-    {
-      "path": "demo/shared.js",
-      "accessCount": 48,
-      "lastAccessed": 1776465203969,
-      "type": "file"
-    },
-    {
-      "path": "demo/data.js",
-      "accessCount": 47,
-      "lastAccessed": 1776465209403,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-b/shared.js",
-      "accessCount": 44,
-      "lastAccessed": 1776456576718,
-      "type": "file"
-    },
-    {
-      "path": "demo/index.html",
-      "accessCount": 38,
-      "lastAccessed": 1776465209524,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-a/shared.js",
-      "accessCount": 35,
-      "lastAccessed": 1776430462875,
-      "type": "file"
-    },
-    {
-      "path": "demo/inbound-execute.html",
-      "accessCount": 33,
-      "lastAccessed": 1776456626078,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-a/outbound-execute.html",
-      "accessCount": 32,
-      "lastAccessed": 1776461749665,
-      "type": "directory"
-    },
-    {
-      "path": "demo/activity-log.html",
-      "accessCount": 27,
-      "lastAccessed": 1776464961659,
-      "type": "file"
-    },
-    {
-      "path": "demo/outbound-execute.html",
-      "accessCount": 26,
-      "lastAccessed": 1776456626265,
-      "type": "file"
-    },
-    {
-      "path": "demo/products.html",
-      "accessCount": 18,
-      "lastAccessed": 1776464961445,
-      "type": "file"
-    },
-    {
-      "path": "demo/settings.html",
-      "accessCount": 17,
-      "lastAccessed": 1776464962537,
-      "type": "file"
-    },
-    {
-      "path": "samples/type-b/data.js",
-      "accessCount": 13,
-      "lastAccessed": 1776367978166,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-b/data.js",
-      "accessCount": 13,
-      "lastAccessed": 1776432577072,
-      "type": "file"
-    },
-    {
-      "path": "demo",
+      "path": "src/components/warehouse/WarehouseElevation.jsx",
       "accessCount": 10,
-      "lastAccessed": 1776459637401,
-      "type": "directory"
-    },
-    {
-      "path": "demo/samples/type-a/data.js",
-      "accessCount": 8,
-      "lastAccessed": 1776432393517,
-      "type": "file"
-    },
-    {
-      "path": "docs/superpowers/specs/2026-04-16-warehouse-management-design.md",
-      "accessCount": 7,
-      "lastAccessed": 1776461897188,
+      "lastAccessed": 1776597823381,
       "type": "file"
     },
     {
       "path": "src/styles/global.css",
-      "accessCount": 7,
-      "lastAccessed": 1776507790129,
+      "accessCount": 9,
+      "lastAccessed": 1776598501342,
       "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 5,
-      "lastAccessed": 1776465943217,
-      "type": "directory"
     },
     {
       "path": "src/styles/warehouse.css",
+      "accessCount": 9,
+      "lastAccessed": 1776598584708,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseMinimap.jsx",
+      "accessCount": 8,
+      "lastAccessed": 1776595319688,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-b/shared.js",
+      "accessCount": 6,
+      "lastAccessed": 1776558888355,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-a/shared.js",
       "accessCount": 5,
-      "lastAccessed": 1776466066372,
+      "lastAccessed": 1776558886832,
       "type": "file"
     },
     {
-      "path": "samples/type-b/shared.js",
-      "accessCount": 4,
-      "lastAccessed": 1776366263764,
+      "path": "src/components/warehouse/WarehouseMatrix.jsx",
+      "accessCount": 5,
+      "lastAccessed": 1776593342576,
       "type": "file"
     },
     {
-      "path": ".claude/launch.json",
-      "accessCount": 4,
-      "lastAccessed": 1776366424432,
+      "path": "src/components/layout/Sidebar.jsx",
+      "accessCount": 5,
+      "lastAccessed": 1776597874178,
       "type": "file"
     },
     {
-      "path": "CLAUDE.md",
-      "accessCount": 4,
-      "lastAccessed": 1776458441069,
+      "path": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "accessCount": 5,
+      "lastAccessed": 1776598495969,
       "type": "file"
     },
     {
-      "path": "demo/samples",
+      "path": "src/pages/Settings.jsx",
       "accessCount": 4,
-      "lastAccessed": 1776461408368,
+      "lastAccessed": 1776593887916,
+      "type": "file"
+    },
+    {
+      "path": "demo/data.js",
+      "accessCount": 3,
+      "lastAccessed": 1776593029659,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/CellDetailsPanel.jsx",
+      "accessCount": 3,
+      "lastAccessed": 1776596672665,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/ScheduleScroll.jsx",
+      "accessCount": 3,
+      "lastAccessed": 1776597940265,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-b/inbound-execute.html",
+      "accessCount": 2,
+      "lastAccessed": 1776558359354,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-c/shared.js",
+      "accessCount": 2,
+      "lastAccessed": 1776560245873,
+      "type": "file"
+    },
+    {
+      "path": "src",
+      "accessCount": 2,
+      "lastAccessed": 1776591929271,
       "type": "directory"
     },
     {
-      "path": "src/store/useDataStore.js",
-      "accessCount": 4,
-      "lastAccessed": 1776466660118,
-      "type": "file"
-    },
-    {
-      "path": "example/입고.jpg",
-      "accessCount": 3,
-      "lastAccessed": 1776362437652,
-      "type": "file"
-    },
-    {
-      "path": "example/출고.jpg",
-      "accessCount": 3,
-      "lastAccessed": 1776362534346,
-      "type": "file"
-    },
-    {
-      "path": "demo/inbound-schedule.html",
-      "accessCount": 3,
-      "lastAccessed": 1776464954278,
-      "type": "file"
-    },
-    {
-      "path": "vite.config.js",
-      "accessCount": 3,
-      "lastAccessed": 1776509098105,
-      "type": "file"
-    },
-    {
-      "path": "example/전동랙 설계도.jpg",
+      "path": "src/pages",
       "accessCount": 2,
-      "lastAccessed": 1776361475038,
-      "type": "file"
-    },
-    {
-      "path": "samples/type-b/serve-preview.js",
-      "accessCount": 2,
-      "lastAccessed": 1776366291663,
-      "type": "file"
-    },
-    {
-      "path": "demo/outbound-schedule.html",
-      "accessCount": 2,
-      "lastAccessed": 1776464954323,
-      "type": "file"
-    },
-    {
-      "path": "demo/users.html",
-      "accessCount": 2,
-      "lastAccessed": 1776464962420,
-      "type": "file"
-    },
-    {
-      "path": "samples/type-b/index.html",
-      "accessCount": 1,
-      "lastAccessed": 1776365051738,
-      "type": "file"
-    },
-    {
-      "path": "samples/type-b/serve-inbound.js",
-      "accessCount": 1,
-      "lastAccessed": 1776365219870,
-      "type": "file"
-    },
-    {
-      "path": "samples/type-b/serve-outbound.js",
-      "accessCount": 1,
-      "lastAccessed": 1776365221584,
-      "type": "file"
-    },
-    {
-      "path": "README.md",
-      "accessCount": 1,
-      "lastAccessed": 1776370045959,
-      "type": "file"
-    },
-    {
-      "path": "demo/WAREHOUSE_STYLES_GUIDE.md",
-      "accessCount": 1,
-      "lastAccessed": 1776431265828,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-b",
-      "accessCount": 1,
-      "lastAccessed": 1776456182075,
+      "lastAccessed": 1776595858360,
       "type": "directory"
     },
     {
-      "path": ".claude/settings.local.json",
+      "path": "demo/index.html",
       "accessCount": 1,
-      "lastAccessed": 1776456579039,
+      "lastAccessed": 1776557989006,
       "type": "file"
     },
     {
-      "path": "demo/samples/type-a",
+      "path": "demo/inbound-execute.html",
       "accessCount": 1,
-      "lastAccessed": 1776458864101,
-      "type": "directory"
-    },
-    {
-      "path": "package.json",
-      "accessCount": 1,
-      "lastAccessed": 1776465103905,
+      "lastAccessed": 1776558029875,
       "type": "file"
     },
     {
-      "path": "index.html",
+      "path": "demo/samples/type-a/inbound-execute.html",
       "accessCount": 1,
-      "lastAccessed": 1776465107020,
+      "lastAccessed": 1776558030324,
       "type": "file"
     },
     {
-      "path": "src/store/useAuthStore.js",
+      "path": "demo/warehouse-styles.js",
       "accessCount": 1,
-      "lastAccessed": 1776465415895,
+      "lastAccessed": 1776558043773,
+      "type": "file"
+    },
+    {
+      "path": "demo/inventory.html",
+      "accessCount": 1,
+      "lastAccessed": 1776558043996,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-b/outbound-execute.html",
+      "accessCount": 1,
+      "lastAccessed": 1776558728549,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-c/inbound-execute.html",
+      "accessCount": 1,
+      "lastAccessed": 1776559019463,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-c/outbound-execute.html",
+      "accessCount": 1,
+      "lastAccessed": 1776559075609,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-c/inventory.html",
+      "accessCount": 1,
+      "lastAccessed": 1776559111693,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-d/inbound-execute.html",
+      "accessCount": 1,
+      "lastAccessed": 1776559260139,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-d/outbound-execute.html",
+      "accessCount": 1,
+      "lastAccessed": 1776559321318,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-d/inventory.html",
+      "accessCount": 1,
+      "lastAccessed": 1776559372449,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-e/inbound-execute.html",
+      "accessCount": 1,
+      "lastAccessed": 1776559430920,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-e/outbound-execute.html",
+      "accessCount": 1,
+      "lastAccessed": 1776559480474,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-e/inventory.html",
+      "accessCount": 1,
+      "lastAccessed": 1776559522070,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-d/shared.js",
+      "accessCount": 1,
+      "lastAccessed": 1776560275449,
+      "type": "file"
+    },
+    {
+      "path": "demo/samples/type-e/shared.js",
+      "accessCount": 1,
+      "lastAccessed": 1776560275528,
+      "type": "file"
+    },
+    {
+      "path": "src/store/useUIStore.js",
+      "accessCount": 1,
+      "lastAccessed": 1776593039104,
       "type": "file"
     }
   ],

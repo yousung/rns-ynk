@@ -5,8 +5,11 @@ import WarehouseTabs from '../components/warehouse/WarehouseTabs.jsx';
 import ScheduleScroll from '../components/warehouse/ScheduleScroll.jsx';
 import WarehouseMatrix from '../components/warehouse/WarehouseMatrix.jsx';
 import WarehouseRackGrid from '../components/warehouse/WarehouseRackGrid.jsx';
+import WarehouseFloorPlan, { FloorPlanRackDetail } from '../components/warehouse/WarehouseFloorPlan.jsx';
+import WarehouseElevation from '../components/warehouse/WarehouseElevation.jsx';
 import StatsBar from '../components/warehouse/StatsBar.jsx';
-import CellDetailsPanel from '../components/warehouse/CellDetailsPanel.jsx';
+import { KanDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
+import WarehouseMinimap from '../components/warehouse/WarehouseMinimap.jsx';
 
 export default function OutboundExecute() {
   const { racks, pallets, inventoryItems, outboundSchedules, inboundSchedules, products } = useDataStore();
@@ -15,10 +18,17 @@ export default function OutboundExecute() {
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(1);
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null);
+  const [hoveredRackId, setHoveredRackId] = useState(null);
+
+  const [searchQuery, setSearchQuery] = useState('');
 
   const pendingSchedules = outboundSchedules
     .filter((s) => s.status === 'pending')
     .map((s) => ({ ...s, productName: products.find((p) => p.id === s.product_id)?.name || '' }));
+
+  const filteredSchedules = searchQuery
+    ? pendingSchedules.filter(s => s.productName.toLowerCase().includes(searchQuery.toLowerCase()) || (s.scheduled_date || '').includes(searchQuery))
+    : pendingSchedules;
 
   const sched = outboundSchedules.find((s) => s.id === selectedScheduleId);
 
@@ -193,81 +203,136 @@ export default function OutboundExecute() {
       <div className="header-bar">
         <h1>출고 처리</h1>
       </div>
-      <div className="content-area" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        <WarehouseTabs
-          selectedWarehouseId={selectedWarehouseId}
-          onSelect={(id) => { setSelectedWarehouseId(id); setSelectedScheduleId(null); setSelectedCell(null); }}
-        />
-
-        <div style={{ flexShrink: 0, maxHeight: 80, overflow: 'hidden' }}>
+      <div className="content-area" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'row', minHeight: 0 }}>
+        {/* 스케줄 사이드패널 */}
+        <div style={{ width: 188, flexShrink: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', background: 'var(--bg-base)', overflow: 'hidden' }}>
+          <div style={{ flexShrink: 0, padding: '8px 8px 6px', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>출고 예정</div>
+            <input
+              type="text"
+              placeholder="검색..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 5, padding: '5px 8px', fontSize: '0.78rem', color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit' }}
+            />
+          </div>
           <ScheduleScroll
-            schedules={pendingSchedules}
+            schedules={filteredSchedules}
             selectedId={selectedScheduleId}
             onSelect={selectSchedule}
+            vertical
           />
         </div>
 
-        <div className="matrix-section">
-          <div className="action-bar">
-            <div className="action-info">
-              {schedProduct ? (
-                <>
-                  <span>출고: <span className="action-highlight">{schedProduct.name} {outboundQty}개</span>
-                    {sched.note && <> · <span className="action-highlight">{sched.note}</span></>}
-                  </span>
-                  {top && topRack && (
-                    <span style={{ marginLeft: 8 }}>
-                      | <span className="action-highlight">FIFO F{top.rank}: {topRack.rack_no}번 랙 · {top.floor}층 · {top.kan}칸 ({top.qty}개)</span>
-                    </span>
-                  )}
-                  {totalAvailable < outboundQty && (
-                    <span style={{ color: 'var(--red)', fontWeight: 700, marginLeft: 8 }}>⚠ 재고 부족: {totalAvailable}/{outboundQty}개</span>
-                  )}
-                  <span style={{ marginLeft: 8 }}>|
-                    <span className="lg-badge lg-stock"> 현재 {totalStock}개</span>
-                    <span className="lg-badge lg-inbound"> 입고예정 {inboundPending}개</span>
-                    <span className="lg-badge lg-outbound"> 출고 {outboundQty}개</span>
-                    <span className="lg-badge lg-after"> 잔여 {Math.max(0, totalStock - outboundQty)}개</span>
-                  </span>
-                </>
-              ) : (
-                <span>상품을 선택하세요</span>
-              )}
-            </div>
-            <button className="btn-exec" disabled={!canExecute} onClick={executeOutbound}>
-              출고 실행
-            </button>
-          </div>
+        {/* 오른쪽 메인 영역 */}
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <WarehouseTabs
+            selectedWarehouseId={selectedWarehouseId}
+            onSelect={(id) => { setSelectedWarehouseId(id); setSelectedScheduleId(null); setSelectedCell(null); }}
+          />
 
-          {warehouseType === 'a' ? (
-            <div style={{ flex: 1, overflow: 'auto', padding: 10 }}>
-              <WarehouseRackGrid
-                warehouseId={selectedWarehouseId}
-                selectedRackId={selectedCell?.rackId}
-                onRackClick={(rackId) => setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1 })}
-                getCellClass={getCellClass}
+          <div className="matrix-section">
+            <div className="action-bar">
+              <div className="action-info">
+                {schedProduct ? (
+                  <>
+                    <span>출고: <span className="action-highlight">{schedProduct.name} {outboundQty}개</span>
+                      {sched.note && <> · <span className="action-highlight">{sched.note}</span></>}
+                    </span>
+                    {top && topRack && (
+                      <span style={{ marginLeft: 8 }}>
+                        | <span className="action-highlight">FIFO F{top.rank}: {topRack.rack_no}번 랙 · {top.floor}층 · {top.kan}칸 ({top.qty}개)</span>
+                      </span>
+                    )}
+                    {totalAvailable < outboundQty && (
+                      <span style={{ color: 'var(--red)', fontWeight: 700, marginLeft: 8 }}>⚠ 재고 부족: {totalAvailable}/{outboundQty}개</span>
+                    )}
+                    <span style={{ marginLeft: 8 }}>|
+                      <span className="lg-badge lg-stock"> 현재 {totalStock}개</span>
+                      <span className="lg-badge lg-inbound"> 입고예정 {inboundPending}개</span>
+                      <span className="lg-badge lg-outbound"> 출고 {outboundQty}개</span>
+                      <span className="lg-badge lg-after"> 잔여 {Math.max(0, totalStock - outboundQty)}개</span>
+                    </span>
+                  </>
+                ) : (
+                  <span>상품을 선택하세요</span>
+                )}
+              </div>
+              <button className="btn-exec" disabled={!canExecute} onClick={executeOutbound}>
+                출고 실행
+              </button>
+            </div>
+
+            <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+              {/* 패널 1: 창고 시각화 (flex:2, 스크롤 없음) */}
+              <div style={{ flex: 2, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
+                <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} />
+                {warehouseType === 'a' ? (
+                  <div style={{ overflow: 'hidden', padding: '10px 230px 10px 10px', height: '100%' }}>
+                    <WarehouseRackGrid
+                      warehouseId={selectedWarehouseId}
+                      selectedRackId={selectedCell?.rackId}
+                      onRackClick={(rackId) => setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: 1 })}
+                      onRackHover={setHoveredRackId}
+                      getCellClass={getCellClass}
+                    />
+                  </div>
+                ) : warehouseType === 'c' ? (
+                  <div style={{ paddingRight: 230, overflow: 'hidden', height: '100%' }}>
+                    <WarehouseFloorPlan
+                      warehouseId={selectedWarehouseId}
+                      selectedRackId={selectedCell?.rackId}
+                      onRackClick={(rackId) => setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: 1 })}
+                      onRackHover={setHoveredRackId}
+                    />
+                  </div>
+                ) : warehouseType === 'd' ? (
+                  <div style={{ paddingRight: 230, overflow: 'hidden', height: '100%' }}>
+                    <WarehouseElevation
+                      warehouseId={selectedWarehouseId}
+                      selectedRackId={selectedCell?.rackId}
+                      onRackClick={(rackId) => setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: 1 })}
+                      onRackHover={setHoveredRackId}
+                    />
+                  </div>
+                ) : (
+                  <div style={{ paddingRight: 230, height: '100%', overflow: 'hidden' }}>
+                    <WarehouseMatrix
+                      warehouseId={selectedWarehouseId}
+                      selectedCell={selectedCell}
+                      onCellClick={(rackId, floor) => setSelectedCell({ rackId, floor, kan: 1 })}
+                      onCellHover={setHoveredRackId}
+                      getCellFifoInfo={getCellFifoInfo}
+                      getMiniBlocksFn={getMiniBlocksFn}
+                      mode="outbound"
+                    />
+                  </div>
+                )}
+              </div>
+              {/* 패널 2: 칸별 현황 (flex:1, 스크롤 없음) */}
+              <FloorPlanRackDetail
+                rackId={selectedCell?.rackId}
+                selectedFloor={selectedCell?.floor}
+                selectedKan={selectedCell?.kan}
+                onKanClick={(floor, kan) => setSelectedCell(prev => prev ? { ...prev, floor, kan } : null)}
+                noScroll
+              />
+              {/* 패널 3: 적재 상세 (flex:1, 스크롤 허용) */}
+              <KanDetailPanel
+                rackId={selectedCell?.rackId}
+                floor={selectedCell?.floor}
+                kan={selectedCell?.kan}
               />
             </div>
-          ) : (
-            <WarehouseMatrix
-              warehouseId={selectedWarehouseId}
-              selectedCell={selectedCell}
-              onCellClick={(rackId, floor) => setSelectedCell({ rackId, floor })}
-              getCellFifoInfo={getCellFifoInfo}
-              getMiniBlocksFn={getMiniBlocksFn}
-              mode="outbound"
+
+            <StatsBar
+              items={[
+                { label: '현재 재고', value: filledPallets, unit: 'PLT', color: '#60A5FA' },
+                { label: '출고 예정', value: pendingCount, unit: '건', color: 'var(--amber)' },
+                { label: '잔여 용량', value: totalSlots - filledPallets, unit: 'PLT', color: 'var(--text-secondary)' },
+              ]}
             />
-          )}
-
-          <CellDetailsPanel selectedCell={selectedCell} />
-
-          <StatsBar
-            items={[
-              { label: '현재 재고', value: filledPallets, unit: 'PLT', color: '#60A5FA' },
-              { label: '출고 예정', value: pendingCount, unit: '건', color: 'var(--amber)' },
-              { label: '잔여 용량', value: totalSlots - filledPallets, unit: 'PLT', color: 'var(--text-secondary)' },
-            ]}
-          />
+          </div>
         </div>
       </div>
     </>

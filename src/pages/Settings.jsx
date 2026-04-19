@@ -195,7 +195,7 @@ export default function Settings() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <span style={{ color: 'var(--text-secondary)', width: 100 }}>창고 타입</span>
               <div style={{ display: 'flex', gap: 8 }}>
-                {['a', 'b', 'c', 'd', 'e'].map((t) => (
+                {['a', 'b', 'c', 'd'].map((t) => (
                   <button
                     key={t}
                     onClick={() => setWarehouseType(t)}

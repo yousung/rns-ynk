@@ -1,5 +1,65 @@
 import { useDataStore } from '../../store/useDataStore.js';
 
+export function KanDetailPanel({ rackId, floor, kan }) {
+  const { racks, pallets, inventoryItems, products } = useDataStore();
+
+  const panelStyle = {
+    padding: '12px 16px',
+    borderTop: '1px solid var(--border)',
+    background: 'var(--bg-panel)',
+    flex: 1,
+    minHeight: 0,
+    overflowY: 'auto',
+  };
+
+  if (!rackId || !floor || !kan) {
+    return (
+      <div style={panelStyle}>
+        <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>칸을 선택하면 적재 상세가 표시됩니다</div>
+      </div>
+    );
+  }
+
+  const rack = racks.find(r => r.id === rackId);
+  const pallet = pallets.find(p => p.location === `${rackId}-${floor}-${kan}`);
+  const items = pallet ? inventoryItems.filter(i => i.pallet_id === pallet.id) : [];
+
+  return (
+    <div style={panelStyle}>
+      <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: 8 }}>
+        {rack?.rack_no}번 랙 {floor}층 {kan}칸 — 적재 상세
+      </div>
+      {items.length === 0 ? (
+        <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>빈 칸입니다</div>
+      ) : (
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+          <thead>
+            <tr style={{ color: 'var(--text-secondary)' }}>
+              <th style={{ textAlign: 'left', padding: '3px 8px' }}>팔레트</th>
+              <th style={{ textAlign: 'left', padding: '3px 8px' }}>상품</th>
+              <th style={{ textAlign: 'left', padding: '3px 8px' }}>수량</th>
+              <th style={{ textAlign: 'left', padding: '3px 8px' }}>입고일</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map(item => {
+              const prod = products.find(p => p.id === item.product_id);
+              return (
+                <tr key={item.id}>
+                  <td style={{ padding: '3px 8px' }}>P{String(pallet.id).padStart(3, '0')}</td>
+                  <td style={{ padding: '3px 8px' }}>{prod?.name || '-'}</td>
+                  <td style={{ padding: '3px 8px' }}>{item.quantity.toLocaleString()}개</td>
+                  <td style={{ padding: '3px 8px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{item.received_at}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+
 export default function CellDetailsPanel({ selectedCell }) {
   const { pallets, inventoryItems, products, racks } = useDataStore();
 
