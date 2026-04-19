@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useDataStore } from '../store/useDataStore.js';
 import { useUIStore } from '../store/useUIStore.js';
 import WarehouseTabs from '../components/warehouse/WarehouseTabs.jsx';
@@ -18,6 +18,14 @@ export default function Inventory() {
 
   const { products, inventoryItems, pallets, racks } = useDataStore();
   const { warehouseType } = useUIStore();
+
+  useEffect(() => {
+    if (['c', 'd', 'e'].includes(warehouseType)) {
+      window.location.href = `${import.meta.env.BASE_URL}demo/samples/type-${warehouseType}/inventory.html`;
+    }
+  }, [warehouseType]);
+
+  if (['c', 'd', 'e'].includes(warehouseType)) return null;
 
   const categories = useMemo(
     () => [...new Set(products.map((p) => p.category).filter(Boolean))].sort(),
