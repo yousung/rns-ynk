@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>재고 리스트 (단면도) - 창고 관리 시스템</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../../data.js"></script>
+  <script src="shared.js"></script>
+  <style id="commonStyle"></style>
+  <style>
+    .filter-chip { padding:4px 12px; border-radius:20px; font-size:0.78rem; font-weight:600; cursor:pointer;
+      border:1px solid var(--border); background:var(--bg-surface); color:var(--text-secondary); transition:all 0.15s; }
+    .filter-chip.active { background:var(--cyan-dim); border-color:var(--cyan); color:var(--cyan); }
+    .filter-chip:not(.active):hover { border-color:var(--border-bright); color:var(--text-primary); }
+    .rack-btn { padding:5px 10px; border-radius:5px; font-size:0.78rem; font-weight:600; cursor:pointer;
+      border:1px solid var(--border); background:var(--bg-surface); color:var(--text-secondary); transition:all 0.15s; }
+    .rack-btn:hover { border-color:var(--border-bright); color:var(--text-primary); }
+    .rack-btn.active { border-color:var(--cyan); background:var(--cyan-dim); color:var(--cyan); }
+    .rack-btn.has-product { border-color:var(--cyan); color:var(--cyan); }
+    .cross-cell { cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-area">
+      <div class="header-bar">
+        <h1>재고 리스트</h1>
+        <span style="font-size:0.78rem;color:var(--text-secondary);background:var(--bg-surface);padding:3px 10px;border-radius:4px;border:1px solid var(--border);">E — 단면도</span>
+      </div>
+      <div class="content-area">
+        <!-- 필터 -->
+        <div class="card" style="padding:14px 16px;margin-bottom:16px;">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <span style="font-size:0.8rem;color:var(--text-secondary);font-weight:600;">상품 필터:</span>
+            <button class="filter-chip active" onclick="filterProduct(null)">전체</button>
+            <div id="productChips" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+          </div>
+        </div>
+
+        <!-- 창고 탭 -->
+        <div style="display:flex;gap:6px;margin-bottom:16px;" id="whTabs"></div>
+
+        <!-- 랙 선택 -->
+        <div class="card" style="padding:14px 16px;margin-bottom:16px;">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <span style="font-size:0.8rem;color:var(--text-secondary);font-weight:600;flex-shrink:0;">랙 선택:</span>
+            <div id="rackBtns" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+          </div>
+        </div>
+
+        <!-- 단면도 -->
+        <div class="card" style="padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <span style="font-size:0.85rem;font-weight:700;" id="sectionTitle">랙을 선택하세요</span>
+            <!-- 카테고리 범례 -->
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:0.72rem;">
+              <span id="catLegend" style="display:flex;gap:8px;flex-wrap:wrap;"></span>
+            </div>
+          </div>
+          <div style="overflow:auto;">
+            <svg id="sectionSvg" viewBox="0 0 600 280" width="600" height="280"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('commonStyle').textContent = getCommonStyles();
+    requireAuth();
+    renderLayout('inventory');
+
+    let selWh = 3, selProductId = null, selRackId = null;
+
+    const CELL_W = 110, CELL_H = 36, PAD_L = 48, PAD_T = 32;
+
+    const CATEGORY_COLORS = {
+      '의료용 밴드': '#60A5FA', '붕대류': '#F59E0B', '보호대류': '#34D399',
+      '원단/소재': '#A78BFA', '포장재': '#22D3EE', '접착제': '#F87171',
+    };
+
+    function filterProduct(id) {
+      selProductId = id;
+      document.querySelectorAll('.filter-chip').forEach(el => el.classList.remove('active'));
+      const chips = document.querySelectorAll('.filter-chip');
+      if (!id) { chips[0].classList.add('active'); }
+      else {
+        const chipIdx = products.findIndex(p => p.id === id);
+        if (chips[chipIdx + 1]) chips[chipIdx + 1].classList.add('active');
+      }
+      renderAll();
+    }
+
+    function renderWhTabs() {
+      document.getElementById('whTabs').innerHTML = warehouses.map(w =>
+        `<button onclick="selWh=${w.id};selRackId=null;renderAll()" style="padding:5px 14px;border-radius:5px;font-size:0.82rem;font-weight:600;cursor:pointer;border:1px solid ${w.id===selWh?'var(--cyan)':'var(--border)'};background:${w.id===selWh?'var(--cyan-dim)':'var(--bg-surface)'};color:${w.id===selWh?'var(--cyan)':'var(--text-secondary)'};">${w.name}</button>`
+      ).join('');
+    }
+
+    function renderProductChips() {
+      document.getElementById('productChips').innerHTML = products.map(p =>
+        `<button class="filter-chip ${selProductId===p.id?'active':''}" onclick="filterProduct(${p.id})" style="${selProductId===p.id?`border-color:${CATEGORY_COLORS[p.category]||'var(--cyan)'};color:${CATEGORY_COLORS[p.category]||'var(--cyan)'}`:''}">${p.name}</button>`
+      ).join('');
+    }
+
+    function renderRackBtns() {
+      const whRacks = racks.filter(r => r.warehouse_id === selWh);
+      const productPalletIds = selProductId
+        ? new Set(inventoryItems.filter(i => i.product_id === selProductId).map(i => i.pallet_id))
+        : null;
+
+      document.getElementById('rackBtns').innerHTML = whRacks.map(rack => {
+        const palletsInRack = pallets.filter(p => parseInt(p.location.split('-')[0]) === rack.id);
+        const hasProduct = productPalletIds && palletsInRack.some(p => productPalletIds.has(p.id));
+        const cls = selRackId === rack.id ? 'active' : hasProduct ? 'has-product' : '';
+        return `<button class="rack-btn ${cls}" onclick="selRackId=${rack.id};renderAll()">R${String(rack.rack_no).padStart(2,'0')}</button>`;
+      }).join('');
+    }
+
+    function renderCatLegend() {
+      const usedCats = new Set();
+      if (selRackId) {
+        const rack = racks.find(r => r.id === selRackId);
+        if (rack) {
+          const palletsInRack = pallets.filter(p => parseInt(p.location.split('-')[0]) === rack.id);
+          palletsInRack.forEach(pal => {
+            const items = inventoryItems.filter(i => i.pallet_id === pal.id);
+            items.forEach(it => {
+              const prod = products.find(pr => pr.id === it.product_id);
+              if (prod) usedCats.add(prod.category);
+            });
+          });
+        }
+      }
+      const legend = [...usedCats].map(cat => {
+        const color = CATEGORY_COLORS[cat] || '#60A5FA';
+        return `<span style="display:flex;align-items:center;gap:3px;font-size:0.7rem;color:${color};"><span style="width:8px;height:8px;border-radius:2px;background:${color};display:inline-block;"></span>${cat}</span>`;
+      }).join('');
+      document.getElementById('catLegend').innerHTML = legend;
+    }
+
+    function renderSectionSvg() {
+      if (!selRackId) {
+        document.getElementById('sectionSvg').innerHTML = `<text x="300" y="140" text-anchor="middle" fill="var(--text-secondary)" font-size="13">← 위에서 랙을 선택하세요</text>`;
+        return;
+      }
+      const rack = racks.find(r => r.id === selRackId);
+      if (!rack) return;
+
+      document.getElementById('sectionTitle').textContent = `${rack.rack_no}번 랙 단면도 — ${rack.floors}층 × ${rack.groups}칸`;
+
+      const productPalletIds = selProductId
+        ? new Set(inventoryItems.filter(i => i.product_id === selProductId).map(i => i.pallet_id))
+        : null;
+
+      const svgW = PAD_L + rack.groups * CELL_W + 20;
+      const svgH = PAD_T + rack.floors * CELL_H + 28;
+      document.getElementById('sectionSvg').setAttribute('viewBox', `0 0 ${svgW} ${svgH}`);
+      document.getElementById('sectionSvg').setAttribute('width', svgW);
+      document.getElementById('sectionSvg').setAttribute('height', svgH);
+
+      let svg = '';
+
+      for (let g = 1; g <= rack.groups; g++) {
+        const cx = PAD_L + (g - 1) * CELL_W + CELL_W / 2;
+        svg += `<text x="${cx}" y="${PAD_T - 8}" text-anchor="middle" fill="var(--text-secondary)" font-size="10" font-weight="600">K${g}</text>`;
+      }
+      svg += `<text x="${PAD_L}" y="${PAD_T - 18}" fill="var(--text-secondary)" font-size="8.5" opacity="0.6">← 전면</text>`;
+      svg += `<text x="${PAD_L + rack.groups * CELL_W - 2}" y="${PAD_T - 18}" text-anchor="end" fill="var(--text-secondary)" font-size="8.5" opacity="0.6">후면 →</text>`;
+
+      for (let fl = rack.floors; fl >= 1; fl--) {
+        const row = rack.floors - fl;
+        const cy = PAD_T + row * CELL_H + CELL_H / 2 + 4;
+        svg += `<text x="${PAD_L - 8}" y="${cy}" text-anchor="end" fill="var(--text-secondary)" font-size="10" font-weight="600">${fl}F</text>`;
+      }
+
+      for (let fl = rack.floors; fl >= 1; fl--) {
+        const row = rack.floors - fl;
+        for (let g = 1; g <= rack.groups; g++) {
+          const key = `${rack.id}-${fl}-${g}`;
+          const x = PAD_L + (g - 1) * CELL_W;
+          const y = PAD_T + row * CELL_H;
+          const pallet = pallets.find(p => p.location === key);
+          const items = pallet ? inventoryItems.filter(i => i.pallet_id === pallet.id) : [];
+          const isEmpty = !pallet;
+          const isHighlighted = productPalletIds && pallet && productPalletIds.has(pallet.id);
+
+          let fillColor = 'rgba(94,226,198,0.08)';
+          let strokeColor = 'rgba(94,226,198,0.2)';
+          let textColor = 'var(--text-secondary)';
+          let label = '빈칸';
+          let sublabel = '';
+          let strokeW = 1;
+
+          if (!isEmpty) {
+            const firstItem = items[0] ? products.find(pr => pr.id === items[0].product_id) : null;
+            const catColor = firstItem ? (CATEGORY_COLORS[firstItem.category] || '#60A5FA') : '#60A5FA';
+            const opacity = productPalletIds && !isHighlighted ? '11' : '22';
+            const strokeOp = productPalletIds && !isHighlighted ? '44' : '88';
+            fillColor = catColor + opacity;
+            strokeColor = catColor + strokeOp;
+            textColor = productPalletIds && !isHighlighted ? catColor + '66' : catColor;
+            label = firstItem ? firstItem.name : '상품';
+            sublabel = `${items.length}종`;
+          }
+
+          if (isHighlighted) {
+            strokeColor = 'var(--cyan)';
+            strokeW = 2;
+          }
+
+          svg += `<g class="cross-cell">
+            <rect x="${x+1}" y="${y+1}" width="${CELL_W-2}" height="${CELL_H-2}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${strokeW}" rx="3"/>`;
+
+          if (!isEmpty) {
+            const truncLabel = label.length > 7 ? label.substring(0, 7) + '…' : label;
+            svg += `<text x="${x + CELL_W/2}" y="${y + CELL_H/2 - 3}" text-anchor="middle" fill="${textColor}" font-size="9.5" font-weight="600">${truncLabel}</text>`;
+            svg += `<text x="${x + CELL_W/2}" y="${y + CELL_H/2 + 10}" text-anchor="middle" fill="${textColor}" font-size="8.5" opacity="0.85">${sublabel}</text>`;
+          } else {
+            svg += `<text x="${x + CELL_W/2}" y="${y + CELL_H/2 + 4}" text-anchor="middle" fill="${textColor}" font-size="9" opacity="0.4">${label}</text>`;
+          }
+
+          svg += `</g>`;
+        }
+      }
+
+      document.getElementById('sectionSvg').innerHTML = svg;
+    }
+
+    function renderAll() {
+      renderWhTabs();
+      renderProductChips();
+      renderRackBtns();
+      renderCatLegend();
+      renderSectionSvg();
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>

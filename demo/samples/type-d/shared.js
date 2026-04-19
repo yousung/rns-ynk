@@ -1,7 +1,3 @@
-// ============================================================
-// 창고 관리 시스템 - 공유 유틸리티
-// ============================================================
-
 (function () {
   document.documentElement.setAttribute('data-theme', localStorage.getItem('wms_theme') || 'dark');
 })();
@@ -24,8 +20,9 @@ function setTheme(theme) {
   localStorage.setItem('wms_theme', theme);
   document.documentElement.setAttribute('data-theme', theme);
 }
-function getWarehouseType() { return localStorage.getItem('wms_warehouse_type') || 'b'; }
+function getWarehouseType() { return localStorage.getItem('wms_warehouse_type') || 'd'; }
 function setWarehouseType(type) { localStorage.setItem('wms_warehouse_type', type); }
+
 function switchWarehouseType(type, menu) {
   setWarehouseType(type);
   const typedMenus = ['inbound-execute', 'outbound-execute', 'inventory'];
@@ -36,22 +33,16 @@ function switchWarehouseType(type, menu) {
   }
   if (menu === 'inventory' && (type === 'a' || type === 'b')) {
     window.location.href = '../../inventory.html';
-  } else if (type === 'b') {
-    window.location.href = `${menu}.html`;
   } else {
     window.location.href = `../type-${type}/${menu}.html`;
   }
 }
 
-function isSidebarSlim() {
-  return localStorage.getItem('wms_sidebar_slim') === 'true';
-}
-
+function isSidebarSlim() { return localStorage.getItem('wms_sidebar_slim') === 'true'; }
 function toggleSidebar() {
   const slim = !isSidebarSlim();
   localStorage.setItem('wms_sidebar_slim', String(slim));
-  const sb = document.getElementById('sidebar');
-  sb.classList.toggle('slim', slim);
+  document.getElementById('sidebar').classList.toggle('slim', slim);
   const btn = document.getElementById('sidebarToggleBtn');
   if (btn) btn.innerHTML = slim ? _ICON_CHEVRON_R : _ICON_CHEVRON_L;
 }
@@ -72,16 +63,15 @@ const _MENU_ICONS = {
   'logout':            `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
 };
 
-// 사이드바 + 헤더 렌더링
 function renderLayout(activeMenu) {
   const user = getCurrentUser();
   const slim = isSidebarSlim();
   const menuItems = [
     { key: 'inbound-schedule',  label: '입고 예정',   href: '../../inbound-schedule.html' },
-    { key: 'inbound-execute',   label: '입고 처리',   href: getWarehouseType() === 'b' ? 'inbound-execute.html' : `../type-${getWarehouseType()}/inbound-execute.html` },
+    { key: 'inbound-execute',   label: '입고 처리',   href: 'inbound-execute.html' },
     { key: 'outbound-schedule', label: '출고 예정',   href: '../../outbound-schedule.html' },
-    { key: 'outbound-execute',  label: '출고 처리',   href: getWarehouseType() === 'b' ? 'outbound-execute.html' : `../type-${getWarehouseType()}/outbound-execute.html` },
-    { key: 'inventory',         label: '재고 리스트', href: (getWarehouseType() === 'a' || getWarehouseType() === 'b') ? '../../inventory.html' : `../type-${getWarehouseType()}/inventory.html` },
+    { key: 'outbound-execute',  label: '출고 처리',   href: 'outbound-execute.html' },
+    { key: 'inventory',         label: '재고 리스트', href: 'inventory.html' },
     { key: 'products',          label: '상품 리스트', href: '../../products.html' },
     { key: 'activity-log',      label: '활동 로그',   href: '../../activity-log.html' },
     { key: 'users',             label: '사용자 관리', href: '../../users.html' },
@@ -124,11 +114,9 @@ function renderLayout(activeMenu) {
       </button>
     </div>
   `;
-
   if (slim) document.getElementById('sidebar').classList.add('slim');
 }
 
-// 공통 CSS 반환
 function getCommonStyles() {
   return `
     :root {
@@ -145,12 +133,9 @@ function getCommonStyles() {
       background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
       background-size:40px 40px;color:var(--text-primary);display:flex;flex-direction:column;min-height:100vh;}
     .app-layout{display:flex;flex:1;min-height:0;height:100vh;}
-
-    /* ── 사이드바 ── */
     .sidebar{background:linear-gradient(180deg,#0D1626 0%,#070C14 100%);border-right:1px solid var(--border);
       width:240px;flex-shrink:0;display:flex;flex-direction:column;transition:width 0.2s ease;overflow:hidden;}
     .sidebar.slim{width:56px;}
-
     .sidebar-header{display:flex;align-items:center;justify-content:space-between;
       padding:14px 16px;border-bottom:1px solid var(--border);min-height:62px;flex-shrink:0;}
     .sidebar.slim .sidebar-header{justify-content:center;padding:14px 8px;}
@@ -158,29 +143,26 @@ function getCommonStyles() {
     .sidebar.slim .sidebar-brand{display:none;}
     .sidebar-brand-title{font-size:1rem;font-weight:700;color:var(--cyan);text-shadow:0 0 8px rgba(0,212,255,0.6);white-space:nowrap;}
     .sidebar-brand-user{font-size:0.75rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-
     .sidebar-toggle-btn{display:flex;align-items:center;justify-content:center;
       width:26px;height:26px;border-radius:5px;background:var(--bg-surface);
       border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;
       flex-shrink:0;transition:all 0.15s;padding:0;}
     .sidebar-toggle-btn:hover{border-color:var(--border-bright);color:var(--text-primary);}
-
     .nav-icon{width:18px;height:18px;flex-shrink:0;}
     a.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:0.875rem;
       color:var(--text-secondary);cursor:pointer;transition:all 0.15s;
       border-left:3px solid transparent;text-decoration:none;white-space:nowrap;overflow:hidden;}
     a.nav-item:hover{background:var(--bg-hover);color:var(--text-primary);}
     a.nav-item.active{background:var(--cyan-dim);color:var(--cyan);border-left-color:var(--cyan);}
-    .sidebar.slim a.nav-item{justify-content:center;padding:11px 0;border-left-color:transparent !important;border-left:3px solid transparent;}
+    .sidebar.slim a.nav-item{justify-content:center;padding:11px 0;border-left:3px solid transparent;}
     .sidebar.slim a.nav-item.active{background:var(--cyan-dim);color:var(--cyan);border-left-color:var(--cyan) !important;}
     .nav-label{transition:opacity 0.1s;}
     .sidebar.slim .nav-label{display:none;}
-
     .sidebar-wh-type{padding:8px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
     .sidebar.slim .sidebar-wh-type{justify-content:center;}
     .sidebar.slim .sidebar-wh-type .nav-label{display:none;}
-    .wh-type-btns{display:flex;gap:4px;}
-    .wh-type-btn{padding:3px 10px;border-radius:4px;font-size:0.75rem;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--bg-surface);color:var(--text-secondary);transition:all 0.15s;font-family:inherit;}
+    .wh-type-btns{display:flex;gap:3px;}
+    .wh-type-btn{padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--bg-surface);color:var(--text-secondary);transition:all 0.15s;font-family:inherit;}
     .wh-type-btn.active{background:var(--cyan);color:#000;border-color:var(--cyan);}
     .sidebar-footer{border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2px;padding:8px;flex-shrink:0;}
     .sidebar-logout-btn{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:6px;
@@ -189,7 +171,6 @@ function getCommonStyles() {
     .sidebar-logout-btn:hover{background:var(--red-dim);color:var(--red);}
     .sidebar.slim .sidebar-logout-btn{justify-content:center;padding:11px 0;}
     .sidebar.slim .sidebar-footer .nav-label{display:none;}
-
     .main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
     .header-bar{padding:16px 24px;border-bottom:1px solid var(--border);background:var(--bg-panel);
       display:flex;align-items:center;gap:12px;}
@@ -218,21 +199,6 @@ function getCommonStyles() {
     .badge-cancelled{background:var(--red-dim);color:var(--red);}
     ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg-base);}
     ::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:2px;}
-    .ab-tabs{display:flex;gap:4px;margin-left:16px;border-left:1px solid var(--border);padding-left:16px;}
-    .ab-tab{padding:3px 12px;border-radius:4px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg-surface);color:var(--text-secondary);text-decoration:none;transition:all 0.15s;}
-    .ab-tab.active{background:var(--cyan-dim);color:var(--cyan);border-color:var(--cyan);cursor:default;}
-    .ab-tab:not(.active):hover{border-color:var(--border-bright);color:var(--text-primary);}
-
-    /* ── 필터바 스타일 ── */
-    .filter-bar{display:flex;gap:12px;margin-bottom:20px;align-items:center;}
-    .search-input{flex:1;max-width:300px;}
-    .category-select{flex:0 0 200px;}
-    .btn-reset{background:var(--bg-surface);color:var(--text-secondary);padding:8px 16px;
-      border-radius:6px;font-size:0.875rem;cursor:pointer;border:1px solid var(--border);transition:all 0.2s;
-      white-space:nowrap;}
-    .btn-reset:hover{border-color:var(--border-bright);color:var(--text-primary);}
-
-    /* ── 라이트 테마 ── */
     [data-theme="light"] {
       --bg-base:#F0F4F8; --bg-panel:#FFFFFF; --bg-surface:#F1F5F9; --bg-hover:#E2E8F0;
       --border:#CBD5E1; --border-bright:#94A3B8;
@@ -245,11 +211,8 @@ function getCommonStyles() {
         linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px);
       background-size:40px 40px;
     }
-    [data-theme="light"] .sidebar {
-      background:linear-gradient(180deg,#FFFFFF 0%,#F1F5F9 100%);
-    }
+    [data-theme="light"] .sidebar { background:linear-gradient(180deg,#FFFFFF 0%,#F1F5F9 100%); }
     [data-theme="light"] .header-bar { background:var(--bg-panel); }
-    [data-theme="light"] .sched-section { background:var(--bg-surface); }
     [data-theme="light"] a.nav-item.active { background:var(--cyan-dim); color:var(--cyan); border-left-color:var(--cyan); }
     [data-theme="light"] input,[data-theme="light"] select { background:var(--bg-surface); color:var(--text-primary); }
     [data-theme="light"] th { background:var(--bg-surface); }

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>재고 리스트 (정면도) - 창고 관리 시스템</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../../data.js"></script>
+  <script src="shared.js"></script>
+  <style id="commonStyle"></style>
+  <style>
+    .elev-wrap { overflow: auto; }
+    .legend-dot { width:12px; height:12px; border-radius:2px; flex-shrink:0; }
+    .filter-chip { padding:4px 12px; border-radius:20px; font-size:0.78rem; font-weight:600; cursor:pointer;
+      border:1px solid var(--border); background:var(--bg-surface); color:var(--text-secondary); transition:all 0.15s; }
+    .filter-chip.active { background:var(--cyan-dim); border-color:var(--cyan); color:var(--cyan); }
+    .filter-chip:not(.active):hover { border-color:var(--border-bright); color:var(--text-primary); }
+    .slot-cell { display:inline-flex; align-items:center; justify-content:center; flex-direction:column;
+      width:58px; height:46px; border-radius:5px; border:1px solid var(--border); font-size:0.68rem;
+      gap:2px; background:var(--bg-surface); color:var(--text-secondary); }
+    .slot-cell.has-product { border-color:var(--cyan); background:var(--cyan-dim); color:var(--cyan); }
+    .slot-cell.has-stock { background:rgba(245,158,11,0.12); border-color:rgba(245,158,11,0.4); color:var(--amber); }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-area">
+      <div class="header-bar">
+        <h1>재고 리스트</h1>
+        <span style="font-size:0.78rem;color:var(--text-secondary);background:var(--bg-surface);padding:3px 10px;border-radius:4px;border:1px solid var(--border);">D — 정면도</span>
+      </div>
+      <div class="content-area">
+        <!-- 필터 -->
+        <div class="card" style="padding:14px 16px;margin-bottom:16px;">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <span style="font-size:0.8rem;color:var(--text-secondary);font-weight:600;">상품 필터:</span>
+            <button class="filter-chip active" onclick="filterProduct(null)">전체</button>
+            <div id="productChips" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;">
+          <!-- 창고 탭 + 정면도 -->
+          <div style="flex:1;display:flex;flex-direction:column;gap:12px;min-width:0;">
+            <div style="display:flex;gap:6px;" id="whTabs"></div>
+            <div class="card" style="padding:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                <span style="font-size:0.85rem;font-weight:700;">정면도 — 재고 현황</span>
+                <div style="display:flex;gap:10px;align-items:center;font-size:0.72rem;color:var(--text-secondary);">
+                  <span style="display:flex;align-items:center;gap:4px;"><span class="legend-dot" style="background:rgba(94,226,198,0.25);border:1px solid rgba(94,226,198,0.4);"></span>비어있음</span>
+                  <span style="display:flex;align-items:center;gap:4px;"><span class="legend-dot" style="background:rgba(0,212,255,0.4);"></span>일부 재고</span>
+                  <span style="display:flex;align-items:center;gap:4px;"><span class="legend-dot" style="background:rgba(245,158,11,0.5);"></span>절반 이상</span>
+                  <span style="display:flex;align-items:center;gap:4px;"><span class="legend-dot" style="background:rgba(248,113,113,0.65);"></span>가득</span>
+                  <span style="display:flex;align-items:center;gap:4px;"><span class="legend-dot" style="border:2px solid var(--cyan);background:transparent;"></span>선택 상품</span>
+                </div>
+              </div>
+              <div class="elev-wrap">
+                <svg id="elevSvg" viewBox="0 0 820 220" width="820" height="220"></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- 랙 상세 -->
+          <div style="width:240px;flex-shrink:0;" id="rackDetailWrap" style="display:none;">
+            <div class="card" style="padding:16px;" id="rackDetailCard">
+              <h4 style="font-size:0.85rem;font-weight:700;margin-bottom:12px;" id="rackDetailTitle">랙을 클릭하세요</h4>
+              <div id="rackSlotGrid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('commonStyle').textContent = getCommonStyles();
+    requireAuth();
+    renderLayout('inventory');
+
+    let selWh = 3, selProductId = null, selRackId = null;
+
+    const RACK_W = 20, RACK_G = 4, FLOOR_H = 28, PAD_L = 40, PAD_T = 16;
+    const GRP_GAP = 32, MAX_FLOORS = 6;
+
+    const CATEGORY_COLORS = {
+      '의료용 밴드': '#60A5FA', '붕대류': '#F59E0B', '보호대류': '#34D399',
+      '원단/소재': '#A78BFA', '포장재': '#22D3EE', '접착제': '#F87171',
+    };
+
+    function heatColor(rate) {
+      if (rate <= 0) return 'rgba(94,226,198,0.25)';
+      if (rate < 0.34) return 'rgba(0,212,255,0.4)';
+      if (rate < 0.67) return 'rgba(245,158,11,0.5)';
+      return 'rgba(248,113,113,0.65)';
+    }
+
+    function getRackX(rackNo) {
+      if (rackNo <= 15) return PAD_L + (rackNo - 1) * (RACK_W + RACK_G);
+      return PAD_L + 15 * (RACK_W + RACK_G) + GRP_GAP + (rackNo - 16) * (RACK_W + RACK_G);
+    }
+
+    function getFloorY(floor) {
+      return PAD_T + (MAX_FLOORS - floor) * FLOOR_H;
+    }
+
+    function filterProduct(id) {
+      selProductId = id;
+      selRackId = null;
+      document.querySelectorAll('.filter-chip').forEach(el => el.classList.remove('active'));
+      const chips = document.querySelectorAll('.filter-chip');
+      if (!id) { chips[0].classList.add('active'); }
+      else {
+        const chipIdx = products.findIndex(p => p.id === id);
+        if (chips[chipIdx + 1]) chips[chipIdx + 1].classList.add('active');
+      }
+      renderAll();
+    }
+
+    function renderWhTabs() {
+      document.getElementById('whTabs').innerHTML = warehouses.map(w =>
+        `<button onclick="selWh=${w.id};selRackId=null;renderAll()" style="padding:5px 14px;border-radius:5px;font-size:0.82rem;font-weight:600;cursor:pointer;border:1px solid ${w.id===selWh?'var(--cyan)':'var(--border)'};background:${w.id===selWh?'var(--cyan-dim)':'var(--bg-surface)'};color:${w.id===selWh?'var(--cyan)':'var(--text-secondary)'};">${w.name}</button>`
+      ).join('');
+    }
+
+    function renderProductChips() {
+      document.getElementById('productChips').innerHTML = products.map(p =>
+        `<button class="filter-chip ${selProductId===p.id?'active':''}" onclick="filterProduct(${p.id})" style="${selProductId===p.id?`border-color:${CATEGORY_COLORS[p.category]||'var(--cyan)'};color:${CATEGORY_COLORS[p.category]||'var(--cyan)'}`:''}">${p.name}</button>`
+      ).join('');
+    }
+
+    function renderElevSvg() {
+      const whRacks = racks.filter(r => r.warehouse_id === selWh);
+      const productPalletIds = selProductId
+        ? new Set(inventoryItems.filter(i => i.product_id === selProductId).map(i => i.pallet_id))
+        : null;
+
+      let svg = '';
+
+      for (let fl = 1; fl <= MAX_FLOORS; fl++) {
+        const y = getFloorY(fl) + FLOOR_H / 2 + 4;
+        svg += `<text x="${PAD_L - 6}" y="${y}" text-anchor="end" fill="var(--text-secondary)" font-size="9">${fl}F</text>`;
+      }
+
+      const grp1X = PAD_L + 7 * (RACK_W + RACK_G) + RACK_W / 2;
+      const grp2X = PAD_L + 15 * (RACK_W + RACK_G) + GRP_GAP + 7 * (RACK_W + RACK_G) + RACK_W / 2;
+      const labelY = PAD_T + MAX_FLOORS * FLOOR_H + 16;
+      svg += `<text x="${grp1X}" y="${labelY}" text-anchor="middle" fill="var(--text-secondary)" font-size="9" opacity="0.7">전면 (R01 ~ R15)</text>`;
+      svg += `<text x="${grp2X}" y="${labelY}" text-anchor="middle" fill="var(--text-secondary)" font-size="9" opacity="0.7">후면 (R16 ~ R30)</text>`;
+
+      const sepX = PAD_L + 15 * (RACK_W + RACK_G) + GRP_GAP / 2;
+      svg += `<line x1="${sepX}" y1="${PAD_T}" x2="${sepX}" y2="${PAD_T + MAX_FLOORS * FLOOR_H}" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>`;
+
+      whRacks.forEach(rack => {
+        const x = getRackX(rack.rack_no);
+        const isSelected = rack.id === selRackId;
+        const palletsInRack = pallets.filter(p => parseInt(p.location.split('-')[0]) === rack.id);
+        const hasProduct = productPalletIds && palletsInRack.some(p => productPalletIds.has(p.id));
+
+        for (let fl = 1; fl <= rack.floors; fl++) {
+          const y = getFloorY(fl);
+          const palletsOnFloor = palletsInRack.filter(p => parseInt(p.location.split('-')[1]) === fl);
+          const rate = rack.groups > 0 ? palletsOnFloor.length / rack.groups : 0;
+          let fill = heatColor(rate);
+          if (productPalletIds && palletsOnFloor.some(p => productPalletIds.has(p.id))) fill = 'rgba(0,212,255,0.55)';
+          svg += `<rect x="${x}" y="${y}" width="${RACK_W}" height="${FLOOR_H - 1}" fill="${fill}" stroke="rgba(30,58,95,0.5)" stroke-width="0.5" rx="1"/>`;
+        }
+
+        for (let fl = rack.floors + 1; fl <= MAX_FLOORS; fl++) {
+          const y = getFloorY(fl);
+          svg += `<rect x="${x}" y="${y}" width="${RACK_W}" height="${FLOOR_H - 1}" fill="rgba(30,41,59,0.3)" stroke="rgba(30,58,95,0.2)" stroke-width="0.5" rx="1"/>`;
+        }
+
+        const totalH = rack.floors * FLOOR_H;
+        const topY = getFloorY(rack.floors);
+        if (isSelected) {
+          svg += `<rect x="${x - 2}" y="${topY - 2}" width="${RACK_W + 4}" height="${totalH + 4}" fill="none" stroke="var(--cyan)" stroke-width="2" rx="3"/>`;
+        } else if (hasProduct) {
+          svg += `<rect x="${x - 1}" y="${topY - 1}" width="${RACK_W + 2}" height="${totalH + 2}" fill="none" stroke="var(--cyan)" stroke-width="1.5" rx="2" stroke-dasharray="4,2"/>`;
+        }
+
+        const numY = getFloorY(rack.floors) - 5;
+        svg += `<text x="${x + RACK_W / 2}" y="${numY}" text-anchor="middle" fill="${isSelected ? 'var(--cyan)' : hasProduct ? 'var(--cyan)' : 'var(--text-secondary)'}" font-size="8.5" font-weight="${(isSelected || hasProduct) ? '600' : '400'}">${rack.rack_no}</text>`;
+        svg += `<rect x="${x}" y="${PAD_T}" width="${RACK_W}" height="${MAX_FLOORS * FLOOR_H}" fill="transparent" onclick="selectRack(${rack.id})" style="cursor:pointer;"/>`;
+      });
+
+      document.getElementById('elevSvg').innerHTML = svg;
+    }
+
+    function selectRack(rackId) {
+      selRackId = selRackId === rackId ? null : rackId;
+      renderAll();
+    }
+
+    function renderRackDetail() {
+      const wrap = document.getElementById('rackDetailWrap');
+      if (!selRackId) { wrap.style.display = 'none'; return; }
+      wrap.style.display = 'block';
+      const rack = racks.find(r => r.id === selRackId);
+      document.getElementById('rackDetailTitle').textContent = `${rack.rack_no}번 랙`;
+      const productPalletIds = selProductId
+        ? new Set(inventoryItems.filter(i => i.product_id === selProductId).map(i => i.pallet_id))
+        : null;
+
+      let html = '';
+      for (let fl = rack.floors; fl >= 1; fl--) {
+        html += `<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+          <div style="width:28px;font-size:0.72rem;font-weight:600;color:var(--text-secondary);">${fl}F</div>
+          <div style="display:flex;gap:4px;">`;
+        for (let g = 1; g <= rack.groups; g++) {
+          const key = `${rack.id}-${fl}-${g}`;
+          const pallet = pallets.find(p => p.location === key);
+          const items = pallet ? inventoryItems.filter(i => i.pallet_id === pallet.id) : [];
+          const highlight = productPalletIds && pallet && productPalletIds.has(pallet.id);
+          const cls = highlight ? 'has-product' : pallet ? 'has-stock' : '';
+          const firstItem = items[0] ? products.find(pr => pr.id === items[0].product_id) : null;
+          const catColor = firstItem ? (CATEGORY_COLORS[firstItem.category] || 'var(--cyan)') : null;
+          html += `<div class="slot-cell ${cls}" style="${highlight && catColor ? `border-color:${catColor};color:${catColor};background:${catColor}22;` : ''}">
+            <span>K${g}</span>
+            <span style="font-size:0.62rem;">${pallet ? items.length + '종' : '빈칸'}</span>
+          </div>`;
+        }
+        html += `</div></div>`;
+      }
+      document.getElementById('rackSlotGrid').innerHTML = html;
+    }
+
+    function renderAll() {
+      renderWhTabs(); renderProductChips(); renderElevSvg(); renderRackDetail();
+    }
+    renderAll();
+  </script>
+</body>
+</html>

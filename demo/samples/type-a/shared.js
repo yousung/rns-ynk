@@ -49,15 +49,18 @@ function setWarehouseType(type) {
 }
 function switchWarehouseType(type, menu) {
   setWarehouseType(type);
-  if (menu === 'inbound-execute') {
-    window.location.href = type === 'a' ? 'inbound-execute.html' : '../type-b/inbound-execute.html';
-  } else if (menu === 'outbound-execute') {
-    window.location.href = type === 'a' ? 'outbound-execute.html' : '../type-b/outbound-execute.html';
-  } else {
+  const typedMenus = ['inbound-execute', 'outbound-execute', 'inventory'];
+  if (!typedMenus.includes(menu)) {
     renderLayout(menu);
-    if (typeof window.__onWhTypeChange === 'function') {
-      window.__onWhTypeChange();
-    }
+    if (typeof window.__onWhTypeChange === 'function') window.__onWhTypeChange();
+    return;
+  }
+  if (menu === 'inventory' && (type === 'a' || type === 'b')) {
+    window.location.href = '../../inventory.html';
+  } else if (type === 'a') {
+    window.location.href = `${menu}.html`;
+  } else {
+    window.location.href = `../type-${type}/${menu}.html`;
   }
 }
 
@@ -66,10 +69,10 @@ function renderLayout(activeMenu) {
   const user = getCurrentUser();
   const menuItems = [
     { key: 'inbound-schedule',  label: '입고 예정',   href: '../../inbound-schedule.html' },
-    { key: 'inbound-execute',   label: '입고 처리',   href: getWarehouseType() === 'a' ? 'inbound-execute.html' : '../type-b/inbound-execute.html' },
+    { key: 'inbound-execute',   label: '입고 처리',   href: getWarehouseType() === 'a' ? 'inbound-execute.html' : `../type-${getWarehouseType()}/inbound-execute.html` },
     { key: 'outbound-schedule', label: '출고 예정',   href: '../../outbound-schedule.html' },
-    { key: 'outbound-execute',  label: '출고 처리',   href: getWarehouseType() === 'a' ? 'outbound-execute.html' : '../type-b/outbound-execute.html' },
-    { key: 'inventory',         label: '재고 리스트', href: '../../inventory.html' },
+    { key: 'outbound-execute',  label: '출고 처리',   href: getWarehouseType() === 'a' ? 'outbound-execute.html' : `../type-${getWarehouseType()}/outbound-execute.html` },
+    { key: 'inventory',         label: '재고 리스트', href: (getWarehouseType() === 'a' || getWarehouseType() === 'b') ? '../../inventory.html' : `../type-${getWarehouseType()}/inventory.html` },
     { key: 'products',          label: '상품 리스트', href: '../../products.html' },
     { key: 'activity-log',      label: '활동 로그',   href: '../../activity-log.html' },
     { key: 'users',             label: '사용자 관리', href: '../../users.html' },
@@ -90,8 +93,7 @@ function renderLayout(activeMenu) {
     <div class="sidebar-wh-type">
       <span class="nav-label" style="font-size:0.72rem;color:var(--text-secondary);padding:0 4px;">창고 타입</span>
       <div class="wh-type-btns">
-        <button class="wh-type-btn ${getWarehouseType() === 'a' ? 'active' : ''}" onclick="switchWarehouseType('a','${activeMenu}')">A</button>
-        <button class="wh-type-btn ${getWarehouseType() === 'b' ? 'active' : ''}" onclick="switchWarehouseType('b','${activeMenu}')">B</button>
+        ${['a','b','c','d','e'].map(t=>`<button class="wh-type-btn ${getWarehouseType()===t?'active':''}" onclick="switchWarehouseType('${t}','${activeMenu}')">${t.toUpperCase()}</button>`).join('')}
       </div>
     </div>
     <div style="border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;padding:16px;">
