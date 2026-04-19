@@ -198,12 +198,7 @@ export default function Settings() {
                 {['a', 'b', 'c', 'd', 'e'].map((t) => (
                   <button
                     key={t}
-                    onClick={() => {
-                      setWarehouseType(t);
-                      if (['c', 'd', 'e'].includes(t)) {
-                        window.location.href = `${import.meta.env.BASE_URL}demo/samples/type-${t}/inventory.html`;
-                      }
-                    }}
+                    onClick={() => setWarehouseType(t)}
                     style={{
                       padding: '6px 16px', borderRadius: 6, border: '1px solid var(--border)',
                       cursor: 'pointer', fontSize: '0.875rem', fontFamily: 'inherit',

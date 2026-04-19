@@ -1,9 +1,12 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useDataStore } from '../store/useDataStore.js';
 import { useUIStore } from '../store/useUIStore.js';
 import WarehouseTabs from '../components/warehouse/WarehouseTabs.jsx';
 import WarehouseMatrix from '../components/warehouse/WarehouseMatrix.jsx';
 import WarehouseRackGrid from '../components/warehouse/WarehouseRackGrid.jsx';
+import WarehouseFloorPlan, { FloorPlanRackDetail } from '../components/warehouse/WarehouseFloorPlan.jsx';
+import WarehouseElevation from '../components/warehouse/WarehouseElevation.jsx';
+import WarehouseSection from '../components/warehouse/WarehouseSection.jsx';
 
 export default function Inventory() {
   const [view, setView] = useState(() => localStorage.getItem('wms_inventory_view') || 'list');
@@ -16,16 +19,10 @@ export default function Inventory() {
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(1);
   const [selectedCell, setSelectedCell] = useState(null);
 
+  const [selectedRackId, setSelectedRackId] = useState(null);
+
   const { products, inventoryItems, pallets, racks } = useDataStore();
   const { warehouseType } = useUIStore();
-
-  useEffect(() => {
-    if (['c', 'd', 'e'].includes(warehouseType)) {
-      window.location.href = `${import.meta.env.BASE_URL}demo/samples/type-${warehouseType}/inventory.html`;
-    }
-  }, [warehouseType]);
-
-  if (['c', 'd', 'e'].includes(warehouseType)) return null;
 
   const categories = useMemo(
     () => [...new Set(products.map((p) => p.category).filter(Boolean))].sort(),
@@ -297,6 +294,27 @@ export default function Inventory() {
                     }
                     getCellClass={getCellClass}
                   />
+                ) : warehouseType === 'c' ? (
+                  <WarehouseFloorPlan
+                    warehouseId={selectedWarehouseId}
+                    selectedProductId={selectedProductId}
+                    selectedRackId={selectedRackId}
+                    onRackClick={(id) => setSelectedRackId((prev) => prev === id ? null : id)}
+                  />
+                ) : warehouseType === 'd' ? (
+                  <WarehouseElevation
+                    warehouseId={selectedWarehouseId}
+                    selectedProductId={selectedProductId}
+                    selectedRackId={selectedRackId}
+                    onRackClick={(id) => setSelectedRackId((prev) => prev === id ? null : id)}
+                  />
+                ) : warehouseType === 'e' ? (
+                  <WarehouseSection
+                    warehouseId={selectedWarehouseId}
+                    selectedProductId={selectedProductId}
+                    selectedRackId={selectedRackId}
+                    onRackSelect={(id) => setSelectedRackId((prev) => prev === id ? null : id)}
+                  />
                 ) : (
                   <WarehouseMatrix
                     warehouseId={selectedWarehouseId}
@@ -311,6 +329,11 @@ export default function Inventory() {
                   />
                 )}
               </div>
+
+              {/* C/D/E 랙 상세 */}
+              {['c', 'd'].includes(warehouseType) && selectedRackId && (
+                <FloorPlanRackDetail rackId={selectedRackId} />
+              )}
 
               {/* 셀 상세 */}
               {selectedCell && cellRack && (

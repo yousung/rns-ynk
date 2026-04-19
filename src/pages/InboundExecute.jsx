@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useDataStore } from '../store/useDataStore.js';
 import { useUIStore } from '../store/useUIStore.js';
 import WarehouseTabs from '../components/warehouse/WarehouseTabs.jsx';
@@ -11,12 +11,6 @@ import CellDetailsPanel from '../components/warehouse/CellDetailsPanel.jsx';
 export default function InboundExecute() {
   const { racks, pallets, inventoryItems, inboundSchedules, products } = useDataStore();
   const { warehouseType } = useUIStore();
-
-  useEffect(() => {
-    if (['c', 'd', 'e'].includes(warehouseType)) {
-      window.location.href = `${import.meta.env.BASE_URL}demo/samples/type-${warehouseType}/inbound-execute.html`;
-    }
-  }, [warehouseType]);
 
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(1);
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);

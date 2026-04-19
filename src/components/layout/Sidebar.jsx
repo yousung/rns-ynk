@@ -1,4 +1,4 @@
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore.js';
 import { useUIStore } from '../../store/useUIStore.js';
 
@@ -35,31 +35,12 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
   const logout = useAuthStore((s) => s.logout);
   const { sidebarSlim, warehouseType, toggleSidebar, setWarehouseType } = useUIStore();
   const navigate = useNavigate();
-  const location = useLocation();
 
   function handleLogout() {
     logout();
     if (onClose) onClose();
     navigate('/login');
   }
-
-  const DEMO_PAGES = {
-    'inventory': 'inventory.html',
-    'inbound-execute': 'inbound-execute.html',
-    'outbound-execute': 'outbound-execute.html',
-  };
-
-  function handleWarehouseType(t) {
-    setWarehouseType(t);
-    if (['c', 'd', 'e'].includes(t)) {
-      const curr = location.pathname.replace('/', '');
-      if (DEMO_PAGES[curr]) {
-        window.location.href = `${import.meta.env.BASE_URL}demo/samples/type-${t}/${DEMO_PAGES[curr]}`;
-      }
-    }
-  }
-
-  const activeKey = location.pathname.replace('/', '');
 
   return (
     <div className={`sidebar${sidebarSlim ? ' slim' : ''}${mobileOpen ? ' mobile-open' : ''}`}>
@@ -74,41 +55,25 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
       </div>
 
       <nav style={{flex:1, overflowY:'auto', paddingTop:8, paddingBottom:8}}>
-        {MENU_ITEMS.map((item) => {
-          const demoHtml = DEMO_PAGES[item.key];
-          if (demoHtml && ['c', 'd', 'e'].includes(warehouseType)) {
-            return (
-              <a
-                key={item.key}
-                href={`${import.meta.env.BASE_URL}demo/samples/type-${warehouseType}/${demoHtml}`}
-                className={`nav-item`}
-                title={item.label}
-              >
-                {ICONS[item.key]}
-                <span className="nav-label">{item.label}</span>
-              </a>
-            );
-          }
-          return (
-            <NavLink
-              key={item.key}
-              to={item.path}
-              className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-              title={item.label}
-              onClick={onClose}
-            >
-              {ICONS[item.key]}
-              <span className="nav-label">{item.label}</span>
-            </NavLink>
-          );
-        })}
+        {MENU_ITEMS.map((item) => (
+          <NavLink
+            key={item.key}
+            to={item.path}
+            className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+            title={item.label}
+            onClick={onClose}
+          >
+            {ICONS[item.key]}
+            <span className="nav-label">{item.label}</span>
+          </NavLink>
+        ))}
       </nav>
 
       <div className="sidebar-wh-type">
         <span className="nav-label" style={{fontSize:'0.72rem', color:'var(--text-secondary)', padding:'0 4px'}}>창고 타입</span>
         <div className="wh-type-btns">
           {['a','b','c','d','e'].map((t) => (
-            <button key={t} className={`wh-type-btn${warehouseType === t ? ' active' : ''}`} onClick={() => handleWarehouseType(t)}>{t.toUpperCase()}</button>
+            <button key={t} className={`wh-type-btn${warehouseType === t ? ' active' : ''}`} onClick={() => setWarehouseType(t)}>{t.toUpperCase()}</button>
           ))}
         </div>
       </div>
