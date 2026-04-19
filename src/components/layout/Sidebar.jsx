@@ -75,8 +75,9 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
       <div className="sidebar-wh-type">
         <span className="nav-label" style={{fontSize:'0.72rem', color:'var(--text-secondary)', padding:'0 4px'}}>창고 타입</span>
         <div className="wh-type-btns">
-          <button className={`wh-type-btn${warehouseType === 'a' ? ' active' : ''}`} onClick={() => setWarehouseType('a')}>A</button>
-          <button className={`wh-type-btn${warehouseType === 'b' ? ' active' : ''}`} onClick={() => setWarehouseType('b')}>B</button>
+          {['a','b','c','d','e'].map((t) => (
+            <button key={t} className={`wh-type-btn${warehouseType === t ? ' active' : ''}`} onClick={() => setWarehouseType(t)}>{t.toUpperCase()}</button>
+          ))}
         </div>
       </div>
 
