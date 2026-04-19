@@ -275,81 +275,103 @@ export default function Inventory() {
                 onSelect={(id) => { setSelectedWarehouseId(id); setSelectedCell(null); }}
               />
               <div className="wh-rack-area" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-                {/* 패널 1: 창고 시각화 */}
-                <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
-                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} />
-                  {warehouseType === 'a' ? (
-                    <div style={{ overflow: 'auto', padding: '10px 230px 10px 10px', height: '100%' }}>
-                      <WarehouseRackGrid
-                        warehouseId={selectedWarehouseId}
-                        selectedRackId={selectedCell?.rackId}
-                        onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
-                        onRackHover={setHoveredRackId}
-                        highlightedRackIds={
-                          selectedProductId
-                            ? racks
-                                .filter((r) =>
-                                  pallets.some((p) => {
-                                    const rId = parseInt(p.location.split('-')[0]);
-                                    return rId === r.id && inventoryItems.some((i) => i.pallet_id === p.id && i.product_id === selectedProductId);
-                                  })
-                                )
-                                .map((r) => r.id)
-                            : []
-                        }
-                        getCellClass={getCellClass}
-                      />
-                    </div>
-                  ) : warehouseType === 'c' ? (
-                    <div style={{ paddingRight: 230, overflow: 'auto', height: '100%' }}>
-                      <WarehouseFloorPlan
-                        warehouseId={selectedWarehouseId}
-                        selectedProductId={selectedProductId}
-                        selectedRackId={selectedCell?.rackId}
-                        onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
-                        onRackHover={setHoveredRackId}
-                      />
-                    </div>
-                  ) : warehouseType === 'd' ? (
-                    <div style={{ paddingRight: 230, overflow: 'auto', height: '100%' }}>
-                      <WarehouseElevation
-                        warehouseId={selectedWarehouseId}
-                        selectedProductId={selectedProductId}
-                        selectedRackId={selectedCell?.rackId}
-                        onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
-                        onRackHover={setHoveredRackId}
-                      />
-                    </div>
-                  ) : (
-                    <div style={{ paddingRight: 230, height: '100%', overflow: 'auto' }}>
-                      <WarehouseMatrix
-                        warehouseId={selectedWarehouseId}
-                        selectedCell={selectedCell}
-                        onCellClick={(rackId, floor) =>
-                          setSelectedCell((prev) =>
-                            prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor, kan: 1 }
-                          )
-                        }
-                        onCellHover={setHoveredRackId}
-                        getMiniBlocksFn={getMiniBlocksFn}
-                        mode="inventory"
-                      />
-                    </div>
-                  )}
+                {/* 창고 시각화 */}
+                <div style={{ flexShrink: 0, borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ height: 34, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
+                  </div>
+                  <div style={{ position: 'relative', paddingBottom: 6 }}>
+                    <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} />
+                    {warehouseType === 'a' ? (
+                      <div style={{ padding: '10px 230px 10px 10px' }}>
+                        <WarehouseRackGrid
+                          warehouseId={selectedWarehouseId}
+                          selectedRackId={selectedCell?.rackId}
+                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                          onRackHover={setHoveredRackId}
+                          highlightedRackIds={
+                            selectedProductId
+                              ? racks
+                                  .filter((r) =>
+                                    pallets.some((p) => {
+                                      const rId = parseInt(p.location.split('-')[0]);
+                                      return rId === r.id && inventoryItems.some((i) => i.pallet_id === p.id && i.product_id === selectedProductId);
+                                    })
+                                  )
+                                  .map((r) => r.id)
+                              : []
+                          }
+                          getCellClass={getCellClass}
+                        />
+                      </div>
+                    ) : warehouseType === 'c' ? (
+                      <div style={{ paddingRight: 230, aspectRatio: '740/180' }}>
+                        <WarehouseFloorPlan
+                          warehouseId={selectedWarehouseId}
+                          selectedProductId={selectedProductId}
+                          selectedRackId={selectedCell?.rackId}
+                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                          onRackHover={setHoveredRackId}
+                        />
+                      </div>
+                    ) : warehouseType === 'd' ? (
+                      <div style={{ paddingRight: 230, aspectRatio: '780/160' }}>
+                        <WarehouseElevation
+                          warehouseId={selectedWarehouseId}
+                          selectedProductId={selectedProductId}
+                          selectedRackId={selectedCell?.rackId}
+                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                          onRackHover={setHoveredRackId}
+                        />
+                      </div>
+                    ) : (
+                      <div style={{ paddingRight: 230 }}>
+                        <WarehouseMatrix
+                          warehouseId={selectedWarehouseId}
+                          selectedCell={selectedCell}
+                          onCellClick={(rackId, floor) =>
+                            setSelectedCell((prev) =>
+                              prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor, kan: 1 }
+                            )
+                          }
+                          onCellHover={setHoveredRackId}
+                          getMiniBlocksFn={getMiniBlocksFn}
+                          mode="inventory"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
-                {/* 패널 2: 칸별 현황 */}
-                <FloorPlanRackDetail
-                  rackId={selectedCell?.rackId}
-                  selectedFloor={selectedCell?.floor}
-                  selectedKan={selectedCell?.kan}
-                  onKanClick={(floor, kan) => setSelectedCell(prev => prev ? { ...prev, floor, kan } : null)}
-                />
-                {/* 패널 3: 적재 상세 */}
-                <KanDetailPanel
-                  rackId={selectedCell?.rackId}
-                  floor={selectedCell?.floor}
-                  kan={selectedCell?.kan}
-                />
+                {/* 칸별 현황 */}
+                <div style={{ flexShrink: 0, borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ height: 34, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      {selectedCell ? `랙 — 칸별 현황` : '칸별 현황'}
+                    </span>
+                  </div>
+                  <FloorPlanRackDetail
+                    rackId={selectedCell?.rackId}
+                    selectedFloor={selectedCell?.floor}
+                    selectedKan={selectedCell?.kan}
+                    onKanClick={(floor, kan) => setSelectedCell(prev => prev ? { ...prev, floor, kan } : null)}
+                    disableEmptyKan={true}
+                  />
+                </div>
+                {/* 적재 상세 */}
+                <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  <div style={{ height: 34, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      {selectedCell?.kan ? `${selectedCell.kan}칸 적재 상세` : '적재 상세'}
+                    </span>
+                  </div>
+                  <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+                    <KanDetailPanel
+                      rackId={selectedCell?.rackId}
+                      floor={selectedCell?.floor}
+                      kan={selectedCell?.kan}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

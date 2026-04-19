@@ -5,7 +5,6 @@ export function KanDetailPanel({ rackId, floor, kan }) {
 
   const panelStyle = {
     padding: '12px 16px',
-    borderTop: '1px solid var(--border)',
     background: 'var(--bg-panel)',
     flex: 1,
     minHeight: 0,

@@ -75,7 +75,7 @@
 .matrix-section {
   flex: 1; overflow: hidden; display: flex; flex-direction: column; min-height: 0; gap: 10px; padding: 10px 0;
 }
-.matrix-scroll { display: flex; justify-content: center; align-items: flex-start; overflow: auto; flex: 1 1 auto; }
+.matrix-scroll { display: flex; justify-content: flex-start; align-items: flex-start; overflow: auto; flex: 1 1 auto; }
 
 .rack-matrix,.rm-table {
   border-collapse: collapse;
@@ -127,7 +127,7 @@ tfoot .label-cell { position: sticky; left: 0; z-index: 1; background: #06101A; 
 .rack-matrix tr:hover td,.rm-table tr:hover td { background: unset; }
 
 .rm-dummy { background: #030A14; color: #0D1F35; cursor: default; pointer-events: none; }
-.rm-dummy-th { background: #06101A; color: #0D1F35; border: 1px solid rgba(30,58,95,0.3) !important; min-width: 42px; }
+.rm-dummy-th { background: #06101A; color: #0D1F35; border: 1px solid rgba(30,58,95,0.3) !important; }
 
 /* 미니 블록 */
 .mini-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; width: 100%; height: 100%; padding: 2px; }

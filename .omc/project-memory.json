@@ -146,33 +146,45 @@
   },
   "hotPaths": [
     {
-      "path": "src/pages/Inventory.jsx",
-      "accessCount": 37,
-      "lastAccessed": 1776596880366,
-      "type": "file"
-    },
-    {
       "path": "src/pages/InboundExecute.jsx",
-      "accessCount": 25,
-      "lastAccessed": 1776598588601,
+      "accessCount": 65,
+      "lastAccessed": 1776606767982,
       "type": "file"
     },
     {
       "path": "src/pages/OutboundExecute.jsx",
-      "accessCount": 24,
-      "lastAccessed": 1776598589458,
+      "accessCount": 54,
+      "lastAccessed": 1776606810270,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Inventory.jsx",
+      "accessCount": 45,
+      "lastAccessed": 1776606899147,
       "type": "file"
     },
     {
       "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
-      "accessCount": 11,
-      "lastAccessed": 1776598138599,
+      "accessCount": 16,
+      "lastAccessed": 1776605657632,
+      "type": "file"
+    },
+    {
+      "path": "src/styles/warehouse.css",
+      "accessCount": 16,
+      "lastAccessed": 1776606553203,
       "type": "file"
     },
     {
       "path": "src/components/warehouse/WarehouseElevation.jsx",
+      "accessCount": 11,
+      "lastAccessed": 1776605657714,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseMinimap.jsx",
       "accessCount": 10,
-      "lastAccessed": 1776597823381,
+      "lastAccessed": 1776607228385,
       "type": "file"
     },
     {
@@ -182,15 +194,15 @@
       "type": "file"
     },
     {
-      "path": "src/styles/warehouse.css",
+      "path": "src/components/warehouse/WarehouseMatrix.jsx",
       "accessCount": 9,
-      "lastAccessed": 1776598584708,
+      "lastAccessed": 1776605931654,
       "type": "file"
     },
     {
-      "path": "src/components/warehouse/WarehouseMinimap.jsx",
-      "accessCount": 8,
-      "lastAccessed": 1776595319688,
+      "path": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "accessCount": 7,
+      "lastAccessed": 1776605654494,
       "type": "file"
     },
     {
@@ -206,21 +218,15 @@
       "type": "file"
     },
     {
-      "path": "src/components/warehouse/WarehouseMatrix.jsx",
-      "accessCount": 5,
-      "lastAccessed": 1776593342576,
-      "type": "file"
-    },
-    {
       "path": "src/components/layout/Sidebar.jsx",
       "accessCount": 5,
       "lastAccessed": 1776597874178,
       "type": "file"
     },
     {
-      "path": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "path": "src/components/warehouse/CellDetailsPanel.jsx",
       "accessCount": 5,
-      "lastAccessed": 1776598495969,
+      "lastAccessed": 1776599239145,
       "type": "file"
     },
     {
@@ -230,15 +236,15 @@
       "type": "file"
     },
     {
+      "path": "src",
+      "accessCount": 4,
+      "lastAccessed": 1776605958318,
+      "type": "directory"
+    },
+    {
       "path": "demo/data.js",
       "accessCount": 3,
       "lastAccessed": 1776593029659,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/CellDetailsPanel.jsx",
-      "accessCount": 3,
-      "lastAccessed": 1776596672665,
       "type": "file"
     },
     {
@@ -246,6 +252,12 @@
       "accessCount": 3,
       "lastAccessed": 1776597940265,
       "type": "file"
+    },
+    {
+      "path": "src/pages",
+      "accessCount": 3,
+      "lastAccessed": 1776605623890,
+      "type": "directory"
     },
     {
       "path": "demo/samples/type-b/inbound-execute.html",
@@ -258,18 +270,6 @@
       "accessCount": 2,
       "lastAccessed": 1776560245873,
       "type": "file"
-    },
-    {
-      "path": "src",
-      "accessCount": 2,
-      "lastAccessed": 1776591929271,
-      "type": "directory"
-    },
-    {
-      "path": "src/pages",
-      "accessCount": 2,
-      "lastAccessed": 1776595858360,
-      "type": "directory"
     },
     {
       "path": "demo/index.html",
@@ -378,6 +378,18 @@
       "accessCount": 1,
       "lastAccessed": 1776593039104,
       "type": "file"
+    },
+    {
+      "path": "src/components/warehouse",
+      "accessCount": 1,
+      "lastAccessed": 1776599053400,
+      "type": "directory"
+    },
+    {
+      "path": "src/store/useDataStore.js",
+      "accessCount": 1,
+      "lastAccessed": 1776606475713,
+      "type": "directory"
     }
   ],
   "userDirectives": []
