@@ -1,0 +1,537 @@
+/* ── CSS 변수 (다크 기본) ── */
+.t-root {
+  --bg-base: #070C14;
+  --bg-panel: #0D1626;
+  --bg-surface: #132035;
+  --bg-hover: #1A2D47;
+  --border: #1E3A5F;
+  --border-bright: #2D5A8E;
+  --cyan: #00D4FF;
+  --cyan-dim: rgba(0,212,255,0.15);
+  --cyan-glow: 0 0 12px rgba(0,212,255,0.5);
+  --amber: #F59E0B;
+  --amber-dim: rgba(245,158,11,0.15);
+  --red: #EF4444;
+  --red-dim: rgba(239,68,68,0.15);
+  --green: #10B981;
+  --green-dim: rgba(16,185,129,0.15);
+  --text-primary: #E8F0FE;
+  --text-secondary: #7B91AD;
+
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.t-root[data-theme="light"] {
+  --bg-base: #F0F4F8;
+  --bg-panel: #FFFFFF;
+  --bg-surface: #F1F5F9;
+  --bg-hover: #E2E8F0;
+  --border: #CBD5E1;
+  --border-bright: #94A3B8;
+  --cyan: #0284C7;
+  --cyan-dim: rgba(2,132,199,0.12);
+  --cyan-glow: 0 0 12px rgba(2,132,199,0.3);
+  --amber: #D97706;
+  --amber-dim: rgba(217,119,6,0.12);
+  --red: #EF4444;
+  --red-dim: rgba(239,68,68,0.12);
+  --green: #059669;
+  --green-dim: rgba(5,150,105,0.12);
+  --text-primary: #1E293B;
+  --text-secondary: #64748B;
+}
+
+.t-root * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; word-break: keep-all; }
+
+/* ── 헤더 ── */
+.t-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 56px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.t-header-logo { font-size: 1rem; font-weight: 700; color: var(--cyan); letter-spacing: -0.5px; }
+.t-header-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+.t-header-right { display: flex; align-items: center; gap: 12px; }
+.t-header-user { font-size: 0.85rem; color: var(--text-secondary); }
+.t-btn-logout {
+  padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;
+  background: var(--red-dim); color: var(--red); border: 1px solid var(--red);
+  cursor: pointer; min-height: 36px; font-family: inherit;
+}
+.t-btn-logout:active { opacity: 0.7; }
+
+/* ── 메인 2컬럼 ── */
+.t-main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── 좌측 패널 ── */
+.t-left-panel {
+  width: 38%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: var(--bg-panel);
+  overflow: hidden;
+}
+.t-panel-header {
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg-surface);
+}
+.t-schedule-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── 스케줄 카드 ── */
+.t-sched-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-height: 60px;
+}
+.t-sched-card:hover { border-color: var(--border-bright); background: var(--bg-hover); }
+.t-sched-card.selected { border-color: var(--cyan); background: var(--cyan-dim); }
+.t-sched-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.t-sched-card-name { font-size: 0.92rem; font-weight: 600; color: var(--text-primary); }
+.t-sched-card.selected .t-sched-card-name { color: var(--cyan); }
+.t-sched-card-meta { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 4px; }
+.t-sched-meta-item {
+  font-size: 0.74rem; color: var(--text-secondary);
+  background: var(--bg-base); border-radius: 4px;
+  padding: 2px 7px; border: 1px solid var(--border);
+}
+.t-sched-meta-note { font-size: 0.74rem; color: var(--amber); }
+.t-sched-empty { padding: 24px 16px; text-align: center; font-size: 0.85rem; color: var(--text-secondary); }
+
+.t-fifo-badge {
+  font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+  background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); flex-shrink: 0;
+}
+.t-sched-sku { font-size: 0.75rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
+.t-sched-qty { color: var(--cyan); font-weight: 600; }
+.t-sched-dest { color: var(--amber); }
+
+/* ── 우측 패널 ── */
+.t-right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+
+/* ── 타입 토글 ── */
+.t-wh-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.t-toggle-label { font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; }
+.t-toggle-switch {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.t-toggle-btn {
+  padding: 8px 18px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  min-height: 38px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.t-toggle-btn.active { background: var(--cyan); color: #000; }
+
+/* ── 스크롤 콘텐츠 ── */
+.t-right-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── 선택 배너 ── */
+.t-sel-banner {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.t-sel-banner.active { border-color: var(--cyan); background: var(--cyan-dim); }
+.t-sel-product { font-size: 1rem; font-weight: 700; color: var(--cyan); }
+.t-sel-meta { display: flex; gap: 10px; margin-top: 4px; flex-wrap: wrap; font-size: 0.8rem; color: var(--text-secondary); }
+
+/* ── 위치 섹션 ── */
+.t-location-section {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+.t-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+/* ── 그리드 버튼들 ── */
+.t-rack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; }
+.t-floor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 8px; }
+.t-kan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
+
+.t-grid-btn {
+  min-height: 52px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  transition: all 0.15s;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.t-grid-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); box-shadow: var(--cyan-glow); }
+.t-grid-btn.occupied { background: var(--amber-dim); color: var(--amber); border-color: var(--amber); }
+.t-grid-btn:active:not(.active):not(.occupied) { background: var(--bg-hover); }
+
+/* ── 전동랙 제어 ── */
+.t-electric-control {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+.t-electric-title { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 14px; }
+.t-electric-btns { display: flex; gap: 16px; justify-content: center; }
+.t-electric-btn {
+  width: 92px; height: 92px; border-radius: 50%;
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; border: 3px solid;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; font-family: inherit;
+  flex-direction: column; gap: 4px;
+}
+.t-electric-btn.open { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.t-electric-btn.open:active { background: var(--green); color: #000; }
+.t-electric-btn.stop { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); }
+.t-electric-btn.stop:active { background: var(--amber); color: #000; }
+.t-electric-btn-icon { font-size: 1.4rem; line-height: 1; }
+
+/* 전동랙 상태 (출고) */
+.t-elec-status {
+  text-align: center; font-size: 0.82rem; color: var(--text-secondary);
+  padding: 8px; border-radius: 6px;
+  background: var(--bg-panel); border: 1px solid var(--border);
+  margin-top: 10px;
+}
+.t-elec-status.running { color: var(--green); border-color: var(--green); background: var(--green-dim); }
+.t-elec-status.stopped { color: var(--amber); border-color: var(--amber); background: var(--amber-dim); }
+
+/* ── 확정 바 ── */
+.t-confirm-bar {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+}
+.t-qty-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.t-qty-label { font-size: 0.85rem; color: var(--text-secondary); white-space: nowrap; min-width: 32px; }
+.t-qty-input {
+  flex: 1; min-height: 44px; padding: 0 14px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--bg-surface);
+  color: var(--text-primary); font-size: 1rem; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace; text-align: right;
+  -webkit-appearance: none; outline: none;
+}
+.t-qty-input:focus { border-color: var(--cyan); }
+.t-qty-hint { font-size: 0.74rem; color: var(--text-secondary); text-align: right; margin-bottom: 6px; }
+.t-btn-confirm {
+  width: 100%; min-height: 50px; border-radius: 10px;
+  font-size: 1.05rem; font-weight: 700; cursor: pointer;
+  background: var(--cyan); color: #000; border: none;
+  font-family: inherit; transition: all 0.2s; letter-spacing: 0.03em;
+}
+.t-btn-confirm:disabled { background: var(--bg-surface); color: var(--text-secondary); cursor: not-allowed; }
+.t-btn-confirm:not(:disabled):active { opacity: 0.8; }
+
+/* ── 탭바 ── */
+.t-tab-bar {
+  height: 56px; display: flex;
+  background: var(--bg-panel); border-top: 1px solid var(--border);
+  flex-shrink: 0; z-index: 20;
+}
+.t-tab {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  border: none; background: transparent; color: var(--text-secondary);
+  font-family: inherit; text-decoration: none; transition: all 0.15s;
+  border-top: 2px solid transparent;
+}
+.t-tab.active { color: var(--cyan); border-top-color: var(--cyan); background: var(--cyan-dim); }
+.t-tab:active { background: var(--bg-hover); }
+.t-tab.logout:active { background: var(--red-dim); color: var(--red); }
+
+/* ── 출고 전용 ── */
+.t-right-empty {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 10px;
+  color: var(--text-secondary); font-size: 0.9rem;
+}
+.t-right-empty svg { opacity: 0.3; }
+
+.t-lot-list-section { padding: 10px 14px 0; flex-shrink: 0; }
+.t-lot-list-label {
+  font-size: 0.72rem; font-weight: 600; color: var(--text-secondary);
+  letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px;
+}
+.t-lot-list { display: flex; flex-direction: column; gap: 5px; max-height: 170px; overflow-y: auto; }
+.t-lot-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; background: var(--bg-surface);
+  border: 1.5px solid var(--border); border-radius: 8px;
+  cursor: pointer; transition: all 0.15s; gap: 8px;
+}
+.t-lot-card:hover { border-color: var(--border-bright); background: var(--bg-hover); }
+.t-lot-card.selected { border-color: var(--cyan); background: var(--cyan-dim); }
+.t-lot-rank {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--amber-dim); border: 1px solid rgba(245,158,11,0.4);
+  color: var(--amber); font-size: 0.7rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.t-lot-card.selected .t-lot-rank { background: var(--cyan-dim); border-color: var(--cyan); color: var(--cyan); }
+.t-lot-body { flex: 1; min-width: 0; }
+.t-lot-date { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); font-family: 'JetBrains Mono', monospace; }
+.t-lot-loc { font-size: 0.74rem; color: var(--text-secondary); margin-top: 2px; }
+.t-lot-qty { font-size: 0.9rem; font-weight: 700; color: var(--cyan); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+.t-lot-empty { padding: 10px 0; font-size: 0.82rem; color: var(--text-secondary); text-align: center; }
+
+.t-fifo-location-block {
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.t-fifo-location-empty { color: var(--text-secondary); font-size: 0.88rem; text-align: center; padding: 6px 0; }
+.t-fifo-location-label {
+  font-size: 0.72rem; font-weight: 600; color: var(--text-secondary);
+  letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;
+}
+.t-fifo-location-main { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.t-fifo-loc-item { display: flex; flex-direction: column; align-items: center; }
+.t-fifo-loc-value {
+  font-size: 2rem; font-weight: 700; color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace; line-height: 1;
+  text-shadow: var(--cyan-glow);
+}
+.t-fifo-loc-unit { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; }
+.t-fifo-loc-sep { font-size: 1.4rem; color: var(--border-bright); margin-bottom: 12px; }
+.t-fifo-received { margin-top: 8px; font-size: 0.78rem; color: var(--text-secondary); }
+.t-fifo-received span { color: var(--amber); font-weight: 600; }
+
+.t-control-area {
+  flex: 1; overflow-y: auto;
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.t-normal-loc-card {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px;
+}
+.t-normal-loc-title {
+  font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em;
+}
+.t-normal-rows { display: flex; flex-direction: column; gap: 7px; }
+.t-normal-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; background: var(--bg-panel);
+  border-radius: 6px; border: 1px solid var(--border);
+}
+.t-normal-row-label { font-size: 0.8rem; color: var(--text-secondary); }
+.t-normal-row-value { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
+.t-normal-row-value.hl { color: var(--cyan); }
+
+.t-fifo-highlight-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; background: var(--cyan-dim);
+  border: 1px solid var(--cyan); border-radius: 8px; font-size: 0.85rem;
+}
+.t-fifo-highlight-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--cyan); box-shadow: 0 0 8px var(--cyan);
+  flex-shrink: 0; animation: t-pulse 1.5s infinite;
+}
+@keyframes t-pulse { 0%,100% { opacity:1;transform:scale(1); } 50% { opacity:0.6;transform:scale(1.2); } }
+.t-fifo-highlight-text { color: var(--text-primary); }
+.t-fifo-highlight-text strong { color: var(--cyan); }
+
+/* ── 로그인 전용 ── */
+.t-login-root {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: var(--bg-base);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  padding: 24px;
+}
+.t-login-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-bright);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 880px;
+  min-height: 500px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0,212,255,0.08), 0 24px 80px rgba(0,0,0,0.4);
+}
+.t-login-badge {
+  position: fixed; top: 16px; right: 16px;
+  background: var(--cyan-dim); border: 1px solid var(--cyan);
+  border-radius: 6px; padding: 4px 12px;
+  font-size: 0.72rem; font-weight: 700; color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;
+}
+.t-brand-panel {
+  flex: 1; padding: 48px 40px;
+  background: linear-gradient(145deg, rgba(0,212,255,0.06) 0%, rgba(0,100,200,0.04) 100%);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.t-brand-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.t-brand-icon {
+  width: 48px; height: 48px; background: var(--cyan-dim); border: 1px solid var(--cyan);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.t-brand-name { font-size: 1.4rem; font-weight: 700; color: var(--cyan); line-height: 1.2; }
+.t-brand-sub { font-size: 0.78rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+.t-brand-desc { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 24px; }
+.t-feature-list { display: flex; flex-direction: column; gap: 10px; }
+.t-feature-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.12);
+  border-radius: 8px; font-size: 0.82rem; color: var(--text-secondary);
+}
+.t-feature-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--cyan);
+  flex-shrink: 0; box-shadow: 0 0 6px rgba(0,212,255,0.6);
+}
+.t-app-badge {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 28px;
+  background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 8px; padding: 8px 16px;
+  font-size: 0.78rem; color: var(--green); font-family: 'JetBrains Mono', monospace;
+}
+.t-app-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: t-blink 2s infinite; }
+@keyframes t-blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+.t-form-panel {
+  width: 360px; flex-shrink: 0; padding: 48px 40px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.t-form-title { font-size: 1.375rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.t-form-sub { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 32px; }
+.t-field-group { margin-bottom: 18px; }
+.t-field-label {
+  display: block; font-size: 0.78rem; font-weight: 600;
+  color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 0.02em;
+}
+.t-field-input {
+  width: 100%; background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 13px 16px; color: var(--text-primary);
+  font-size: 1rem; outline: none; transition: all 0.2s; font-family: inherit;
+}
+.t-field-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
+.t-field-input::placeholder { color: var(--text-secondary); opacity: 0.6; }
+.t-btn-login {
+  width: 100%; background: var(--cyan); color: #000;
+  padding: 14px; border-radius: 8px; font-weight: 700; font-size: 1rem;
+  cursor: pointer; border: none; transition: all 0.2s; margin-top: 8px; font-family: inherit;
+}
+.t-btn-login:hover { background: #00b8d9; box-shadow: 0 0 24px rgba(0,212,255,0.4); transform: translateY(-1px); }
+.t-btn-login:active { transform: translateY(0); }
+.t-error-msg {
+  color: #EF4444; font-size: 0.8rem; text-align: center; margin-top: 12px;
+  padding: 10px; background: rgba(239,68,68,0.08); border-radius: 6px;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+.t-hint-box {
+  margin-top: 18px; padding: 12px 16px;
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 8px; font-size: 0.75rem; color: var(--text-secondary);
+}
+.t-hint-box code { font-family: 'JetBrains Mono', monospace; color: var(--cyan); font-size: 0.72rem; }
+.t-theme-btn {
+  position: fixed; top: 16px; left: 16px;
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--bg-panel);
+  color: var(--text-secondary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; transition: all 0.2s;
+}
+
+/* ── 스크롤바 ── */
+.t-root ::-webkit-scrollbar, .t-schedule-list::-webkit-scrollbar, .t-lot-list::-webkit-scrollbar { width: 4px; }
+.t-root ::-webkit-scrollbar-track { background: var(--bg-base); }
+.t-root ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+@media (max-width: 768px) {
+  .t-login-card { flex-direction: column; }
+  .t-brand-panel { border-right: none; border-bottom: 1px solid var(--border); padding: 28px 24px; }
+  .t-form-panel { width: 100%; padding: 28px 24px; }
+  .t-feature-list { display: none; }
+}

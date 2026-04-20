@@ -13,6 +13,9 @@ import ActivityLog from './pages/ActivityLog.jsx';
 import Users from './pages/Users.jsx';
 import Settings from './pages/Settings.jsx';
 import Dashboard from './pages/Dashboard.jsx';
+import TabletInbound from './pages/tablet/TabletInbound.jsx';
+import TabletOutbound from './pages/tablet/TabletOutbound.jsx';
+import KioskPage from './pages/kiosk/KioskPage.jsx';
 
 function RequireAuth({ children }) {
   const currentUser = useAuthStore((s) => s.currentUser);
@@ -39,6 +42,9 @@ export default function App() {
           <Route path="users"             element={<Users />} />
           <Route path="settings"          element={<Settings />} />
         </Route>
+        <Route path="/tablet/inbound"  element={<TabletInbound />} />
+        <Route path="/tablet/outbound" element={<TabletOutbound />} />
+        <Route path="/kiosk"           element={<KioskPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </HashRouter>

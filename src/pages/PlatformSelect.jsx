@@ -136,7 +136,7 @@ export default function PlatformSelect() {
           <line x1="12" y1="18" x2="12.01" y2="18" />
         </>
       ),
-      onClick: () => { window.location.href = './demo/tablet/login.html'; },
+      onClick: () => navigate('/tablet/inbound'),
     },
     {
       key: 'kiosk',
@@ -152,7 +152,7 @@ export default function PlatformSelect() {
           <line x1="12" y1="8" x2="12" y2="16" />
         </>
       ),
-      onClick: () => { window.location.href = './demo/kiosk/index.html'; },
+      onClick: () => navigate('/kiosk'),
     },
   ];
 

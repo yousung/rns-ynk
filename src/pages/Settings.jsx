@@ -14,7 +14,7 @@ const FIELD_STYLE = {
 };
 
 export default function Settings() {
-  const { theme, setTheme, warehouseType, setWarehouseType } = useUIStore();
+  const { theme, setTheme } = useUIStore();
   const currentUser = useAuthStore((s) => s.currentUser);
   const updateUser = useAuthStore((s) => s.updateUser);
 
@@ -188,25 +188,6 @@ export default function Settings() {
                     }}
                   >
                     {t === 'dark' ? '다크' : '라이트'}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <span style={{ color: 'var(--text-secondary)', width: 100 }}>창고 타입</span>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {['a', 'b', 'c', 'd'].map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setWarehouseType(t)}
-                    style={{
-                      padding: '6px 16px', borderRadius: 6, border: '1px solid var(--border)',
-                      cursor: 'pointer', fontSize: '0.875rem', fontFamily: 'inherit',
-                      background: warehouseType === t ? 'var(--cyan)' : 'var(--bg-surface)',
-                      color: warehouseType === t ? '#000' : 'var(--text-secondary)',
-                    }}
-                  >
-                    Type {t.toUpperCase()}
                   </button>
                 ))}
               </div>

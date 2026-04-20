@@ -33,7 +33,7 @@ const ICONS = {
 export default function Sidebar({ mobileOpen = false, onClose }) {
   const currentUser = useAuthStore((s) => s.currentUser);
   const logout = useAuthStore((s) => s.logout);
-  const { sidebarSlim, warehouseType, toggleSidebar, setWarehouseType } = useUIStore();
+  const { sidebarSlim, toggleSidebar } = useUIStore();
   const navigate = useNavigate();
 
   function handleLogout() {
@@ -68,15 +68,6 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
           </NavLink>
         ))}
       </nav>
-
-      <div className="sidebar-wh-type">
-        <span className="nav-label" style={{fontSize:'0.72rem', color:'var(--text-secondary)', padding:'0 4px'}}>창고 타입</span>
-        <div className="wh-type-btns">
-          {['a','b','c','d'].map((t) => (
-            <button key={t} className={`wh-type-btn${warehouseType === t ? ' active' : ''}`} onClick={() => setWarehouseType(t)}>{t.toUpperCase()}</button>
-          ))}
-        </div>
-      </div>
 
       <div className="sidebar-footer">
         <NavLink to="/app/settings" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`} title="계정 설정">

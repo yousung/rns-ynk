@@ -105,8 +105,7 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanC
     );
   }
 
-  const rows = [];
-  for (let fl = rack.floors; fl >= 1; fl--) {
+  function buildCells(fl) {
     const cells = [];
     for (let g = 1; g <= rack.groups; g++) {
       const key = `${rack.id}-${fl}-${g}`;
@@ -131,10 +130,25 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanC
         </div>
       );
     }
+    return cells;
+  }
+
+  if (selectedFloor) {
+    return (
+      <div style={panelStyle}>
+        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+          {buildCells(selectedFloor)}
+        </div>
+      </div>
+    );
+  }
+
+  const rows = [];
+  for (let fl = rack.floors; fl >= 1; fl--) {
     rows.push(
       <div key={fl} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
         <div style={{ width: 26, fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)', flexShrink: 0 }}>{fl}F</div>
-        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>{cells}</div>
+        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>{buildCells(fl)}</div>
       </div>
     );
   }

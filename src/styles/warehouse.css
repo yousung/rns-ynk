@@ -132,7 +132,7 @@ tfoot .label-cell { position: sticky; left: 0; z-index: 1; background: #06101A; 
 /* 미니 블록 */
 .mini-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; width: 100%; height: 100%; padding: 2px; }
 .mini-block { border-radius: 1px; transition: all 0.1s; }
-.mini-empty { background: rgba(30,58,95,0.3); }
+.mini-empty { background: var(--rm-empty-slot, rgba(30,58,95,0.15)); border: 1px solid rgba(30,58,95,0.2); }
 .mini-filled { background: rgba(30,80,200,0.5); }
 .mini-sel { background: var(--cyan) !important; box-shadow: 0 0 4px rgba(0,212,255,0.8); }
 .mini-product { background: rgba(245,158,11,0.7); }
