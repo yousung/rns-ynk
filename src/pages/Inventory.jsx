@@ -21,6 +21,8 @@ export default function Inventory() {
   const [selectedCell, setSelectedCell] = useState(null);
 
   const [hoveredRackId, setHoveredRackId] = useState(null);
+  const [hoveredFloor, setHoveredFloor] = useState(null);
+  const [hoveredKan, setHoveredKan] = useState(null);
 
   const { products, inventoryItems, pallets, racks } = useDataStore();
   const { warehouseType } = useUIStore();
@@ -281,9 +283,9 @@ export default function Inventory() {
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                   </div>
                   <div style={{ position: 'relative', paddingBottom: 6 }}>
-                    <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} />
+                    <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredKan={hoveredKan} />
                     {warehouseType === 'a' ? (
-                      <div style={{ padding: '10px 230px 10px 10px', maxHeight: 320, overflowY: 'auto' }}>
+                      <div style={{ padding: '10px 230px 10px 10px', maxHeight: 520, overflowY: 'auto' }}>
                         <WarehouseRackGrid
                           warehouseId={selectedWarehouseId}
                           selectedRackId={selectedCell?.rackId}
@@ -325,7 +327,7 @@ export default function Inventory() {
                         />
                       </div>
                     ) : (
-                      <div style={{ paddingRight: 230, maxHeight: 320, overflowY: 'auto' }}>
+                      <div style={{ paddingRight: 230, maxHeight: 520, overflowY: 'auto' }}>
                         <WarehouseMatrix
                           warehouseId={selectedWarehouseId}
                           selectedCell={selectedCell}
@@ -334,7 +336,7 @@ export default function Inventory() {
                               prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor, kan: null }
                             )
                           }
-                          onCellHover={setHoveredRackId}
+                          onCellHover={(rackId, floor) => { setHoveredRackId(rackId); setHoveredFloor(floor ?? null); }}
                           getMiniBlocksFn={getMiniBlocksFn}
                           mode="inventory"
                         />
@@ -361,6 +363,7 @@ export default function Inventory() {
                           if (prev.floor === floor && prev.kan === kan) return { ...prev, kan: null };
                           return { ...prev, floor, kan };
                         })}
+                        onKanHover={(floor, kan) => setHoveredKan(floor != null ? { rackId: selectedCell?.rackId, floor, kan } : null)}
                         disableEmptyKan={true}
                       />
                     </div>

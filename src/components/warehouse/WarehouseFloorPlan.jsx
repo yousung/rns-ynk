@@ -85,7 +85,7 @@ export default function WarehouseFloorPlan({ warehouseId, selectedProductId, sel
   );
 }
 
-export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanClick, disableEmptyKan = false }) {
+export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanClick, onKanHover, disableEmptyKan = false }) {
   const { racks, pallets, inventoryItems, products } = useDataStore();
 
   const panelStyle = {
@@ -115,7 +115,7 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanC
       const catColor = firstItem ? (CAT_COLORS[firstItem.category] || 'var(--cyan)') : null;
       const isSel = selectedFloor === fl && selectedKan === g;
       cells.push(
-        <div key={g} onClick={(e) => { e.stopPropagation(); if (disableEmptyKan && !pallet) return; onKanClick?.(fl, g); }} style={{
+        <div key={g} onClick={(e) => { e.stopPropagation(); if (disableEmptyKan && !pallet) return; onKanClick?.(fl, g); }} onMouseEnter={() => onKanHover?.(fl, g)} onMouseLeave={() => onKanHover?.(null, null)} style={{
           display: 'inline-flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           width: 52, height: 42, borderRadius: 5,
           border: isSel ? '2px solid var(--cyan)' : `1px solid ${pallet ? (catColor || 'var(--cyan)') : 'var(--border)'}`,

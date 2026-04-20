@@ -147,13 +147,13 @@ const outboundSchedules = [
 ];
 
 const activityLogs = [
-  { id: 1,  user: '김민준', action: '입고 처리',      feature: 'inbound',   detail: '대형 밴드 10매입 3000박스 → 완제품창고 3번랙 2층 1번',     created_at: '2026-04-15 15:42' },
+  { id: 1,  user: '김민준', action: '입고 처리',      feature: 'inbound',   detail: '대형 밴드 10매입 3000박스 → 완제품창고 3번랙 2칸 1단',     created_at: '2026-04-15 15:42' },
   { id: 2,  user: '이지훈', action: '출고 처리',      feature: 'outbound',  detail: '방수 밴드 20매입 1800박스 출고 — CJ올리브영 정기납품',    created_at: '2026-04-15 14:10' },
   { id: 3,  user: '최현우', action: '입고 예정 등록', feature: 'inbound',   detail: '거즈 원단 80롤 예정 등록 — 대한탄성원단',                  created_at: '2026-04-14 09:30' },
   { id: 4,  user: '김민준', action: '재고 조정',      feature: 'inventory', detail: '탄력 붕대 7.5cm 12박스 손실 기록 — 품질 불량',            created_at: '2026-04-14 16:45' },
   { id: 5,  user: '이지훈', action: '출고 처리',      feature: 'outbound',  detail: '거즈 붕대 7.5cm×5m 800박스 출고 — 세브란스병원 납품',    created_at: '2026-04-13 10:20' },
   { id: 6,  user: '최현우', action: '상품 등록',      feature: 'products',  detail: '반창고 롤 2.5cm×5m 신규 등록',                          created_at: '2026-04-13 08:30' },
-  { id: 7,  user: '김민준', action: '위치 변경',      feature: 'inventory', detail: '무릎 보호대 M → 전동랙창고 12번랙 1층으로 이동',          created_at: '2026-04-12 13:15' },
+  { id: 7,  user: '김민준', action: '위치 변경',      feature: 'inventory', detail: '무릎 보호대 M → 전동랙창고 12번랙 1칸으로 이동',          created_at: '2026-04-12 13:15' },
   { id: 8,  user: '이지훈', action: '입고 처리',      feature: 'inbound',   detail: '손목 보호대 Free 600개 입고 — 자사 생산',                created_at: '2026-04-12 09:50' },
   { id: 9,  user: '최현우', action: '사용자 추가',    feature: 'users',     detail: '창고 관리자 신규 계정 승인',                              created_at: '2026-04-11 15:30' },
   { id: 10, user: '김민준', action: '재고 확인',      feature: 'inventory', detail: '월말 재고 실사 완료 — 오차율 0.1%',                      created_at: '2026-04-10 18:00' },

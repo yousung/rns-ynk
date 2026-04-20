@@ -19,6 +19,8 @@ export default function OutboundExecute() {
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null);
   const [hoveredRackId, setHoveredRackId] = useState(null);
+  const [hoveredFloor, setHoveredFloor] = useState(null);
+  const [hoveredKan, setHoveredKan] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [execQty, setExecQty] = useState('');
 
@@ -193,7 +195,7 @@ export default function OutboundExecute() {
     if (!canExecute) return;
     const topSlots = fifoSlots.slice(0, 3).map((sl) => {
       const r = racks.find((x) => x.id === sl.rackId);
-      return `  F${sl.rank}: ${r?.rack_no}번 랙 · ${sl.floor}층 · ${sl.kan}칸 (${sl.qty}개)`;
+      return `  F${sl.rank}: ${r?.rack_no}번 랙 · ${sl.floor}칸 · ${sl.kan}단 (${sl.qty}개)`;
     }).join('\n');
     alert(`✅ 출고 완료!\n${schedProduct?.name} ${outboundQty}개 출고\n\nFIFO 출고 위치:\n${topSlots}\n\n(데모: 실제 저장 없음)`);
     setSelectedScheduleId(null);
@@ -244,7 +246,7 @@ export default function OutboundExecute() {
                     </span>
                     {top && topRack && (
                       <span style={{ marginLeft: 8 }}>
-                        | <span className="action-highlight">FIFO F{top.rank}: {topRack.rack_no}번 랙 · {top.floor}층 · {top.kan}칸 ({top.qty}개)</span>
+                        | <span className="action-highlight">FIFO F{top.rank}: {topRack.rack_no}번 랙 · {top.floor}칸 · {top.kan}단 ({top.qty}개)</span>
                       </span>
                     )}
                     {totalAvailable < outboundQty && (
@@ -286,9 +288,9 @@ export default function OutboundExecute() {
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                 </div>
                 <div style={{ position: 'relative', paddingBottom: 6 }}>
-                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} />
+                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredKan={hoveredKan} />
                   {warehouseType === 'a' ? (
-                    <div style={{ padding: '10px 230px 10px 10px', maxHeight: 320, overflowY: 'auto' }}>
+                    <div style={{ padding: '10px 230px 10px 10px', maxHeight: 520, overflowY: 'auto' }}>
                       <WarehouseRackGrid
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
@@ -316,12 +318,12 @@ export default function OutboundExecute() {
                       />
                     </div>
                   ) : (
-                    <div style={{ paddingRight: 230, maxHeight: 320, overflowY: 'auto' }}>
+                    <div style={{ paddingRight: 230, maxHeight: 520, overflowY: 'auto' }}>
                       <WarehouseMatrix
                         warehouseId={selectedWarehouseId}
                         selectedCell={selectedCell}
                         onCellClick={(rackId, floor) => { setSelectedCell({ rackId, floor, kan: null }); }}
-                        onCellHover={setHoveredRackId}
+                        onCellHover={(rackId, floor) => { setHoveredRackId(rackId); setHoveredFloor(floor ?? null); }}
                         getCellFifoInfo={getCellFifoInfo}
                         getMiniBlocksFn={getMiniBlocksFn}
                         mode="outbound"
@@ -337,7 +339,7 @@ export default function OutboundExecute() {
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell ? `랙 ${selectedRack?.rack_no ?? ''} — ${selectedCell.floor}층 칸별 현황` : '칸별 현황'}
+                      {selectedCell ? `랙 ${selectedRack?.rack_no ?? ''} — ${selectedCell.floor}칸 단별 현황` : '단별 현황'}
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
@@ -354,6 +356,7 @@ export default function OutboundExecute() {
                           return { ...prev, floor, kan };
                         });
                       }}
+                      onKanHover={(floor, kan) => setHoveredKan(floor != null ? { rackId: selectedCell?.rackId, floor, kan } : null)}
                       disableEmptyKan={true}
                     />
                   </div>
@@ -362,7 +365,7 @@ export default function OutboundExecute() {
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell?.kan ? `${selectedCell.kan}칸 적재 상세` : '적재 상세'}
+                      {selectedCell?.kan ? `${selectedCell.kan}단 적재 상세` : '적재 상세'}
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
@@ -416,7 +419,7 @@ export default function OutboundExecute() {
                                 </td>
                                 <td style={{ padding: '5px 8px', color: 'var(--text-primary)' }}>{slot.received_at?.slice(0, 10) ?? '-'}</td>
                                 <td style={{ padding: '5px 8px', color: 'var(--text-primary)', fontFamily: 'monospace', fontSize: '0.73rem' }}>
-                                  {r?.rack_no ?? slot.rackId}번-{slot.floor}층-{slot.kan}칸
+                                  {r?.rack_no ?? slot.rackId}번-{slot.floor}칸-{slot.kan}단
                                 </td>
                                 <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--text-primary)', fontWeight: 600 }}>{slot.qty}</td>
                               </tr>

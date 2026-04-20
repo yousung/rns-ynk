@@ -146,9 +146,21 @@
   },
   "hotPaths": [
     {
+      "path": "src/pages/OutboundExecute.jsx",
+      "accessCount": 32,
+      "lastAccessed": 1776692778175,
+      "type": "file"
+    },
+    {
       "path": "demo/kiosk/index.html",
       "accessCount": 30,
       "lastAccessed": 1776682296416,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/InboundExecute.jsx",
+      "accessCount": 30,
+      "lastAccessed": 1776692777465,
       "type": "file"
     },
     {
@@ -158,9 +170,21 @@
       "type": "file"
     },
     {
+      "path": "src/pages/tablet/TabletInbound.jsx",
+      "accessCount": 27,
+      "lastAccessed": 1776694347918,
+      "type": "file"
+    },
+    {
       "path": "demo/tablet/inbound.html",
       "accessCount": 23,
       "lastAccessed": 1776682292652,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/tablet/TabletOutbound.jsx",
+      "accessCount": 23,
+      "lastAccessed": 1776694348373,
       "type": "file"
     },
     {
@@ -170,21 +194,39 @@
       "type": "file"
     },
     {
-      "path": "src/pages/OutboundExecute.jsx",
-      "accessCount": 14,
-      "lastAccessed": 1776683664912,
+      "path": "src/store/useDataStore.js",
+      "accessCount": 19,
+      "lastAccessed": 1776692822971,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Inventory.jsx",
+      "accessCount": 18,
+      "lastAccessed": 1776692128095,
+      "type": "file"
+    },
+    {
+      "path": "src",
+      "accessCount": 18,
+      "lastAccessed": 1776692871530,
+      "type": "directory"
+    },
+    {
+      "path": "src/App.jsx",
+      "accessCount": 16,
+      "lastAccessed": 1776692315362,
       "type": "file"
     },
     {
       "path": "src/pages/PlatformSelect.jsx",
-      "accessCount": 12,
-      "lastAccessed": 1776682779948,
+      "accessCount": 13,
+      "lastAccessed": 1776692130094,
       "type": "file"
     },
     {
-      "path": "src/App.jsx",
+      "path": "src/components/warehouse/WarehouseMinimap.jsx",
       "accessCount": 12,
-      "lastAccessed": 1776682781337,
+      "lastAccessed": 1776685660717,
       "type": "file"
     },
     {
@@ -194,9 +236,15 @@
       "type": "file"
     },
     {
-      "path": "src/pages/InboundExecute.jsx",
+      "path": "src/components/warehouse/WarehouseMatrix.jsx",
       "accessCount": 11,
-      "lastAccessed": 1776684558675,
+      "lastAccessed": 1776692778938,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/CellDetailsPanel.jsx",
+      "accessCount": 10,
+      "lastAccessed": 1776692780144,
       "type": "file"
     },
     {
@@ -207,26 +255,26 @@
     },
     {
       "path": "src/components/layout/Sidebar.jsx",
-      "accessCount": 8,
-      "lastAccessed": 1776677958504,
+      "accessCount": 9,
+      "lastAccessed": 1776692135604,
       "type": "file"
     },
     {
-      "path": "src/pages/Inventory.jsx",
-      "accessCount": 8,
-      "lastAccessed": 1776683664269,
+      "path": "src/pages/kiosk/KioskPage.jsx",
+      "accessCount": 9,
+      "lastAccessed": 1776693852221,
       "type": "file"
     },
     {
-      "path": "src/store/useDataStore.js",
+      "path": "src/store/useUIStore.js",
       "accessCount": 8,
-      "lastAccessed": 1776683934518,
+      "lastAccessed": 1776692135046,
       "type": "file"
     },
     {
-      "path": "src",
+      "path": "",
       "accessCount": 7,
-      "lastAccessed": 1776684546563,
+      "lastAccessed": 1776692137751,
       "type": "directory"
     },
     {
@@ -242,15 +290,15 @@
       "type": "directory"
     },
     {
-      "path": "demo/inbound-execute.html",
-      "accessCount": 5,
-      "lastAccessed": 1776658576344,
+      "path": "src/styles/tablet.css",
+      "accessCount": 6,
+      "lastAccessed": 1776692137534,
       "type": "file"
     },
     {
-      "path": "src/store/useUIStore.js",
+      "path": "demo/inbound-execute.html",
       "accessCount": 5,
-      "lastAccessed": 1776677947049,
+      "lastAccessed": 1776658576344,
       "type": "file"
     },
     {
@@ -260,45 +308,39 @@
       "type": "file"
     },
     {
-      "path": "src/styles/tablet.css",
-      "accessCount": 5,
-      "lastAccessed": 1776682600063,
-      "type": "file"
-    },
-    {
       "path": "src/components/warehouse/MiniBlocks.jsx",
       "accessCount": 5,
       "lastAccessed": 1776684140482,
       "type": "file"
     },
     {
-      "path": "src/components/warehouse/WarehouseMatrix.jsx",
+      "path": "src/styles/warehouse.css",
       "accessCount": 5,
-      "lastAccessed": 1776684145343,
+      "lastAccessed": 1776686341410,
       "type": "file"
     },
     {
       "path": "src/pages/Settings.jsx",
-      "accessCount": 4,
-      "lastAccessed": 1776677949450,
+      "accessCount": 5,
+      "lastAccessed": 1776692129474,
       "type": "file"
     },
     {
-      "path": "src/styles/warehouse.css",
+      "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
       "accessCount": 4,
-      "lastAccessed": 1776684299002,
+      "lastAccessed": 1776685607834,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Login.jsx",
+      "accessCount": 4,
+      "lastAccessed": 1776692129853,
       "type": "file"
     },
     {
       "path": "README.md",
       "accessCount": 3,
       "lastAccessed": 1776659162061,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/Login.jsx",
-      "accessCount": 3,
-      "lastAccessed": 1776659231089,
       "type": "file"
     },
     {
@@ -320,16 +362,22 @@
       "type": "file"
     },
     {
+      "path": "src/pages",
+      "accessCount": 3,
+      "lastAccessed": 1776685584245,
+      "type": "directory"
+    },
+    {
+      "path": "src/store/useAuthStore.js",
+      "accessCount": 3,
+      "lastAccessed": 1776692141409,
+      "type": "file"
+    },
+    {
       "path": "demo/login.html",
       "accessCount": 2,
       "lastAccessed": 1776659115235,
       "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 2,
-      "lastAccessed": 1776677815048,
-      "type": "directory"
     },
     {
       "path": "demo/inventory.html",
@@ -338,15 +386,9 @@
       "type": "file"
     },
     {
-      "path": "src/components/warehouse/CellDetailsPanel.jsx",
+      "path": "src/components/layout/Layout.jsx",
       "accessCount": 2,
-      "lastAccessed": 1776684558419,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
-      "accessCount": 2,
-      "lastAccessed": 1776684581920,
+      "lastAccessed": 1776692135422,
       "type": "file"
     },
     {
@@ -359,12 +401,6 @@
       "path": "demo/WAREHOUSE_STYLES_GUIDE.md",
       "accessCount": 1,
       "lastAccessed": 1776659141919,
-      "type": "file"
-    },
-    {
-      "path": "src/components/layout/Layout.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776659164584,
       "type": "file"
     },
     {
@@ -386,45 +422,27 @@
       "type": "directory"
     },
     {
-      "path": "src/store/useAuthStore.js",
-      "accessCount": 1,
-      "lastAccessed": 1776681815835,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/tablet/TabletInbound.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776682667628,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/tablet/TabletOutbound.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776682694608,
-      "type": "file"
-    },
-    {
       "path": "src/styles/kiosk.css",
       "accessCount": 1,
       "lastAccessed": 1776682727539,
       "type": "file"
     },
     {
-      "path": "src/pages/kiosk/KioskPage.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776682761410,
-      "type": "file"
-    },
-    {
-      "path": "src/pages",
-      "accessCount": 1,
-      "lastAccessed": 1776683571610,
-      "type": "directory"
-    },
-    {
       "path": "src/components/warehouse/WarehouseRackGrid.jsx",
       "accessCount": 1,
       "lastAccessed": 1776684540853,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Dashboard.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776692125566,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/InboundSchedule.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776692126334,
       "type": "file"
     }
   ],

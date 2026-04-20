@@ -52,6 +52,8 @@ export default function KioskPage() {
   const [theme, setTheme] = useState('light');
   const [now, setNow] = useState(new Date());
   const [btIdx, setBtIdx] = useState(0);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [toast, setToast] = useState(null);
   const [logs, setLogs] = useState(() => {
     const t = new Date();
     return INIT_LOGS.map((l, i) => ({
@@ -94,21 +96,27 @@ export default function KioskPage() {
 
   const bt = BT_STATES[btIdx];
 
+  function showToast(msg) {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2500);
+  }
+
   return (
     <div className="k-root" data-theme={theme}>
-      <button
-        className="k-theme-btn"
-        onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
-        title={theme === 'light' ? '다크 모드' : '라이트 모드'}
-      >
-        {theme === 'light' ? '🌙' : '☀️'}
-      </button>
-
       {/* 헤더 */}
       <div className="k-header">
         <div className="k-header-logo">WMS</div>
         <div className="k-header-title">창고 관리 시스템 — 키오스크</div>
-        <div className="k-header-badge">KIOSK</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="k-header-badge">KIOSK</div>
+          <button
+            onClick={() => setSettingsOpen(true)}
+            title="설정"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', lineHeight: 1, padding: '2px 4px' }}
+          >
+            ⚙️
+          </button>
+        </div>
       </div>
 
       {/* 메인 */}
@@ -210,10 +218,63 @@ export default function KioskPage() {
 
       {/* 푸터 */}
       <div className="k-footer">
-        <span>v1.0.0-demo</span>
         <span>빌드: 2026-04-20</span>
         <span>내부망 전용</span>
       </div>
+
+      {/* 버전 고정 표시 */}
+      <div style={{ position: 'fixed', bottom: '12px', right: '16px', fontSize: '11px', opacity: 0.5, pointerEvents: 'none' }}>
+        v1.0.0
+      </div>
+
+      {/* 설정 모달 */}
+      {settingsOpen && (
+        <div
+          onClick={() => setSettingsOpen(false)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ background: theme === 'dark' ? '#1e293b' : '#fff', color: theme === 'dark' ? '#f1f5f9' : '#1e293b', borderRadius: '12px', padding: '28px 32px', minWidth: '280px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
+          >
+            <div style={{ fontSize: '16px', fontWeight: 700 }}>설정</div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>테마</span>
+              <button
+                onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
+                style={{ background: theme === 'dark' ? '#334155' : '#e2e8f0', border: 'none', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', color: 'inherit', fontSize: '14px' }}
+              >
+                {theme === 'light' ? '🌙 다크 모드' : '☀️ 라이트 모드'}
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>앱 업데이트</span>
+              <button
+                onClick={() => showToast('업데이트를 확인 중입니다...')}
+                style={{ background: '#0284c7', border: 'none', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', color: '#fff', fontSize: '14px' }}
+              >
+                업데이트 확인
+              </button>
+            </div>
+
+            <button
+              onClick={() => setSettingsOpen(false)}
+              style={{ marginTop: '4px', background: theme === 'dark' ? '#334155' : '#e2e8f0', border: 'none', borderRadius: '8px', padding: '8px', cursor: 'pointer', color: 'inherit', fontSize: '14px' }}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 토스트 */}
+      {toast && (
+        <div style={{ position: 'fixed', bottom: '40px', left: '50%', transform: 'translateX(-50%)', background: '#1e293b', color: '#f1f5f9', borderRadius: '8px', padding: '10px 20px', fontSize: '14px', zIndex: 2000, whiteSpace: 'nowrap', boxShadow: '0 4px 16px rgba(0,0,0,0.3)' }}>
+          {toast}
+        </div>
+      )}
     </div>
   );
 }

@@ -14,7 +14,7 @@ export function KanDetailPanel({ rackId, floor, kan }) {
   if (!rackId || !floor || !kan) {
     return (
       <div style={panelStyle}>
-        <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>칸을 선택하면 적재 상세가 표시됩니다</div>
+        <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>단을 선택하면 적재 상세가 표시됩니다</div>
       </div>
     );
   }
@@ -26,10 +26,10 @@ export function KanDetailPanel({ rackId, floor, kan }) {
   return (
     <div style={panelStyle}>
       <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: 8 }}>
-        {rack?.rack_no}번 랙 {floor}층 {kan}칸 — 적재 상세
+        {rack?.rack_no}번 랙 {floor}칸 {kan}단 — 적재 상세
       </div>
       {items.length === 0 ? (
-        <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>빈 칸입니다</div>
+        <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>빈 단입니다</div>
       ) : (
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
           <thead>
@@ -85,13 +85,13 @@ export default function CellDetailsPanel({ selectedCell }) {
   return (
     <div className="cell-details">
       <div className="cd-header">
-        랙 {rack?.rack_no} — {floor}층
+        랙 {rack?.rack_no} — {floor}칸
       </div>
       <div className="cd-table-wrap">
         <table className="cd-table">
           <thead>
             <tr>
-              <th>칸</th>
+              <th>단</th>
               <th>팔레트</th>
               <th>상품</th>
               <th>수량</th>
@@ -102,7 +102,7 @@ export default function CellDetailsPanel({ selectedCell }) {
             {rows.map(({ kan, pallet, items }) =>
               items.length === 0 ? (
                 <tr key={kan} className="cd-empty-row">
-                  <td>{kan}칸</td>
+                  <td>{kan}단</td>
                   <td colSpan={4}>—</td>
                 </tr>
               ) : (
@@ -110,7 +110,7 @@ export default function CellDetailsPanel({ selectedCell }) {
                   const product = products.find((p) => p.id === item.product_id);
                   return (
                     <tr key={`${kan}-${idx}`}>
-                      {idx === 0 && <td rowSpan={items.length}>{kan}칸</td>}
+                      {idx === 0 && <td rowSpan={items.length}>{kan}단</td>}
                       <td>P{String(pallet.id).padStart(3, '0')}</td>
                       <td>{product?.name || '-'}</td>
                       <td>{item.quantity.toLocaleString()}</td>

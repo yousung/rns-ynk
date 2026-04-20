@@ -90,7 +90,7 @@ export default function WarehouseMatrix({
         <table className="rack-matrix" ref={tableRef}>
           <thead>
             <tr>
-              <th className="label-cell">층/랙</th>
+              <th className="label-cell">칸/랙</th>
               {whRacks.map((rack) => (
                 <th key={rack.id}>{rack.rack_no}</th>
               ))}
@@ -103,7 +103,7 @@ export default function WarehouseMatrix({
           <tbody>
             {floors.map((floor) => (
               <tr key={floor}>
-                <td className="label-cell">{floor}층</td>
+                <td className="label-cell">{floor}칸</td>
                 {whRacks.map((rack) => {
                   const hasFloor = floor <= rack.floors;
                   if (!hasFloor) {
@@ -121,7 +121,7 @@ export default function WarehouseMatrix({
                   const miniBlocks = getMiniBlocks(rack.id, floor);
 
                   return (
-                    <td key={rack.id} onClick={() => onCellClick?.(rack.id, floor)} onMouseEnter={() => onCellHover?.(rack.id)} onMouseLeave={() => onCellHover?.(null)}>
+                    <td key={rack.id} onClick={() => onCellClick?.(rack.id, floor)} onMouseEnter={() => onCellHover?.(rack.id, floor)} onMouseLeave={() => onCellHover?.(null, null)}>
                       <div className={`rm-cell ${cellClass}${isSelected ? ' rm-selected' : ''}`}>
                         <MiniBlocks blocks={miniBlocks} />
                       </div>

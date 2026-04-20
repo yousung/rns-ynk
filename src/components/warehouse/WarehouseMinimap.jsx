@@ -14,7 +14,7 @@ function polyPts(corners) {
   return corners.map(([x, y]) => `${x},${y}`).join(' ');
 }
 
-export default function WarehouseMinimap({ warehouseId, selectedRackId, selectedCell, hoveredRackId }) {
+export default function WarehouseMinimap({ warehouseId, selectedRackId, selectedCell, hoveredRackId, hoveredFloor, hoveredKan }) {
   const { racks } = useDataStore();
   const { theme } = useUIStore();
   const isDark = theme === 'dark';
@@ -90,9 +90,18 @@ export default function WarehouseMinimap({ warehouseId, selectedRackId, selected
     // 셀 선택 — black + white stroke
     aTop: 'rgba(0,0,0,0.92)', aFront: 'rgba(0,0,0,0.78)', aSide: 'rgba(0,0,0,0.62)',
     aStroke: 'rgba(255,255,255,0.88)', aGlow: '0 0 4px rgba(255,255,255,0.75)',
-    // 랙 호버/선택 — cyan
-    hTop: 'rgba(94,226,198,0.42)', hFront: 'rgba(94,226,198,0.26)', hSide: 'rgba(94,226,198,0.16)',
-    hStroke: 'rgba(94,226,198,0.7)',
+    // 랙 호버 — light cyan
+    hTop: 'rgba(94,226,198,0.22)', hFront: 'rgba(94,226,198,0.14)', hSide: 'rgba(94,226,198,0.09)',
+    hStroke: 'rgba(94,226,198,0.45)',
+    // 랙 선택 — dark cyan
+    rsTop: 'rgba(94,226,198,0.65)', rsFront: 'rgba(94,226,198,0.44)', rsSide: 'rgba(94,226,198,0.28)',
+    rsStroke: 'rgba(94,226,198,0.95)',
+    // 층 호버 — amber
+    yTop: 'rgba(251,191,36,0.62)', yFront: 'rgba(251,191,36,0.42)', ySide: 'rgba(251,191,36,0.28)',
+    yStroke: 'rgba(251,191,36,0.9)',
+    // 칸 호버 — light black
+    khTop: 'rgba(0,0,0,0.30)', khFront: 'rgba(0,0,0,0.20)', khSide: 'rgba(0,0,0,0.13)',
+    khStroke: 'rgba(255,255,255,0.38)',
     // 기본
     iTop: 'rgba(94,226,198,0.18)', iFront: 'rgba(94,226,198,0.10)', iSide: 'rgba(94,226,198,0.06)',
     iStroke: 'rgba(140,163,196,0.45)',
@@ -106,9 +115,18 @@ export default function WarehouseMinimap({ warehouseId, selectedRackId, selected
     // 셀 선택 — black
     aTop: 'rgba(0,0,0,0.82)', aFront: 'rgba(0,0,0,0.62)', aSide: 'rgba(0,0,0,0.44)',
     aStroke: '#000000', aGlow: '0 0 3px rgba(0,0,0,0.65)',
-    // 랙 호버/선택 — blue
-    hTop: 'rgba(59,130,246,0.38)', hFront: 'rgba(59,130,246,0.24)', hSide: 'rgba(59,130,246,0.15)',
-    hStroke: 'rgba(59,130,246,0.65)',
+    // 랙 호버 — light blue
+    hTop: 'rgba(59,130,246,0.20)', hFront: 'rgba(59,130,246,0.13)', hSide: 'rgba(59,130,246,0.08)',
+    hStroke: 'rgba(59,130,246,0.40)',
+    // 랙 선택 — dark blue
+    rsTop: 'rgba(59,130,246,0.58)', rsFront: 'rgba(59,130,246,0.38)', rsSide: 'rgba(59,130,246,0.24)',
+    rsStroke: 'rgba(59,130,246,0.90)',
+    // 층 호버 — amber
+    yTop: 'rgba(245,158,11,0.60)', yFront: 'rgba(245,158,11,0.40)', ySide: 'rgba(245,158,11,0.26)',
+    yStroke: 'rgba(245,158,11,0.88)',
+    // 칸 호버 — light black
+    khTop: 'rgba(0,0,0,0.22)', khFront: 'rgba(0,0,0,0.14)', khSide: 'rgba(0,0,0,0.09)',
+    khStroke: 'rgba(0,0,0,0.38)',
     // 기본
     iTop: 'rgba(99,143,176,0.22)', iFront: 'rgba(99,143,176,0.13)', iSide: 'rgba(99,143,176,0.08)',
     iStroke: 'rgba(100,116,139,0.4)',
@@ -147,20 +165,29 @@ export default function WarehouseMinimap({ warehouseId, selectedRackId, selected
       <svg viewBox={viewBox} width={svgW} height={svgH} style={{ display: 'block' }}>
         {cells.map(({ rackId, floor, kan, right, front, top }) => {
           const isCellActive = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.kan === kan;
-          const isFloorActive = !isCellActive && selectedCell?.rackId === rackId && selectedCell?.floor === floor && !hoveredRackId;
-          const isRackActive = !isCellActive && !isFloorActive && (hoveredRackId === rackId || (!hoveredRackId && (selectedRackId === rackId || selectedCell?.rackId === rackId)));
+          const isKanHovered = !isCellActive && hoveredKan?.rackId === rackId && hoveredKan?.floor === floor && hoveredKan?.kan === kan;
+          const isFloorHovered = !isCellActive && !isKanHovered && hoveredRackId === rackId && hoveredFloor === floor;
+          const isFloorActive = !isCellActive && !isKanHovered && !isFloorHovered && selectedCell?.rackId === rackId && selectedCell?.floor === floor && !hoveredRackId;
+          const isRackHovered = !isCellActive && !isKanHovered && !isFloorHovered && !isFloorActive && hoveredRackId === rackId;
+          const isRackSelected = !isCellActive && !isKanHovered && !isFloorHovered && !isFloorActive && !isRackHovered && (selectedRackId === rackId || selectedCell?.rackId === rackId);
 
           let tF, fF, sF, stroke, glowStyle = {};
           if (isCellActive) {
             tF = c.aTop; fF = c.aFront; sF = c.aSide; stroke = c.aStroke;
             glowStyle = { filter: `drop-shadow(${c.aGlow})` };
+          } else if (isKanHovered) {
+            tF = c.khTop; fF = c.khFront; sF = c.khSide; stroke = c.khStroke;
+          } else if (isFloorHovered) {
+            tF = c.yTop; fF = c.yFront; sF = c.ySide; stroke = c.yStroke;
           } else if (isFloorActive) {
             tF = isDark ? 'rgba(0,0,0,0.50)' : 'rgba(0,0,0,0.32)';
             fF = isDark ? 'rgba(0,0,0,0.36)' : 'rgba(0,0,0,0.22)';
             sF = isDark ? 'rgba(0,0,0,0.24)' : 'rgba(0,0,0,0.14)';
             stroke = isDark ? 'rgba(255,255,255,0.48)' : 'rgba(0,0,0,0.52)';
-          } else if (isRackActive) {
+          } else if (isRackHovered) {
             tF = c.hTop; fF = c.hFront; sF = c.hSide; stroke = c.hStroke;
+          } else if (isRackSelected) {
+            tF = c.rsTop; fF = c.rsFront; sF = c.rsSide; stroke = c.rsStroke;
           } else {
             tF = c.iTop; fF = c.iFront; sF = c.iSide; stroke = c.iStroke;
           }

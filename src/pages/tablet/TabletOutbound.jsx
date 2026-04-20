@@ -7,12 +7,15 @@ export default function TabletOutbound() {
   const navigate = useNavigate();
   const { warehouses, racks, pallets, products, inventoryItems, outboundSchedules } = useDataStore();
 
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('light');
   const [selectedId, setSelectedId] = useState(null);
   const [selectedLotId, setSelectedLotId] = useState(null);
   const [elecStatus, setElecStatus] = useState('idle');
   const [qty, setQty] = useState('');
   const [toast, setToast] = useState(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [profile, setProfile] = useState({ name: '작업자1', phone: '', position: '', memo: '' });
+  const [passwords, setPasswords] = useState({ current: '', next: '', confirm: '' });
 
   const pendingSchedules = outboundSchedules.filter(s => s.status === 'pending');
   const selectedSchedule = pendingSchedules.find(s => s.id === selectedId) ?? null;
@@ -82,14 +85,6 @@ export default function TabletOutbound() {
 
   return (
     <div className="t-root" data-theme={theme}>
-      <button
-        className="t-theme-btn"
-        onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
-        title={theme === 'dark' ? '라이트 모드' : '다크 모드'}
-      >
-        {theme === 'dark' ? '☀️' : '🌙'}
-      </button>
-
       {toast && (
         <div style={{
           position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)',
@@ -173,7 +168,7 @@ export default function TabletOutbound() {
                       <div className="t-lot-body">
                         <div className="t-lot-date">{l.item.received_at}</div>
                         <div className="t-lot-loc">
-                          {l.warehouse?.name} · {l.rack?.rack_no}번랙 {l.floor}층 {l.kan}번
+                          {l.warehouse?.name} · {l.rack?.rack_no}번랙 {l.floor}칸 {l.kan}단
                         </div>
                         <div className="t-lot-qty">{l.item.quantity.toLocaleString()}개 재고</div>
                       </div>
@@ -198,12 +193,12 @@ export default function TabletOutbound() {
                     <div className="t-fifo-loc-sep">/</div>
                     <div className="t-fifo-loc-item">
                       <span className="t-fifo-loc-value">{selectedLot.floor}</span>
-                      <span className="t-fifo-loc-unit">층</span>
+                      <span className="t-fifo-loc-unit">칸</span>
                     </div>
                     <div className="t-fifo-loc-sep">/</div>
                     <div className="t-fifo-loc-item">
                       <span className="t-fifo-loc-value">{selectedLot.kan}</span>
-                      <span className="t-fifo-loc-unit">번</span>
+                      <span className="t-fifo-loc-unit">단</span>
                     </div>
                   </div>
                   <div className="t-fifo-received">입고일: {selectedLot.item.received_at}</div>
@@ -259,10 +254,66 @@ export default function TabletOutbound() {
         </div>
       </div>
 
+      {settingsOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+          <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--border-bright)', borderRadius: 14, width: '100%', maxWidth: 420, maxHeight: '90vh', overflowY: 'auto', padding: 24, boxSizing: 'border-box' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>설정</div>
+
+            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>프로필</div>
+            {[
+              { label: '이름', key: 'name' },
+              { label: '전화번호', key: 'phone' },
+              { label: '직책', key: 'position' },
+              { label: '메모', key: 'memo' },
+            ].map(({ label, key }) => (
+              <div key={key} style={{ marginBottom: 10 }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: 4 }}>{label}</div>
+                <input
+                  type="text"
+                  value={profile[key]}
+                  onChange={e => setProfile(p => ({ ...p, [key]: e.target.value }))}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-surface)', color: 'var(--text-primary)', fontSize: '0.9rem', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+            ))}
+
+            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '18px 0 10px' }}>비밀번호 변경</div>
+            {[
+              { label: '현재 비밀번호', key: 'current' },
+              { label: '새 비밀번호', key: 'next' },
+              { label: '확인', key: 'confirm' },
+            ].map(({ label, key }) => (
+              <div key={key} style={{ marginBottom: 10 }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: 4 }}>{label}</div>
+                <input
+                  type="password"
+                  value={passwords[key]}
+                  onChange={e => setPasswords(p => ({ ...p, [key]: e.target.value }))}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-surface)', color: 'var(--text-primary)', fontSize: '0.9rem', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+            ))}
+
+            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '18px 0 10px' }}>테마</div>
+            <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden', marginBottom: 20 }}>
+              <button onClick={() => setTheme('light')} style={{ flex: 1, padding: 10, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', fontFamily: 'inherit', background: theme === 'light' ? 'var(--cyan)' : 'var(--bg-surface)', color: theme === 'light' ? '#000' : 'var(--text-secondary)' }}>라이트</button>
+              <button onClick={() => setTheme('dark')} style={{ flex: 1, padding: 10, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', fontFamily: 'inherit', background: theme === 'dark' ? 'var(--cyan)' : 'var(--bg-surface)', color: theme === 'dark' ? '#000' : 'var(--text-secondary)' }}>다크</button>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button onClick={() => setSettingsOpen(false)} style={{ flex: 1, padding: 12, borderRadius: 10, fontWeight: 700, fontSize: '0.95rem', border: '1px solid var(--border)', background: 'var(--bg-surface)', color: 'var(--text-secondary)', cursor: 'pointer', fontFamily: 'inherit' }}>닫기</button>
+              <button onClick={() => { setSettingsOpen(false); showToast('설정이 저장되었습니다', 'green'); }} style={{ flex: 2, padding: 12, borderRadius: 10, fontWeight: 700, fontSize: '0.95rem', border: 'none', background: 'var(--cyan)', color: '#000', cursor: 'pointer', fontFamily: 'inherit' }}>저장</button>
+            </div>
+
+            <button onClick={() => navigate('/')} style={{ width: '100%', marginTop: 12, padding: 12, borderRadius: 10, fontWeight: 700, fontSize: '0.95rem', border: 'none', background: 'var(--red-dim, #7f1d1d)', color: 'var(--red, #f87171)', cursor: 'pointer', fontFamily: 'inherit' }}>로그아웃</button>
+          </div>
+        </div>
+      )}
+
       <div className="t-tab-bar">
         <button className="t-tab" onClick={() => navigate('/tablet/inbound')}>입고처리</button>
         <button className="t-tab active">출고처리</button>
-        <button className="t-tab logout" onClick={() => navigate('/')}>로그아웃</button>
+        <button className="t-tab" onClick={() => setSettingsOpen(true)}>설정</button>
       </div>
     </div>
   );

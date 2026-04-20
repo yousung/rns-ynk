@@ -19,6 +19,8 @@ export default function InboundExecute() {
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null); // { rackId, floor, kan }
   const [hoveredRackId, setHoveredRackId] = useState(null);
+  const [hoveredFloor, setHoveredFloor] = useState(null);
+  const [hoveredKan, setHoveredKan] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [execQty, setExecQty] = useState('');
 
@@ -124,7 +126,7 @@ export default function InboundExecute() {
 
   function executeInbound() {
     if (!sched || !selectedCell || !rack) return;
-    alert(`✅ 입고 완료!\n${schedProduct?.name} ${inQty}개\n→ ${rack.rack_no}번 랙 · ${selectedCell.floor}층 · ${selectedCell.kan}칸\n\n(데모: 실제 저장 없음)`);
+    alert(`✅ 입고 완료!\n${schedProduct?.name} ${inQty}개\n→ ${rack.rack_no}번 랙 · ${selectedCell.floor}칸 · ${selectedCell.kan}단\n\n(데모: 실제 저장 없음)`);
     setSelectedScheduleId(null);
     setSelectedCell(null);
     setExecQty('');
@@ -176,7 +178,7 @@ export default function InboundExecute() {
                 )}
                 {selectedCell && rack ? (
                   <>
-                    <span style={{ marginLeft: 8 }}>위치: <span className="action-highlight">{rack.rack_no}번 랙 · {selectedCell.floor}층{selectedCell.kan ? ` · ${selectedCell.kan}칸` : ''}</span></span>
+                    <span style={{ marginLeft: 8 }}>위치: <span className="action-highlight">{rack.rack_no}번 랙 · {selectedCell.floor}칸{selectedCell.kan ? ` · ${selectedCell.kan}단` : ''}</span></span>
                   </>
                 ) : (
                   <span style={{ color: 'var(--text-secondary)', marginLeft: 8 }}>← 매트릭스에서 위치 클릭</span>
@@ -207,9 +209,9 @@ export default function InboundExecute() {
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                 </div>
                 <div style={{ position: 'relative', paddingBottom: 6 }}>
-                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} />
+                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredKan={hoveredKan} />
                   {warehouseType === 'a' ? (
-                    <div style={{ padding: '10px 230px 10px 10px', maxHeight: 320, overflowY: 'auto' }}>
+                    <div style={{ padding: '10px 230px 10px 10px', maxHeight: 520, overflowY: 'auto' }}>
                       <WarehouseRackGrid
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
@@ -237,12 +239,12 @@ export default function InboundExecute() {
                       />
                     </div>
                   ) : (
-                    <div style={{ paddingRight: 230, maxHeight: 320, overflowY: 'auto' }}>
+                    <div style={{ paddingRight: 230, maxHeight: 520, overflowY: 'auto' }}>
                       <WarehouseMatrix
                         warehouseId={selectedWarehouseId}
                         selectedCell={selectedCell ? { rackId: selectedCell.rackId, floor: selectedCell.floor } : null}
                         onCellClick={handleCellClick}
-                        onCellHover={setHoveredRackId}
+                        onCellHover={(rackId, floor) => { setHoveredRackId(rackId); setHoveredFloor(floor ?? null); }}
                         getMiniBlocksFn={getMiniBlocksFn}
                         mode="inbound"
                       />
@@ -257,7 +259,7 @@ export default function InboundExecute() {
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell ? `랙 ${rack?.rack_no ?? ''} — ${selectedCell.floor}층 칸별 현황` : '칸별 현황'}
+                      {selectedCell ? `랙 ${rack?.rack_no ?? ''} — ${selectedCell.floor}칸 단별 현황` : '단별 현황'}
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
@@ -270,6 +272,7 @@ export default function InboundExecute() {
                         if (prev.floor === floor && prev.kan === kan) return { ...prev, kan: null };
                         return { ...prev, floor, kan };
                       })}
+                      onKanHover={(floor, kan) => setHoveredKan(floor != null ? { rackId: selectedCell?.rackId, floor, kan } : null)}
                     />
                   </div>
                 </div>
@@ -277,7 +280,7 @@ export default function InboundExecute() {
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell?.kan ? `${selectedCell.kan}칸 적재 상세` : '적재 상세'}
+                      {selectedCell?.kan ? `${selectedCell.kan}단 적재 상세` : '적재 상세'}
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
