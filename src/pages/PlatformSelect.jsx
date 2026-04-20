@@ -223,6 +223,35 @@ export default function PlatformSelect() {
           />
         ))}
       </div>
+      <button
+        onClick={() => navigate('/presentation')}
+        style={{
+          marginTop: 64,
+          background: v.bgPanel,
+          border: `1.5px solid ${v.cyan}`,
+          color: v.cyan,
+          fontSize: '1rem',
+          fontWeight: 600,
+          cursor: 'pointer',
+          padding: '14px 28px',
+          fontFamily: 'inherit',
+          transition: 'all 0.25s',
+          borderRadius: 12,
+          boxShadow: 'none',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = v.cyanDim;
+          e.currentTarget.style.boxShadow = `0 0 20px ${theme === 'dark' ? 'rgba(0,212,255,0.15)' : 'rgba(2,132,199,0.1)'}`;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = v.bgPanel;
+          e.currentTarget.style.boxShadow = 'none';
+        }}
+      >
+        📋 시스템 사용법 보기
+      </button>
     </div>
   );
 }

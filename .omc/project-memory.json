@@ -147,20 +147,20 @@
   "hotPaths": [
     {
       "path": "src/pages/OutboundExecute.jsx",
-      "accessCount": 32,
-      "lastAccessed": 1776692778175,
+      "accessCount": 33,
+      "lastAccessed": 1776695161372,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/InboundExecute.jsx",
+      "accessCount": 31,
+      "lastAccessed": 1776695160789,
       "type": "file"
     },
     {
       "path": "demo/kiosk/index.html",
       "accessCount": 30,
       "lastAccessed": 1776682296416,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/InboundExecute.jsx",
-      "accessCount": 30,
-      "lastAccessed": 1776692777465,
       "type": "file"
     },
     {
@@ -171,8 +171,14 @@
     },
     {
       "path": "src/pages/tablet/TabletInbound.jsx",
-      "accessCount": 27,
-      "lastAccessed": 1776694347918,
+      "accessCount": 28,
+      "lastAccessed": 1776695168360,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/tablet/TabletOutbound.jsx",
+      "accessCount": 24,
+      "lastAccessed": 1776695168556,
       "type": "file"
     },
     {
@@ -182,9 +188,21 @@
       "type": "file"
     },
     {
-      "path": "src/pages/tablet/TabletOutbound.jsx",
-      "accessCount": 23,
-      "lastAccessed": 1776694348373,
+      "path": "src/App.jsx",
+      "accessCount": 22,
+      "lastAccessed": 1776695486781,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/PlatformSelect.jsx",
+      "accessCount": 21,
+      "lastAccessed": 1776696881175,
+      "type": "file"
+    },
+    {
+      "path": "src/store/useDataStore.js",
+      "accessCount": 20,
+      "lastAccessed": 1776695176094,
       "type": "file"
     },
     {
@@ -194,15 +212,9 @@
       "type": "file"
     },
     {
-      "path": "src/store/useDataStore.js",
-      "accessCount": 19,
-      "lastAccessed": 1776692822971,
-      "type": "file"
-    },
-    {
       "path": "src/pages/Inventory.jsx",
-      "accessCount": 18,
-      "lastAccessed": 1776692128095,
+      "accessCount": 19,
+      "lastAccessed": 1776695175967,
       "type": "file"
     },
     {
@@ -210,18 +222,6 @@
       "accessCount": 18,
       "lastAccessed": 1776692871530,
       "type": "directory"
-    },
-    {
-      "path": "src/App.jsx",
-      "accessCount": 16,
-      "lastAccessed": 1776692315362,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/PlatformSelect.jsx",
-      "accessCount": 13,
-      "lastAccessed": 1776692130094,
-      "type": "file"
     },
     {
       "path": "src/components/warehouse/WarehouseMinimap.jsx",
@@ -248,6 +248,12 @@
       "type": "file"
     },
     {
+      "path": "src/pages/kiosk/KioskPage.jsx",
+      "accessCount": 10,
+      "lastAccessed": 1776695168656,
+      "type": "file"
+    },
+    {
       "path": "demo/data.js",
       "accessCount": 9,
       "lastAccessed": 1776678355249,
@@ -260,12 +266,6 @@
       "type": "file"
     },
     {
-      "path": "src/pages/kiosk/KioskPage.jsx",
-      "accessCount": 9,
-      "lastAccessed": 1776693852221,
-      "type": "file"
-    },
-    {
       "path": "src/store/useUIStore.js",
       "accessCount": 8,
       "lastAccessed": 1776692135046,
@@ -273,8 +273,8 @@
     },
     {
       "path": "",
-      "accessCount": 7,
-      "lastAccessed": 1776692137751,
+      "accessCount": 8,
+      "lastAccessed": 1776694928228,
       "type": "directory"
     },
     {
@@ -326,6 +326,12 @@
       "type": "file"
     },
     {
+      "path": "README.md",
+      "accessCount": 5,
+      "lastAccessed": 1776695559484,
+      "type": "file"
+    },
+    {
       "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
       "accessCount": 4,
       "lastAccessed": 1776685607834,
@@ -335,12 +341,6 @@
       "path": "src/pages/Login.jsx",
       "accessCount": 4,
       "lastAccessed": 1776692129853,
-      "type": "file"
-    },
-    {
-      "path": "README.md",
-      "accessCount": 3,
-      "lastAccessed": 1776659162061,
       "type": "file"
     },
     {
@@ -392,6 +392,18 @@
       "type": "file"
     },
     {
+      "path": "src/pages/Dashboard.jsx",
+      "accessCount": 2,
+      "lastAccessed": 1776695160510,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/InboundSchedule.jsx",
+      "accessCount": 2,
+      "lastAccessed": 1776695160672,
+      "type": "file"
+    },
+    {
       "path": "CLAUDE.md",
       "accessCount": 1,
       "lastAccessed": 1776659126671,
@@ -431,18 +443,6 @@
       "path": "src/components/warehouse/WarehouseRackGrid.jsx",
       "accessCount": 1,
       "lastAccessed": 1776684540853,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/Dashboard.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776692125566,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/InboundSchedule.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776692126334,
       "type": "file"
     }
   ],
