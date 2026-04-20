@@ -104,6 +104,11 @@
             <div id="inboundAction" style="display:none;" class="card mt-4">
               <h4 class="font-bold mb-3">입고 실행</h4>
               <p class="text-sm mb-3" id="inboundActionInfo" style="color:var(--text-secondary);"></p>
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <label style="font-size:0.85rem;color:var(--text-secondary);white-space:nowrap;">입고 수량</label>
+                <input type="number" id="inboundQty" min="1" style="width:100px;" placeholder="수량 입력">
+                <span id="inboundQtyHint" style="font-size:0.8rem;color:var(--text-secondary);"></span>
+              </div>
               <button class="btn-success" onclick="executeInbound()">입고 실행</button>
             </div>
           </div>
@@ -267,7 +272,10 @@
         const schedule = inboundSchedules.find(s => s.id === selectedScheduleId);
         const product = products.find(p => p.id === schedule.product_id);
         document.getElementById('inboundActionInfo').textContent =
-          `${product.name} ${schedule.quantity}개 → ${rack.rack_no}번 랙 ${floor}층 ${grp}번 슬롯`;
+          `${product.name} → ${rack.rack_no}번 랙 ${floor}층 ${grp}번 슬롯`;
+        document.getElementById('inboundQty').value = schedule.quantity;
+        document.getElementById('inboundQty').max = schedule.quantity;
+        document.getElementById('inboundQtyHint').textContent = `최대 ${schedule.quantity}개`;
         document.getElementById('inboundAction').style.display = 'block';
       } else {
         document.getElementById('inboundAction').style.display = 'none';
@@ -278,7 +286,12 @@
       if (!selectedScheduleId || !selectedSlot) return;
       const schedule = inboundSchedules.find(s => s.id === selectedScheduleId);
       const product = products.find(p => p.id === schedule.product_id);
-      alert(`✅ 입고 완료!\n${product.name} ${schedule.quantity}개 → ${selectedSlot} 위치에 입고되었습니다.\n(데모: 실제 저장 없음)`);
+      const qty = parseInt(document.getElementById('inboundQty').value);
+      if (!qty || qty <= 0 || qty > schedule.quantity) {
+        alert(`올바른 수량을 입력하세요. (1 ~ ${schedule.quantity})`);
+        return;
+      }
+      alert(`✅ 입고 완료!\n${product.name} ${qty}개 → ${selectedSlot} 위치에 입고되었습니다.\n(데모: 실제 저장 없음)`);
       selectedScheduleId = null;
       selectedSlot = null;
       selectedRackId = null;

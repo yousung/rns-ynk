@@ -10,11 +10,11 @@ function getCurrentUser() {
   try { return JSON.parse(localStorage.getItem('wms_user')); } catch { return null; }
 }
 function requireAuth() {
-  if (!getCurrentUser()) window.location.href = 'index.html';
+  if (!getCurrentUser()) window.location.href = 'login.html';
 }
 function logout() {
   localStorage.removeItem('wms_user');
-  window.location.href = 'index.html';
+  window.location.href = 'login.html';
 }
 function getRoleText(role) {
   return { developer: '개발자', super_admin: '슈퍼관리자', admin: '관리자', user: '사용자' }[role] || role;
@@ -66,6 +66,8 @@ const _MENU_ICONS = {
   'activity-log':      `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
   'users':             `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`,
   'settings':          `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>`,
+  'tablet-app':        `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`,
+  'kiosk-app':         `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
   'logout':            `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
 };
 
@@ -82,14 +84,22 @@ function renderLayout(activeMenu) {
     { key: 'products',          label: '상품 리스트', href: 'products.html' },
     { key: 'activity-log',      label: '활동 로그',   href: 'activity-log.html' },
     { key: 'users',             label: '사용자 관리', href: 'users.html' },
+    { key: 'separator-demo', label: '데모 앱', separator: true },
+    { key: 'tablet-app', label: '태블릿 앱', href: 'tablet/login.html' },
+    { key: 'kiosk-app',  label: '키오스크 앱', href: 'kiosk/index.html' },
   ];
 
-  const nav = menuItems.map(item => `
-    <a href="${item.href}" class="nav-item ${item.key === activeMenu ? 'active' : ''}" title="${item.label}">
-      ${_MENU_ICONS[item.key] || ''}
-      <span class="nav-label">${item.label}</span>
-    </a>
-  `).join('');
+  const nav = menuItems.map(item => {
+    if (item.separator) {
+      return `<div class="nav-separator">${item.label}</div>`;
+    }
+    return `
+      <a href="${item.href}" class="nav-item ${item.key === activeMenu ? 'active' : ''}" title="${item.label}">
+        ${_MENU_ICONS[item.key] || ''}
+        <span class="nav-label">${item.label}</span>
+      </a>
+    `;
+  }).join('');
 
   document.getElementById('sidebar').innerHTML = `
     <div class="sidebar-header">
@@ -173,6 +183,8 @@ function getCommonStyles() {
     .sidebar.slim a.nav-item.active{background:var(--cyan-dim);color:var(--cyan);border-left-color:var(--cyan) !important;}
     .nav-label{transition:opacity 0.1s;}
     .sidebar.slim .nav-label{display:none;}
+    .nav-separator{padding:16px 12px 4px;font-size:0.65rem;color:var(--text-secondary);letter-spacing:0.08em;text-transform:uppercase;user-select:none;}
+    .slim .nav-separator{display:none;}
 
     .sidebar-wh-type{padding:8px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
     .sidebar.slim .sidebar-wh-type{justify-content:center;}

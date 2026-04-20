@@ -20,6 +20,7 @@ export default function InboundExecute() {
   const [selectedCell, setSelectedCell] = useState(null); // { rackId, floor, kan }
   const [hoveredRackId, setHoveredRackId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [execQty, setExecQty] = useState('');
 
   // ─── 스케줄 ───────────────────────────────────────────────
   const pendingSchedules = inboundSchedules
@@ -33,6 +34,7 @@ export default function InboundExecute() {
   function toggleSchedule(id) {
     setSelectedScheduleId((prev) => (prev === id ? null : id));
     setSelectedCell(null);
+    setExecQty('');
   }
 
   // ─── 셀 클릭 (Type B) ────────────────────────────────────
@@ -118,11 +120,14 @@ export default function InboundExecute() {
   const schedProduct = sched ? products.find((p) => p.id === sched.product_id) : null;
   const rack = selectedCell ? racks.find((r) => r.id === selectedCell.rackId) : null;
 
+  const inQty = execQty !== '' ? (parseInt(execQty) || 0) : (sched?.quantity ?? 0);
+
   function executeInbound() {
     if (!sched || !selectedCell || !rack) return;
-    alert(`✅ 입고 완료!\n${schedProduct?.name} ${sched.quantity}개\n→ ${rack.rack_no}번 랙 · ${selectedCell.floor}층 · ${selectedCell.kan}칸\n\n(데모: 실제 저장 없음)`);
+    alert(`✅ 입고 완료!\n${schedProduct?.name} ${inQty}개\n→ ${rack.rack_no}번 랙 · ${selectedCell.floor}층 · ${selectedCell.kan}칸\n\n(데모: 실제 저장 없음)`);
     setSelectedScheduleId(null);
     setSelectedCell(null);
+    setExecQty('');
   }
 
   const canExecute = !!(selectedScheduleId && selectedCell);
@@ -177,6 +182,19 @@ export default function InboundExecute() {
                   <span style={{ color: 'var(--text-secondary)', marginLeft: 8 }}>← 매트릭스에서 위치 클릭</span>
                 )}
               </div>
+              {sched && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
+                  <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>수량</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={execQty !== '' ? execQty : (sched?.quantity ?? '')}
+                    onChange={e => setExecQty(e.target.value)}
+                    style={{ width: 64, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 4, padding: '3px 6px', fontSize: '0.85rem', color: 'var(--text-primary)', outline: 'none', textAlign: 'right', fontFamily: 'inherit' }}
+                  />
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>개</span>
+                </div>
+              )}
               <button className="btn-exec" disabled={!canExecute} onClick={executeInbound}>
                 입고 실행
               </button>

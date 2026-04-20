@@ -6,11 +6,11 @@ function getCurrentUser() {
   try { return JSON.parse(localStorage.getItem('wms_user')); } catch { return null; }
 }
 function requireAuth() {
-  if (!getCurrentUser()) window.location.href = '../../index.html';
+  if (!getCurrentUser()) window.location.href = '../../login.html';
 }
 function logout() {
   localStorage.removeItem('wms_user');
-  window.location.href = '../../index.html';
+  window.location.href = '../../login.html';
 }
 function getRoleText(role) {
   return { developer: '개발자', super_admin: '슈퍼관리자', admin: '관리자', user: '사용자' }[role] || role;

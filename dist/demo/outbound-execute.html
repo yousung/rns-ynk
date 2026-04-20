@@ -93,6 +93,7 @@
     let selectedWarehouse = 1;
     let selectedScheduleId = null;
     let selectedRackId = null;
+    let selectedLotItemId = null;
 
     function renderWhTabs() {
       document.getElementById('whTabs').innerHTML = warehouses.map(w =>
@@ -131,6 +132,7 @@
     function selectSchedule(id) {
       selectedScheduleId = id;
       selectedRackId = null;
+      selectedLotItemId = null;
       renderScheduleList();
       render3DRacks();
       renderFifoPreview();
@@ -268,39 +270,65 @@
       const sorted = inventoryItems.filter(i => i.product_id === schedule.product_id)
         .sort((a,b) => new Date(a.received_at)-new Date(b.received_at));
 
-      let remaining = schedule.quantity;
       let rows = '';
       sorted.forEach((item, idx) => {
-        if (remaining <= 0) return;
-        const qty = Math.min(item.quantity, remaining);
         const pallet = pallets.find(p => p.id === item.pallet_id);
-        rows += `<tr>
+        const isSel = item.id === selectedLotItemId;
+        rows += `<tr onclick="selectLotItem(${item.id})" style="cursor:pointer;${isSel ? 'background:var(--amber-dim);' : ''}">
           <td><span class="badge" style="background:var(--amber-dim);color:var(--amber);">${idx+1}</span></td>
           <td style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;">${pallet ? pallet.location : '-'}</td>
           <td>${item.received_at}</td>
-          <td>${qty}개</td>
+          <td>${item.quantity}개</td>
+          <td style="color:var(--amber);font-weight:700;">${isSel ? '✓' : ''}</td>
         </tr>`;
-        remaining -= qty;
       });
+
+      const selItem = selectedLotItemId ? sorted.find(i => i.id === selectedLotItemId) : null;
+      const qtySection = selItem ? `
+        <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
+          <label style="font-size:0.85rem;color:var(--text-secondary);white-space:nowrap;">출고 수량</label>
+          <input type="number" id="outboundQty" min="1" max="${selItem.quantity}" value="${Math.min(schedule.quantity, selItem.quantity)}" style="width:100px;">
+          <span style="font-size:0.8rem;color:var(--text-secondary);">최대 ${selItem.quantity}개</span>
+        </div>
+        <button class="btn-success" style="margin-top:12px;" onclick="executeOutbound()">출고 실행</button>
+      ` : '';
 
       const preview = document.getElementById('fifoPreview');
       preview.innerHTML = `
-        <h4 class="font-bold mb-3">FIFO 출고 예상 — ${product.name} ${schedule.quantity}개</h4>
+        <h4 class="font-bold mb-3">FIFO 출고 — ${product.name} (예정: ${schedule.quantity}개)</h4>
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px;">출고할 LOT를 선택하세요 (선입 선출 권장).</p>
         <table>
-          <thead><tr><th>순서</th><th>위치</th><th>입고일</th><th>출고량</th></tr></thead>
+          <thead><tr><th>순서</th><th>위치</th><th>입고일</th><th>재고량</th><th></th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
-        <button class="btn-success mt-4" onclick="executeOutbound()">출고 실행</button>
+        ${qtySection}
       `;
       preview.style.display = 'block';
     }
 
+    function selectLotItem(itemId) {
+      selectedLotItemId = selectedLotItemId === itemId ? null : itemId;
+      renderFifoPreview();
+    }
+
     function executeOutbound() {
+      if (!selectedScheduleId || !selectedLotItemId) {
+        alert('출고할 LOT를 선택하세요.');
+        return;
+      }
       const schedule = outboundSchedules.find(s => s.id === selectedScheduleId);
       const product = products.find(p => p.id === schedule.product_id);
-      alert(`✅ 출고 완료!\n${product.name} ${schedule.quantity}개 FIFO 출고 처리되었습니다.\n(데모: 실제 저장 없음)`);
+      const item = inventoryItems.find(i => i.id === selectedLotItemId);
+      const qty = parseInt(document.getElementById('outboundQty').value);
+      if (!qty || qty <= 0 || qty > item.quantity) {
+        alert(`올바른 수량을 입력하세요. (1 ~ ${item.quantity})`);
+        return;
+      }
+      const pallet = pallets.find(p => p.id === item.pallet_id);
+      alert(`✅ 출고 완료!\n${product.name} ${qty}개\n위치: ${pallet ? pallet.location : '-'} | 입고일: ${item.received_at}\n(데모: 실제 저장 없음)`);
       selectedScheduleId = null;
       selectedRackId = null;
+      selectedLotItemId = null;
       renderScheduleList();
       render3DRacks();
       document.getElementById('slotDetail').style.display = 'none';

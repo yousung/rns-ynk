@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>키오스크 관리 시스템</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-base:#F0F4F8; --bg-panel:#FFFFFF; --bg-surface:#F1F5F9; --bg-hover:#E2E8F0;
+      --border:#CBD5E1; --border-bright:#94A3B8;
+      --cyan:#0284C7; --cyan-dim:rgba(2,132,199,0.12); --cyan-glow:0 0 8px rgba(2,132,199,0.3);
+      --amber:#D97706; --amber-dim:rgba(217,119,6,0.12);
+      --red:#DC2626; --red-dim:rgba(220,38,38,0.12);
+      --green:#059669; --green-dim:rgba(5,150,105,0.12);
+      --text-primary:#1E293B; --text-secondary:#64748B; --text-accent:#0284C7;
+    }
+    [data-theme="dark"] {
+      --bg-base:#070C14; --bg-panel:#0D1626; --bg-surface:#132035; --bg-hover:#1A2D47;
+      --border:#1E3A5F; --border-bright:#2D5A8E;
+      --cyan:#00D4FF; --cyan-dim:rgba(0,212,255,0.15); --cyan-glow:0 0 12px rgba(0,212,255,0.5);
+      --amber:#F59E0B; --amber-dim:rgba(245,158,11,0.15);
+      --red:#EF4444; --red-dim:rgba(239,68,68,0.15);
+      --green:#10B981; --green-dim:rgba(16,185,129,0.15);
+      --text-primary:#E8F0FE; --text-secondary:#7B91AD; --text-accent:#00D4FF;
+    }
+    [data-theme="dark"] body {
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    [data-theme="dark"] .k-logo-icon { filter: drop-shadow(0 0 6px rgba(0,212,255,0.5)); }
+    [data-theme="dark"] .k-logo-text { text-shadow: 0 0 8px rgba(0,212,255,0.5); }
+    [data-theme="dark"] .k-qr-wrapper { box-shadow: 0 0 32px rgba(0,212,255,0.2); }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; word-break: keep-all; }
+    html, body {
+      width: 100vw; height: 100vh; overflow: hidden;
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: var(--bg-base);
+      background-image: none;
+      color: var(--text-primary);
+    }
+
+    /* ── 레이아웃 ── */
+    .kiosk-root {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* ── 헤더 ── */
+    .k-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 32px;
+      height: 64px;
+      flex-shrink: 0;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+    }
+    .k-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .k-logo-icon {
+      width: 32px; height: 32px;
+      color: var(--cyan);
+      filter: drop-shadow(0 0 4px rgba(2,132,199,0.3));
+    }
+    .k-logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-shadow: 0 0 6px rgba(2,132,199,0.25);
+      letter-spacing: -0.3px;
+    }
+    .k-header-sep {
+      flex: 1;
+    }
+    .k-header-time-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    .k-current-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 1px;
+    }
+    .k-start-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+
+    /* ── 메인 영역 ── */
+    .k-main {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      gap: 0;
+    }
+
+    /* ── 좌측 (QR / 연결 정보) ── */
+    .k-left {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 32px 40px;
+      border-right: 1px solid var(--border);
+    }
+    .k-scan-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      text-align: center;
+    }
+    .k-scan-title span {
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow);
+    }
+
+    /* QR 코드 */
+    .k-qr-wrapper {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    /* 접속 정보 */
+    .k-conn-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-bright);
+      border-radius: 10px;
+      padding: 14px 24px;
+    }
+    .k-conn-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .k-conn-addr {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      text-shadow: var(--cyan-glow);
+    }
+
+    /* 카드 행 */
+    .k-cards-row {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+      max-width: 580px;
+    }
+    .k-card {
+      flex: 1;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .k-card:hover { border-color: var(--border-bright); }
+    .k-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .k-card-icon {
+      width: 22px; height: 22px;
+      flex-shrink: 0;
+    }
+    .k-card-title {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .k-card-status {
+      font-size: 0.92rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .k-card-sub {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* BT 상태별 색상 */
+    .bt-connected .k-card-icon { color: var(--green); }
+    .bt-connected .k-card-status { color: var(--green); }
+    .bt-connected { border-color: rgba(16,185,129,0.35); }
+    .bt-retrying .k-card-icon { color: var(--amber); }
+    .bt-retrying .k-card-status { color: var(--amber); }
+    .bt-retrying { border-color: rgba(245,158,11,0.35); }
+    .bt-failed .k-card-icon { color: var(--red); }
+    .bt-failed .k-card-status { color: var(--red); }
+    .bt-failed { border-color: rgba(239,68,68,0.35); }
+
+    /* 소켓 카드 */
+    .k-socket-card .k-card-icon { color: #60A5FA; }
+    .k-socket-card .k-card-status { color: #60A5FA; }
+
+    /* 애니메이션 */
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+    .anim-pulse { animation: pulse-glow 2s ease-in-out infinite; }
+    .anim-blink { animation: blink 1s step-start infinite; }
+
+    /* ── 우측 (활동 로그) ── */
+    .k-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-panel);
+      min-height: 0;
+    }
+    .k-log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .k-log-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .k-log-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-bright);
+    }
+    .k-log-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 0;
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    .k-log-item {
+      display: flex;
+      gap: 8px;
+      padding: 6px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      border-bottom: 1px solid var(--border);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .k-log-ts { color: var(--text-secondary); flex-shrink: 0; }
+    .k-log-type { font-weight: 700; flex-shrink: 0; min-width: 52px; }
+    .k-log-msg { color: var(--text-primary); }
+    .log-info   { color: var(--cyan); }
+    .log-bt     { color: var(--green); }
+    .log-socket { color: #8B5CF6; }
+    .log-error  { color: var(--red); }
+    .log-ctrl   { color: var(--amber); }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+    .k-theme-toggle {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .k-theme-toggle:hover { border-color: var(--border-bright); background: var(--bg-hover); }
+
+    /* ── 하단 상태바 ── */
+    .k-footer {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+      gap: 8px;
+    }
+    .k-footer-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+    .k-footer-dot {
+      color: var(--border-bright);
+    }
+  </style>
+</head>
+<body>
+<div class="kiosk-root">
+
+  <!-- 헤더 -->
+  <header class="k-header">
+    <div class="k-header-logo">
+      <svg class="k-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/>
+        <path d="M8 21h8M12 17v4"/>
+        <circle cx="12" cy="10" r="2"/>
+        <path d="M9 10a3 3 0 0 1 6 0"/>
+      </svg>
+      <span class="k-logo-text">키오스크 관리 시스템</span>
+    </div>
+    <div class="k-header-sep"></div>
+    <button class="k-theme-toggle" onclick="toggleTheme()" id="themeToggleBtn" title="테마 전환">🌙</button>
+    <div class="k-header-time-block">
+      <div class="k-current-time" id="currentTime">00:00:00</div>
+      <div class="k-start-time" id="startTime">시작: --:--:--</div>
+    </div>
+  </header>
+
+  <!-- 메인 -->
+  <main class="k-main">
+
+    <!-- 좌측: QR + 연결 정보 -->
+    <section class="k-left">
+      <div class="k-scan-title">스캔하여 <span>연결</span></div>
+
+      <!-- QR 코드 (SVG 직접 그림) -->
+      <div class="k-qr-wrapper">
+        <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- 배경 -->
+          <rect width="200" height="200" fill="white"/>
+
+          <!-- 파인더 패턴 좌상단 -->
+          <rect x="10" y="10" width="50" height="50" fill="black"/>
+          <rect x="16" y="16" width="38" height="38" fill="white"/>
+          <rect x="22" y="22" width="26" height="26" fill="black"/>
+
+          <!-- 파인더 패턴 우상단 -->
+          <rect x="140" y="10" width="50" height="50" fill="black"/>
+          <rect x="146" y="16" width="38" height="38" fill="white"/>
+          <rect x="152" y="22" width="26" height="26" fill="black"/>
+
+          <!-- 파인더 패턴 좌하단 -->
+          <rect x="10" y="140" width="50" height="50" fill="black"/>
+          <rect x="16" y="146" width="38" height="38" fill="white"/>
+          <rect x="22" y="152" width="26" height="26" fill="black"/>
+
+          <!-- 타이밍 패턴 가로 -->
+          <rect x="70" y="70" width="6" height="6" fill="black"/>
+          <rect x="82" y="70" width="6" height="6" fill="black"/>
+          <rect x="94" y="70" width="6" height="6" fill="black"/>
+          <rect x="106" y="70" width="6" height="6" fill="black"/>
+          <rect x="118" y="70" width="6" height="6" fill="black"/>
+          <!-- 타이밍 패턴 세로 -->
+          <rect x="70" y="82" width="6" height="6" fill="black"/>
+          <rect x="70" y="94" width="6" height="6" fill="black"/>
+          <rect x="70" y="106" width="6" height="6" fill="black"/>
+          <rect x="70" y="118" width="6" height="6" fill="black"/>
+
+          <!-- 랜덤 데이터 셀 -->
+          <rect x="76" y="82" width="6" height="6" fill="black"/>
+          <rect x="88" y="82" width="6" height="6" fill="black"/>
+          <rect x="100" y="82" width="6" height="6" fill="black"/>
+          <rect x="112" y="76" width="6" height="6" fill="black"/>
+          <rect x="124" y="82" width="6" height="6" fill="black"/>
+          <rect x="136" y="76" width="6" height="6" fill="black"/>
+
+          <rect x="82" y="88" width="6" height="6" fill="black"/>
+          <rect x="94" y="94" width="6" height="6" fill="black"/>
+          <rect x="106" y="88" width="6" height="6" fill="black"/>
+          <rect x="118" y="94" width="6" height="6" fill="black"/>
+          <rect x="130" y="88" width="6" height="6" fill="black"/>
+          <rect x="142" y="82" width="6" height="6" fill="black"/>
+          <rect x="154" y="88" width="6" height="6" fill="black"/>
+
+          <rect x="76" y="100" width="6" height="6" fill="black"/>
+          <rect x="88" y="106" width="6" height="6" fill="black"/>
+          <rect x="100" y="100" width="6" height="6" fill="black"/>
+          <rect x="112" y="106" width="6" height="6" fill="black"/>
+          <rect x="124" y="100" width="6" height="6" fill="black"/>
+          <rect x="136" y="106" width="6" height="6" fill="black"/>
+          <rect x="148" y="100" width="6" height="6" fill="black"/>
+          <rect x="160" y="94" width="6" height="6" fill="black"/>
+
+          <rect x="82" y="112" width="6" height="6" fill="black"/>
+          <rect x="94" y="118" width="6" height="6" fill="black"/>
+          <rect x="106" y="112" width="6" height="6" fill="black"/>
+          <rect x="118" y="118" width="6" height="6" fill="black"/>
+          <rect x="130" y="112" width="6" height="6" fill="black"/>
+          <rect x="142" y="118" width="6" height="6" fill="black"/>
+          <rect x="154" y="112" width="6" height="6" fill="black"/>
+          <rect x="166" y="106" width="6" height="6" fill="black"/>
+
+          <rect x="76" y="124" width="6" height="6" fill="black"/>
+          <rect x="88" y="124" width="6" height="6" fill="black"/>
+          <rect x="100" y="130" width="6" height="6" fill="black"/>
+          <rect x="112" y="124" width="6" height="6" fill="black"/>
+          <rect x="124" y="130" width="6" height="6" fill="black"/>
+          <rect x="136" y="124" width="6" height="6" fill="black"/>
+
+          <rect x="140" y="140" width="6" height="6" fill="black"/>
+          <rect x="152" y="140" width="6" height="6" fill="black"/>
+          <rect x="164" y="140" width="6" height="6" fill="black"/>
+          <rect x="140" y="152" width="6" height="6" fill="black"/>
+          <rect x="152" y="152" width="6" height="6" fill="black"/>
+          <rect x="164" y="152" width="6" height="6" fill="black"/>
+          <rect x="140" y="164" width="6" height="6" fill="black"/>
+          <rect x="152" y="164" width="6" height="6" fill="black"/>
+          <rect x="164" y="164" width="6" height="6" fill="black"/>
+          <rect x="146" y="146" width="6" height="6" fill="black"/>
+          <rect x="158" y="158" width="6" height="6" fill="black"/>
+
+          <!-- 정렬 패턴 (우하단 근처) -->
+          <rect x="148" y="148" width="18" height="18" fill="black"/>
+          <rect x="151" y="151" width="12" height="12" fill="white"/>
+          <rect x="154" y="154" width="6" height="6" fill="black"/>
+        </svg>
+      </div>
+
+      <!-- 접속 정보 -->
+      <div class="k-conn-info">
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <span class="k-conn-label">접속 주소</span>
+          <span class="k-conn-addr">192.168.1.100 : 8080</span>
+        </div>
+      </div>
+
+      <!-- 카드 행 -->
+      <div class="k-cards-row">
+        <!-- 블루투스 카드 -->
+        <div class="k-card bt-connected" id="btCard" onclick="cycleBtState()">
+          <div class="k-card-header">
+            <svg class="k-card-icon anim-pulse" id="btIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/>
+            </svg>
+            <span class="k-card-title">블루투스 상태</span>
+          </div>
+          <div class="k-card-status" id="btStatus">전동랙 BT-001 연결됨</div>
+          <div class="k-card-sub" id="btSub">클릭하여 상태 변경 (시뮬레이션)</div>
+        </div>
+
+        <!-- 소켓 카드 -->
+        <div class="k-card k-socket-card">
+          <div class="k-card-header">
+            <svg class="k-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/>
+              <line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
+            </svg>
+            <span class="k-card-title">소켓 연결</span>
+          </div>
+          <div class="k-card-status">연결된 기기: 2개</div>
+          <div class="k-card-sub">마지막 활동: 방금 전</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 우측: 활동 로그 -->
+    <section class="k-right">
+      <div class="k-log-header">
+        <span class="k-log-title">활동 로그</span>
+        <span class="k-log-count" id="logCount">0</span>
+      </div>
+      <div class="k-log-list" id="logList"></div>
+    </section>
+
+  </main>
+
+  <!-- 하단 상태바 -->
+  <footer class="k-footer">
+    <span class="k-footer-text">v1.0.0-demo</span>
+    <span class="k-footer-dot">|</span>
+    <span class="k-footer-text">빌드: 2026-04-20</span>
+    <span class="k-footer-dot">|</span>
+    <span class="k-footer-text">내부망 전용</span>
+  </footer>
+
+</div>
+
+<script src="../data.js"></script>
+<script src="../shared.js"></script>
+<script>
+  // ── 테마 토글 ──
+  function toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeToggleBtn').textContent = isDark ? '🌙' : '☀️';
+  }
+
+  // ── 시간 ──
+  const startAt = new Date();
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function fmtTime(d) { return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`; }
+
+  document.getElementById('startTime').textContent = '시작: ' + fmtTime(startAt);
+
+  function tickClock() {
+    document.getElementById('currentTime').textContent = fmtTime(new Date());
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  // ── 블루투스 상태 순환 ──
+  const BT_STATES = [
+    {
+      cls: 'bt-connected', icon: 'pulse',
+      status: '전동랙 BT-001 연결됨', sub: '신호 강도: -65dBm',
+      logMsg: { type: 'bt', msg: '블루투스 연결 복원됨 (BT-001)' }
+    },
+    {
+      cls: 'bt-retrying', icon: 'blink',
+      status: '재연결 시도 중... (3/5)', sub: '마지막 실패: 신호 손실',
+      logMsg: { type: 'bt', msg: 'BT 재연결 시도 중 (3/5) — RACK-A' }
+    },
+    {
+      cls: 'bt-failed', icon: 'blink',
+      status: '연결 실패 — 장치를 확인하세요', sub: '오류 코드: E_BT_TIMEOUT',
+      logMsg: { type: 'error', msg: '블루투스 연결 실패 — 장치를 확인하세요' }
+    },
+  ];
+  let btIdx = 0;
+
+  function cycleBtState() {
+    btIdx = (btIdx + 1) % BT_STATES.length;
+    const s = BT_STATES[btIdx];
+    const card = document.getElementById('btCard');
+    card.className = 'k-card ' + s.cls;
+    document.getElementById('btStatus').textContent = s.status;
+    document.getElementById('btSub').textContent = s.sub;
+    const ic = document.getElementById('btIcon');
+    ic.className = 'k-card-icon ' + (s.icon === 'pulse' ? 'anim-pulse' : 'anim-blink');
+    addLog(s.logMsg.type, s.logMsg.msg);
+  }
+
+  // ── 로그 ──
+  const LOG_POOL = [
+    { type: 'info',   msg: '시스템 초기화 완료' },
+    { type: 'bt',     msg: '전동랙 RACK-A 열기 명령 수신' },
+    { type: 'socket', msg: '클라이언트 192.168.1.55 연결됨' },
+    { type: 'bt',     msg: 'BT 신호 강도: -65dBm' },
+    { type: 'ctrl',   msg: '관리자 접속 — 192.168.1.1' },
+    { type: 'info',   msg: 'RACK-B 닫힘 확인' },
+    { type: 'socket', msg: '클라이언트 192.168.1.42 연결됨' },
+    { type: 'bt',     msg: '전동랙 RACK-B 열기 명령 수신' },
+    { type: 'ctrl',   msg: '수동 제어 모드 전환' },
+    { type: 'info',   msg: '헬스체크 응답 정상' },
+    { type: 'socket', msg: '클라이언트 192.168.1.55 연결 해제' },
+    { type: 'bt',     msg: 'BT 페어링 요청 — BT-002' },
+    { type: 'error',  msg: '명령 타임아웃 — RACK-C' },
+    { type: 'ctrl',   msg: '출고 명령 처리 중 (SKU-1042)' },
+    { type: 'info',   msg: '랙 위치 보정 완료 — RACK-A' },
+    { type: 'socket', msg: '소켓 핑-퐁 응답 정상' },
+    { type: 'bt',     msg: 'BT 신호 강도: -72dBm (약함)' },
+    { type: 'ctrl',   msg: '입고 명령 수신 (팔레트 P-003)' },
+  ];
+
+  let logItems = [];
+
+  function addLog(type, msg) {
+    const now = fmtTime(new Date());
+    logItems.unshift({ ts: now, type, msg });
+    renderLogs();
+  }
+
+  function renderLogs() {
+    const list = document.getElementById('logList');
+    list.innerHTML = logItems.map(l => {
+      const cls = { info:'log-info', bt:'log-bt', socket:'log-socket', error:'log-error', ctrl:'log-ctrl' }[l.type] || '';
+      const label = { info:'INFO', bt:'BT', socket:'SOCKET', error:'ERROR', ctrl:'CTRL' }[l.type] || l.type;
+      return `<div class="k-log-item">
+        <span class="k-log-ts">[${l.ts}]</span>
+        <span class="k-log-type ${cls}">[${label}]</span>
+        <span class="k-log-msg">${l.msg}</span>
+      </div>`;
+    }).join('');
+    document.getElementById('logCount').textContent = logItems.length + '건';
+  }
+
+  // 초기 로그 10개
+  const initLogs = [
+    { type: 'info',   msg: '시스템 시작됨' },
+    { type: 'info',   msg: 'HTTP 서버 바인딩: 0.0.0.0:8080' },
+    { type: 'socket', msg: '소켓 서버 초기화 완료' },
+    { type: 'bt',     msg: 'BT 어댑터 초기화 완료' },
+    { type: 'bt',     msg: '전동랙 BT-001 페어링 시도 중' },
+    { type: 'bt',     msg: '전동랙 BT-001 연결됨 (신호: -65dBm)' },
+    { type: 'socket', msg: '클라이언트 192.168.1.55 연결됨' },
+    { type: 'socket', msg: '클라이언트 192.168.1.42 연결됨' },
+    { type: 'ctrl',   msg: '관리자 패널 접속 — 192.168.1.1' },
+    { type: 'info',   msg: '키오스크 준비 완료 — 대기 중' },
+  ];
+  initLogs.reverse().forEach(l => addLog(l.type, l.msg));
+
+  // 3~5초마다 랜덤 로그 추가
+  function scheduleLog() {
+    const delay = 3000 + Math.random() * 2000;
+    setTimeout(() => {
+      const pick = LOG_POOL[Math.floor(Math.random() * LOG_POOL.length)];
+      addLog(pick.type, pick.msg);
+      scheduleLog();
+    }, delay);
+  }
+  scheduleLog();
+</script>
+</body>
+</html>

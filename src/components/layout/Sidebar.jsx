@@ -3,15 +3,15 @@ import { useAuthStore } from '../../store/useAuthStore.js';
 import { useUIStore } from '../../store/useUIStore.js';
 
 const MENU_ITEMS = [
-  { key: 'dashboard',         label: '대시보드',    path: '/dashboard' },
-  { key: 'inbound-schedule',  label: '입고 예정',   path: '/inbound-schedule' },
-  { key: 'inbound-execute',   label: '입고 처리',   path: '/inbound-execute' },
-  { key: 'outbound-schedule', label: '출고 예정',   path: '/outbound-schedule' },
-  { key: 'outbound-execute',  label: '출고 처리',   path: '/outbound-execute' },
-  { key: 'inventory',         label: '재고 리스트', path: '/inventory' },
-  { key: 'products',          label: '상품 리스트', path: '/products' },
-  { key: 'activity-log',      label: '활동 로그',   path: '/activity-log' },
-  { key: 'users',             label: '사용자 관리', path: '/users' },
+  { key: 'dashboard',         label: '대시보드',    path: '/app/dashboard' },
+  { key: 'inbound-schedule',  label: '입고 예정',   path: '/app/inbound-schedule' },
+  { key: 'inbound-execute',   label: '입고 처리',   path: '/app/inbound-execute' },
+  { key: 'outbound-schedule', label: '출고 예정',   path: '/app/outbound-schedule' },
+  { key: 'outbound-execute',  label: '출고 처리',   path: '/app/outbound-execute' },
+  { key: 'inventory',         label: '재고 리스트', path: '/app/inventory' },
+  { key: 'products',          label: '상품 리스트', path: '/app/products' },
+  { key: 'activity-log',      label: '활동 로그',   path: '/app/activity-log' },
+  { key: 'users',             label: '사용자 관리', path: '/app/users' },
 ];
 
 const ICONS = {
@@ -79,7 +79,7 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
       </div>
 
       <div className="sidebar-footer">
-        <NavLink to="/settings" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`} title="계정 설정">
+        <NavLink to="/app/settings" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`} title="계정 설정">
           {ICONS['settings']}
           <span className="nav-label">계정 설정</span>
         </NavLink>

@@ -19,8 +19,8 @@ export default function OutboundExecute() {
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null);
   const [hoveredRackId, setHoveredRackId] = useState(null);
-
   const [searchQuery, setSearchQuery] = useState('');
+  const [execQty, setExecQty] = useState('');
 
   const pendingSchedules = outboundSchedules
     .filter((s) => s.status === 'pending')
@@ -76,6 +76,7 @@ export default function OutboundExecute() {
     setSelectedWarehouseId(whId);
     setSelectedScheduleId(id);
     setSelectedCell(null);
+    setExecQty('');
   }
 
   function checkWarehouseHasProduct(warehouseId, productId) {
@@ -184,8 +185,8 @@ export default function OutboundExecute() {
     })
     .reduce((s, i) => s + i.quantity, 0);
   const inboundPending = inboundSchedules.filter((s) => s.status === 'pending').reduce((s, x) => s + x.quantity, 0);
-  const outboundQty = sched?.quantity ?? 0;
 
+  const outboundQty = execQty !== '' ? (parseInt(execQty) || 0) : (sched?.quantity ?? 0);
   const canExecute = !!(sched && fifoSlots.length > 0 && totalAvailable >= outboundQty);
 
   function executeOutbound() {
@@ -197,6 +198,7 @@ export default function OutboundExecute() {
     alert(`✅ 출고 완료!\n${schedProduct?.name} ${outboundQty}개 출고\n\nFIFO 출고 위치:\n${topSlots}\n\n(데모: 실제 저장 없음)`);
     setSelectedScheduleId(null);
     setSelectedCell(null);
+    setExecQty('');
   }
 
   return (
@@ -259,6 +261,19 @@ export default function OutboundExecute() {
                   <span>상품을 선택하세요</span>
                 )}
               </div>
+              {sched && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
+                  <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>수량</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={execQty !== '' ? execQty : (sched?.quantity ?? '')}
+                    onChange={e => setExecQty(e.target.value)}
+                    style={{ width: 64, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 4, padding: '3px 6px', fontSize: '0.85rem', color: 'var(--text-primary)', outline: 'none', textAlign: 'right', fontFamily: 'inherit' }}
+                  />
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>개</span>
+                </div>
+              )}
               <button className="btn-exec" disabled={!canExecute} onClick={executeOutbound}>
                 출고 실행
               </button>
@@ -316,7 +331,7 @@ export default function OutboundExecute() {
                 </div>
               </div>
 
-              {/* 칸별현황 + 적재 상세 (가로 분할) */}
+              {/* 칸별현황 | 적재 상세 | 재고 리스트 (3분할) */}
               <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
                 {/* 칸별 현황 */}
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
@@ -344,7 +359,7 @@ export default function OutboundExecute() {
                   </div>
                 </div>
                 {/* 적재 상세 */}
-                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                       {selectedCell?.kan ? `${selectedCell.kan}칸 적재 상세` : '적재 상세'}
@@ -356,6 +371,60 @@ export default function OutboundExecute() {
                       floor={selectedCell?.floor}
                       kan={selectedCell?.kan}
                     />
+                  </div>
+                </div>
+                {/* 재고 리스트 (FIFO) */}
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--amber)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      재고 리스트{fifoSlots.length > 0 ? ` (${fifoSlots.length}건)` : ''}
+                    </span>
+                  </div>
+                  <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+                    {fifoSlots.length === 0 ? (
+                      <div style={{ padding: '16px 12px', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                        {sched ? '해당 상품의 재고가 없습니다.' : '← 출고 예정 항목을 선택하세요'}
+                      </div>
+                    ) : (
+                      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+                        <thead>
+                          <tr style={{ background: 'var(--bg-surface)', position: 'sticky', top: 0 }}>
+                            <th style={{ padding: '4px 8px', textAlign: 'center', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)', width: 32 }}>순위</th>
+                            <th style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>입고일</th>
+                            <th style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>위치</th>
+                            <th style={{ padding: '4px 8px', textAlign: 'right', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)', width: 44 }}>수량</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {fifoSlots.map((slot) => {
+                            const r = racks.find((x) => x.id === slot.rackId);
+                            const isSelected = selectedCell?.rackId === slot.rackId && selectedCell?.floor === slot.floor && selectedCell?.kan === slot.kan;
+                            return (
+                              <tr
+                                key={slot.key}
+                                onClick={() => setSelectedCell({ rackId: slot.rackId, floor: slot.floor, kan: slot.kan })}
+                                style={{
+                                  cursor: 'pointer',
+                                  background: isSelected ? 'var(--bg-hover, rgba(250,189,47,0.12))' : 'transparent',
+                                  borderBottom: '1px solid var(--border)',
+                                }}
+                                onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'var(--bg-hover, rgba(255,255,255,0.04))'; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = isSelected ? 'var(--bg-hover, rgba(250,189,47,0.12))' : 'transparent'; }}
+                              >
+                                <td style={{ padding: '5px 8px', textAlign: 'center', color: slot.rank === 1 ? 'var(--amber)' : slot.rank === 2 ? '#60A5FA' : 'var(--text-secondary)', fontWeight: slot.rank <= 2 ? 700 : 400 }}>
+                                  F{slot.rank}
+                                </td>
+                                <td style={{ padding: '5px 8px', color: 'var(--text-primary)' }}>{slot.received_at?.slice(0, 10) ?? '-'}</td>
+                                <td style={{ padding: '5px 8px', color: 'var(--text-primary)', fontFamily: 'monospace', fontSize: '0.73rem' }}>
+                                  {r?.rack_no ?? slot.rackId}번-{slot.floor}층-{slot.kan}칸
+                                </td>
+                                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--text-primary)', fontWeight: 600 }}>{slot.qty}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    )}
                   </div>
                 </div>
               </div>

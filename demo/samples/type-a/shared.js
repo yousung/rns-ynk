@@ -16,13 +16,13 @@ function getCurrentUser() {
 
 function requireAuth() {
   if (!getCurrentUser()) {
-    window.location.href = '../../index.html';
+    window.location.href = '../../login.html';
   }
 }
 
 function logout() {
   localStorage.removeItem('wms_user');
-  window.location.href = '../../index.html';
+  window.location.href = '../../login.html';
 }
 
 function getRoleText(role) {

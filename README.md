@@ -6,11 +6,27 @@
 
 ## 기술 스택
 
-| 플랫폼 | 기술 | 단계 |
+| 플랫폼 | 기술 | 비고 |
 |--------|------|------|
-| 웹 | Laravel + Blade + Serverless (AWS Lambda) | 1단계 |
-| 키오스크 (Windows) | Electron.js | 2단계 |
-| 태블릿 | Flutter | 3단계 |
+| 웹 (SPA) | React 18 + Vite + Zustand + React Router v6 | HashRouter 기반 SPA |
+| 키오스크 | HTML/JS 데모 | `demo/kiosk/` |
+| 태블릿 | HTML/JS 데모 | `demo/tablet/` |
+
+---
+
+## 실행 방법
+
+```bash
+npm install
+npm run dev    # 개발 서버 (localhost:5173)
+npm run build  # 빌드 (dist/ 생성)
+```
+
+---
+
+## 플랫폼 진입 흐름
+
+앱 시작 → 로그인 → **플랫폼 선택** (웹 / 키오스크 / 태블릿) → 각 플랫폼 화면으로 이동
 
 ---
 

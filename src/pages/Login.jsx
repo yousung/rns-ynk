@@ -18,7 +18,7 @@ export default function Login() {
     }
     const user = users.find((u) => u.email === email) || users[1];
     login(user);
-    navigate('/');
+    navigate('/app/dashboard');
   }
 
   function handleKey(e) {

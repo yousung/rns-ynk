@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/useAuthStore.js';
 import Layout from './components/layout/Layout.jsx';
 import Login from './pages/Login.jsx';
+import PlatformSelect from './pages/PlatformSelect.jsx';
 import InboundSchedule from './pages/InboundSchedule.jsx';
 import InboundExecute from './pages/InboundExecute.jsx';
 import OutboundSchedule from './pages/OutboundSchedule.jsx';
@@ -23,9 +24,10 @@ export default function App() {
   return (
     <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
+        <Route path="/" element={<PlatformSelect />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<RequireAuth><Layout /></RequireAuth>}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="/app" element={<RequireAuth><Layout /></RequireAuth>}>
+          <Route index element={<Navigate to="/app/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="inbound-schedule"  element={<InboundSchedule />} />
           <Route path="inbound-execute"   element={<InboundExecute />} />
