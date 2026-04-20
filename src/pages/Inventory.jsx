@@ -287,7 +287,7 @@ export default function Inventory() {
                         <WarehouseRackGrid
                           warehouseId={selectedWarehouseId}
                           selectedRackId={selectedCell?.rackId}
-                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null })}
                           onRackHover={setHoveredRackId}
                           highlightedRackIds={
                             selectedProductId
@@ -310,7 +310,7 @@ export default function Inventory() {
                           warehouseId={selectedWarehouseId}
                           selectedProductId={selectedProductId}
                           selectedRackId={selectedCell?.rackId}
-                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null })}
                           onRackHover={setHoveredRackId}
                         />
                       </div>
@@ -320,7 +320,7 @@ export default function Inventory() {
                           warehouseId={selectedWarehouseId}
                           selectedProductId={selectedProductId}
                           selectedRackId={selectedCell?.rackId}
-                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 })}
+                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null })}
                           onRackHover={setHoveredRackId}
                         />
                       </div>
@@ -331,7 +331,7 @@ export default function Inventory() {
                           selectedCell={selectedCell}
                           onCellClick={(rackId, floor) =>
                             setSelectedCell((prev) =>
-                              prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor, kan: 1 }
+                              prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor, kan: null }
                             )
                           }
                           onCellHover={setHoveredRackId}
@@ -356,7 +356,11 @@ export default function Inventory() {
                         rackId={selectedCell?.rackId}
                         selectedFloor={selectedCell?.floor}
                         selectedKan={selectedCell?.kan}
-                        onKanClick={(floor, kan) => setSelectedCell(prev => prev ? { ...prev, floor, kan } : null)}
+                        onKanClick={(floor, kan) => setSelectedCell(prev => {
+                          if (!prev) return null;
+                          if (prev.floor === floor && prev.kan === kan) return { ...prev, kan: null };
+                          return { ...prev, floor, kan };
+                        })}
                         disableEmptyKan={true}
                       />
                     </div>

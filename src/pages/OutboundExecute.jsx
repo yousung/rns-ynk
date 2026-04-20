@@ -277,7 +277,7 @@ export default function OutboundExecute() {
                       <WarehouseRackGrid
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: 1 }); }}
+                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: null }); }}
                         onRackHover={setHoveredRackId}
                         getCellClass={getCellClass}
                       />
@@ -287,7 +287,7 @@ export default function OutboundExecute() {
                       <WarehouseFloorPlan
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: 1 }); }}
+                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: null }); }}
                         onRackHover={setHoveredRackId}
                       />
                     </div>
@@ -296,7 +296,7 @@ export default function OutboundExecute() {
                       <WarehouseElevation
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: 1 }); }}
+                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: null }); }}
                         onRackHover={setHoveredRackId}
                       />
                     </div>
@@ -305,7 +305,7 @@ export default function OutboundExecute() {
                       <WarehouseMatrix
                         warehouseId={selectedWarehouseId}
                         selectedCell={selectedCell}
-                        onCellClick={(rackId, floor) => { setSelectedCell({ rackId, floor, kan: 1 }); }}
+                        onCellClick={(rackId, floor) => { setSelectedCell({ rackId, floor, kan: null }); }}
                         onCellHover={setHoveredRackId}
                         getCellFifoInfo={getCellFifoInfo}
                         getMiniBlocksFn={getMiniBlocksFn}
@@ -332,7 +332,12 @@ export default function OutboundExecute() {
                       selectedKan={selectedCell?.kan}
                       onKanClick={(floor, kan) => {
                         const hasPallet = !!pallets.find(p => p.location === `${selectedCell?.rackId}-${floor}-${kan}`);
-                        if (hasPallet) setSelectedCell(prev => prev ? { ...prev, floor, kan } : null);
+                        if (!hasPallet) return;
+                        setSelectedCell(prev => {
+                          if (!prev) return null;
+                          if (prev.floor === floor && prev.kan === kan) return { ...prev, kan: null };
+                          return { ...prev, floor, kan };
+                        });
                       }}
                       disableEmptyKan={true}
                     />

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1776557926071,
+  "lastScanned": 1776644898399,
   "projectRoot": "/Users/lovizu/Projects/outsourcing/ynk",
   "techStack": {
     "languages": [
@@ -40,7 +40,7 @@
     "devCommand": "npm run dev",
     "scripts": {
       "dev": "vite",
-      "build": "vite build",
+      "build": "vite build && cp -r demo dist/demo",
       "preview": "vite preview"
     }
   },
@@ -68,7 +68,7 @@
       "path": "demo",
       "purpose": null,
       "fileCount": 14,
-      "lastAccessed": 1776557926028,
+      "lastAccessed": 1776644898389,
       "keyFiles": [
         "WAREHOUSE_STYLES_GUIDE.md",
         "activity-log.html",
@@ -81,7 +81,7 @@
       "path": "dist",
       "purpose": "Distribution/build output",
       "fileCount": 1,
-      "lastAccessed": 1776557926030,
+      "lastAccessed": 1776644898390,
       "keyFiles": [
         "index.html"
       ]
@@ -90,14 +90,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1776557926055,
+      "lastAccessed": 1776644898393,
       "keyFiles": []
     },
     "example": {
       "path": "example",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1776557926056,
+      "lastAccessed": 1776644898393,
       "keyFiles": [
         "다른 회사 화면.jpg",
         "입고.jpg",
@@ -109,7 +109,7 @@
       "path": "src",
       "purpose": "Source code",
       "fileCount": 2,
-      "lastAccessed": 1776557926056,
+      "lastAccessed": 1776644898394,
       "keyFiles": [
         "App.jsx",
         "main.jsx"
@@ -119,24 +119,24 @@
       "path": "dist/assets",
       "purpose": "Static assets",
       "fileCount": 2,
-      "lastAccessed": 1776557926057,
+      "lastAccessed": 1776644898394,
       "keyFiles": [
-        "index-B1VkOooh.css",
-        "index-CKBSW2_K.js"
+        "index-CWrorHnK.js",
+        "index-_7mBfvLE.css"
       ]
     },
     "src/components": {
       "path": "src/components",
       "purpose": "UI components",
       "fileCount": 0,
-      "lastAccessed": 1776557926059,
+      "lastAccessed": 1776644898395,
       "keyFiles": []
     },
     "src/pages": {
       "path": "src/pages",
       "purpose": "Page components",
       "fileCount": 11,
-      "lastAccessed": 1776557926061,
+      "lastAccessed": 1776644898395,
       "keyFiles": [
         "ActivityLog.jsx",
         "Dashboard.jsx",
@@ -146,274 +146,22 @@
   },
   "hotPaths": [
     {
-      "path": "src/pages/InboundExecute.jsx",
-      "accessCount": 90,
-      "lastAccessed": 1776644025449,
+      "path": "src/pages/Inventory.jsx",
+      "accessCount": 5,
+      "lastAccessed": 1776644951711,
       "type": "file"
     },
     {
       "path": "src/pages/OutboundExecute.jsx",
-      "accessCount": 78,
-      "lastAccessed": 1776644038426,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/Inventory.jsx",
-      "accessCount": 66,
-      "lastAccessed": 1776644056524,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
-      "accessCount": 25,
-      "lastAccessed": 1776643786161,
-      "type": "file"
-    },
-    {
-      "path": "src/styles/warehouse.css",
-      "accessCount": 19,
-      "lastAccessed": 1776643457860,
-      "type": "file"
-    },
-    {
-      "path": "src/styles/global.css",
-      "accessCount": 18,
-      "lastAccessed": 1776634194969,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseElevation.jsx",
-      "accessCount": 18,
-      "lastAccessed": 1776643788024,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseMinimap.jsx",
-      "accessCount": 15,
-      "lastAccessed": 1776634148625,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseMatrix.jsx",
-      "accessCount": 9,
-      "lastAccessed": 1776605931654,
-      "type": "file"
-    },
-    {
-      "path": "src",
-      "accessCount": 8,
-      "lastAccessed": 1776643841273,
-      "type": "directory"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseRackGrid.jsx",
-      "accessCount": 7,
-      "lastAccessed": 1776605654494,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-b/shared.js",
-      "accessCount": 6,
-      "lastAccessed": 1776558888355,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-a/shared.js",
-      "accessCount": 5,
-      "lastAccessed": 1776558886832,
-      "type": "file"
-    },
-    {
-      "path": "src/components/layout/Sidebar.jsx",
-      "accessCount": 5,
-      "lastAccessed": 1776597874178,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/CellDetailsPanel.jsx",
-      "accessCount": 5,
-      "lastAccessed": 1776599239145,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/Settings.jsx",
-      "accessCount": 4,
-      "lastAccessed": 1776593887916,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse",
-      "accessCount": 4,
-      "lastAccessed": 1776643840696,
-      "type": "directory"
-    },
-    {
-      "path": "demo/data.js",
       "accessCount": 3,
-      "lastAccessed": 1776593029659,
+      "lastAccessed": 1776644933895,
       "type": "file"
     },
     {
-      "path": "src/components/warehouse/ScheduleScroll.jsx",
-      "accessCount": 3,
-      "lastAccessed": 1776597940265,
-      "type": "file"
-    },
-    {
-      "path": "src/pages",
-      "accessCount": 3,
-      "lastAccessed": 1776605623890,
-      "type": "directory"
-    },
-    {
-      "path": "src/pages/ActivityLog.jsx",
-      "accessCount": 3,
-      "lastAccessed": 1776607986089,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-b/inbound-execute.html",
+      "path": "src/pages/InboundExecute.jsx",
       "accessCount": 2,
-      "lastAccessed": 1776558359354,
+      "lastAccessed": 1776644910988,
       "type": "file"
-    },
-    {
-      "path": "demo/samples/type-c/shared.js",
-      "accessCount": 2,
-      "lastAccessed": 1776560245873,
-      "type": "file"
-    },
-    {
-      "path": "src/store/useUIStore.js",
-      "accessCount": 2,
-      "lastAccessed": 1776607970584,
-      "type": "file"
-    },
-    {
-      "path": "demo/index.html",
-      "accessCount": 1,
-      "lastAccessed": 1776557989006,
-      "type": "file"
-    },
-    {
-      "path": "demo/inbound-execute.html",
-      "accessCount": 1,
-      "lastAccessed": 1776558029875,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-a/inbound-execute.html",
-      "accessCount": 1,
-      "lastAccessed": 1776558030324,
-      "type": "file"
-    },
-    {
-      "path": "demo/warehouse-styles.js",
-      "accessCount": 1,
-      "lastAccessed": 1776558043773,
-      "type": "file"
-    },
-    {
-      "path": "demo/inventory.html",
-      "accessCount": 1,
-      "lastAccessed": 1776558043996,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-b/outbound-execute.html",
-      "accessCount": 1,
-      "lastAccessed": 1776558728549,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-c/inbound-execute.html",
-      "accessCount": 1,
-      "lastAccessed": 1776559019463,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-c/outbound-execute.html",
-      "accessCount": 1,
-      "lastAccessed": 1776559075609,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-c/inventory.html",
-      "accessCount": 1,
-      "lastAccessed": 1776559111693,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-d/inbound-execute.html",
-      "accessCount": 1,
-      "lastAccessed": 1776559260139,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-d/outbound-execute.html",
-      "accessCount": 1,
-      "lastAccessed": 1776559321318,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-d/inventory.html",
-      "accessCount": 1,
-      "lastAccessed": 1776559372449,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-e/inbound-execute.html",
-      "accessCount": 1,
-      "lastAccessed": 1776559430920,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-e/outbound-execute.html",
-      "accessCount": 1,
-      "lastAccessed": 1776559480474,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-e/inventory.html",
-      "accessCount": 1,
-      "lastAccessed": 1776559522070,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-d/shared.js",
-      "accessCount": 1,
-      "lastAccessed": 1776560275449,
-      "type": "file"
-    },
-    {
-      "path": "demo/samples/type-e/shared.js",
-      "accessCount": 1,
-      "lastAccessed": 1776560275528,
-      "type": "file"
-    },
-    {
-      "path": "src/store/useDataStore.js",
-      "accessCount": 1,
-      "lastAccessed": 1776606475713,
-      "type": "directory"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseTabs.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776634324446,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/StatsBar.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776634324568,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 1,
-      "lastAccessed": 1776642151161,
-      "type": "directory"
     }
   ],
   "userDirectives": []

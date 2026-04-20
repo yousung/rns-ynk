@@ -90,7 +90,7 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanC
 
   const panelStyle = {
     padding: '12px 16px',
-    background: 'var(--bg-panel)',
+    background: 'transparent',
     flex: 1,
     minHeight: 0,
     overflowY: 'auto',

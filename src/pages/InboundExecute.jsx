@@ -52,7 +52,7 @@ export default function InboundExecute() {
     const emptyKan = Array.from({ length: rack.groups }, (_, i) => i + 1).find(
       (k) => !occupiedKans.has(k)
     );
-    setSelectedCell({ rackId, floor, kan: emptyKan ?? 1 });
+    setSelectedCell({ rackId, floor, kan: null });
   }
 
   // ─── 랙 클릭 (Type A) ────────────────────────────────────
@@ -60,7 +60,7 @@ export default function InboundExecute() {
     const rack = racks.find((r) => r.id === rackId);
     if (!rack) return;
     if (selectedCell?.rackId === rackId) { setSelectedCell(null); return; }
-    setSelectedCell({ rackId, floor: 1, kan: 1 });
+    setSelectedCell({ rackId, floor: 1, kan: null });
   }
 
   // ─── getMiniBlocksFn ──────────────────────────────────────
@@ -205,7 +205,7 @@ export default function InboundExecute() {
                       <WarehouseFloorPlan
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 }); }}
+                        onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null }); }}
                         onRackHover={setHoveredRackId}
                       />
                     </div>
@@ -214,7 +214,7 @@ export default function InboundExecute() {
                       <WarehouseElevation
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: 1 }); }}
+                        onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null }); }}
                         onRackHover={setHoveredRackId}
                       />
                     </div>
@@ -247,7 +247,11 @@ export default function InboundExecute() {
                       rackId={selectedCell?.rackId}
                       selectedFloor={selectedCell?.floor}
                       selectedKan={selectedCell?.kan}
-                      onKanClick={(floor, kan) => setSelectedCell(prev => prev ? { ...prev, floor, kan } : null)}
+                      onKanClick={(floor, kan) => setSelectedCell(prev => {
+                        if (!prev) return null;
+                        if (prev.floor === floor && prev.kan === kan) return { ...prev, kan: null };
+                        return { ...prev, floor, kan };
+                      })}
                     />
                   </div>
                 </div>
