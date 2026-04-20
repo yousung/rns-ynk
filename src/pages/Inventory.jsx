@@ -277,13 +277,13 @@ export default function Inventory() {
               <div className="wh-rack-area" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
                 {/* 창고 시각화 */}
                 <div style={{ flexShrink: 0, borderBottom: '1px solid var(--border)' }}>
-                  <div style={{ height: 34, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ height: 28, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                   </div>
                   <div style={{ position: 'relative', paddingBottom: 6 }}>
                     <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} />
                     {warehouseType === 'a' ? (
-                      <div style={{ padding: '10px 230px 10px 10px' }}>
+                      <div style={{ padding: '10px 230px 10px 10px', maxHeight: 320, overflowY: 'auto' }}>
                         <WarehouseRackGrid
                           warehouseId={selectedWarehouseId}
                           selectedRackId={selectedCell?.rackId}
@@ -305,7 +305,7 @@ export default function Inventory() {
                         />
                       </div>
                     ) : warehouseType === 'c' ? (
-                      <div style={{ paddingRight: 230, aspectRatio: '740/180' }}>
+                      <div style={{ paddingRight: 230, minHeight: 186, height: 'auto' }}>
                         <WarehouseFloorPlan
                           warehouseId={selectedWarehouseId}
                           selectedProductId={selectedProductId}
@@ -315,7 +315,7 @@ export default function Inventory() {
                         />
                       </div>
                     ) : warehouseType === 'd' ? (
-                      <div style={{ paddingRight: 230, aspectRatio: '780/160' }}>
+                      <div style={{ paddingRight: 230, minHeight: 166, height: 'auto' }}>
                         <WarehouseElevation
                           warehouseId={selectedWarehouseId}
                           selectedProductId={selectedProductId}
@@ -325,7 +325,7 @@ export default function Inventory() {
                         />
                       </div>
                     ) : (
-                      <div style={{ paddingRight: 230 }}>
+                      <div style={{ paddingRight: 230, maxHeight: 320, overflowY: 'auto' }}>
                         <WarehouseMatrix
                           warehouseId={selectedWarehouseId}
                           selectedCell={selectedCell}
@@ -342,34 +342,39 @@ export default function Inventory() {
                     )}
                   </div>
                 </div>
-                {/* 칸별 현황 */}
-                <div style={{ flexShrink: 0, borderBottom: '1px solid var(--border)' }}>
-                  <div style={{ height: 34, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell ? `랙 — 칸별 현황` : '칸별 현황'}
-                    </span>
+                {/* 칸별현황 + 적재 상세 (가로 분할) */}
+                <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
+                  {/* 칸별 현황 */}
+                  <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
+                    <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        {selectedCell ? `랙 — 칸별 현황` : '칸별 현황'}
+                      </span>
+                    </div>
+                    <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+                      <FloorPlanRackDetail
+                        rackId={selectedCell?.rackId}
+                        selectedFloor={selectedCell?.floor}
+                        selectedKan={selectedCell?.kan}
+                        onKanClick={(floor, kan) => setSelectedCell(prev => prev ? { ...prev, floor, kan } : null)}
+                        disableEmptyKan={true}
+                      />
+                    </div>
                   </div>
-                  <FloorPlanRackDetail
-                    rackId={selectedCell?.rackId}
-                    selectedFloor={selectedCell?.floor}
-                    selectedKan={selectedCell?.kan}
-                    onKanClick={(floor, kan) => setSelectedCell(prev => prev ? { ...prev, floor, kan } : null)}
-                    disableEmptyKan={true}
-                  />
-                </div>
-                {/* 적재 상세 */}
-                <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  <div style={{ height: 34, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell?.kan ? `${selectedCell.kan}칸 적재 상세` : '적재 상세'}
-                    </span>
-                  </div>
-                  <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
-                    <KanDetailPanel
-                      rackId={selectedCell?.rackId}
-                      floor={selectedCell?.floor}
-                      kan={selectedCell?.kan}
-                    />
+                  {/* 적재 상세 */}
+                  <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                    <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        {selectedCell?.kan ? `${selectedCell.kan}칸 적재 상세` : '적재 상세'}
+                      </span>
+                    </div>
+                    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+                      <KanDetailPanel
+                        rackId={selectedCell?.rackId}
+                        floor={selectedCell?.floor}
+                        kan={selectedCell?.kan}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

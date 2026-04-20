@@ -1,8 +1,8 @@
 import { useDataStore } from '../../store/useDataStore.js';
 
-const RACK_W = 20, RACK_G = 4, FLOOR_H = 22, PAD_L = 40, PAD_T = 16;
+const RACK_W = 20, RACK_G = 4, FLOOR_H = 22, PAD_L = 40, PAD_T = 24;
 const MAX_FLOORS = 6;
-const SVG_W = 780, SVG_H = 160;
+const SVG_W = 780, SVG_H = 180;
 
 function heatColor(rate) {
   if (rate <= 0) return 'rgba(94,226,198,0.25)';
@@ -93,11 +93,9 @@ export default function WarehouseElevation({ warehouseId, selectedProductId, sel
   });
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" height="100%"
-        preserveAspectRatio="xMidYMid meet" style={{ display: 'block' }}>
-        {elements}
-      </svg>
-    </div>
+    <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" height={SVG_H}
+      preserveAspectRatio="xMidYMid meet" style={{ display: 'block' }}>
+      {elements}
+    </svg>
   );
 }

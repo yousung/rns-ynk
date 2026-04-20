@@ -147,50 +147,50 @@
   "hotPaths": [
     {
       "path": "src/pages/InboundExecute.jsx",
-      "accessCount": 71,
-      "lastAccessed": 1776607771399,
+      "accessCount": 90,
+      "lastAccessed": 1776644025449,
       "type": "file"
     },
     {
       "path": "src/pages/OutboundExecute.jsx",
-      "accessCount": 57,
-      "lastAccessed": 1776607779219,
+      "accessCount": 78,
+      "lastAccessed": 1776644038426,
       "type": "file"
     },
     {
       "path": "src/pages/Inventory.jsx",
-      "accessCount": 45,
-      "lastAccessed": 1776606899147,
+      "accessCount": 66,
+      "lastAccessed": 1776644056524,
       "type": "file"
     },
     {
       "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
-      "accessCount": 16,
-      "lastAccessed": 1776605657632,
+      "accessCount": 25,
+      "lastAccessed": 1776643786161,
       "type": "file"
     },
     {
       "path": "src/styles/warehouse.css",
-      "accessCount": 16,
-      "lastAccessed": 1776606553203,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseMinimap.jsx",
-      "accessCount": 14,
-      "lastAccessed": 1776607724438,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseElevation.jsx",
-      "accessCount": 11,
-      "lastAccessed": 1776605657714,
+      "accessCount": 19,
+      "lastAccessed": 1776643457860,
       "type": "file"
     },
     {
       "path": "src/styles/global.css",
-      "accessCount": 9,
-      "lastAccessed": 1776598501342,
+      "accessCount": 18,
+      "lastAccessed": 1776634194969,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseElevation.jsx",
+      "accessCount": 18,
+      "lastAccessed": 1776643788024,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseMinimap.jsx",
+      "accessCount": 15,
+      "lastAccessed": 1776634148625,
       "type": "file"
     },
     {
@@ -198,6 +198,12 @@
       "accessCount": 9,
       "lastAccessed": 1776605931654,
       "type": "file"
+    },
+    {
+      "path": "src",
+      "accessCount": 8,
+      "lastAccessed": 1776643841273,
+      "type": "directory"
     },
     {
       "path": "src/components/warehouse/WarehouseRackGrid.jsx",
@@ -236,9 +242,9 @@
       "type": "file"
     },
     {
-      "path": "src",
+      "path": "src/components/warehouse",
       "accessCount": 4,
-      "lastAccessed": 1776605958318,
+      "lastAccessed": 1776643840696,
       "type": "directory"
     },
     {
@@ -260,6 +266,12 @@
       "type": "directory"
     },
     {
+      "path": "src/pages/ActivityLog.jsx",
+      "accessCount": 3,
+      "lastAccessed": 1776607986089,
+      "type": "file"
+    },
+    {
       "path": "demo/samples/type-b/inbound-execute.html",
       "accessCount": 2,
       "lastAccessed": 1776558359354,
@@ -269,6 +281,12 @@
       "path": "demo/samples/type-c/shared.js",
       "accessCount": 2,
       "lastAccessed": 1776560245873,
+      "type": "file"
+    },
+    {
+      "path": "src/store/useUIStore.js",
+      "accessCount": 2,
+      "lastAccessed": 1776607970584,
       "type": "file"
     },
     {
@@ -374,21 +392,27 @@
       "type": "file"
     },
     {
-      "path": "src/store/useUIStore.js",
-      "accessCount": 1,
-      "lastAccessed": 1776593039104,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse",
-      "accessCount": 1,
-      "lastAccessed": 1776599053400,
-      "type": "directory"
-    },
-    {
       "path": "src/store/useDataStore.js",
       "accessCount": 1,
       "lastAccessed": 1776606475713,
+      "type": "directory"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseTabs.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776634324446,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/StatsBar.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776634324568,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1776642151161,
       "type": "directory"
     }
   ],

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useDataStore } from '../../store/useDataStore.js';
 
 const RACK_W = 42, RACK_G = 6, GROUP_H = 18, PAD_L = 10;
-const BACK_Y = 12, FRONT_Y = 90; // 12 + 4*18 + 6px gap
-const SVG_W = 740, SVG_H = 180;
+const BACK_Y = 12, FRONT_Y = 130;
+const SVG_W = 740, SVG_H = 240;
 
 const CAT_COLORS = {
   '의료용 밴드': '#60A5FA', '붕대류': '#F59E0B', '보호대류': '#34D399',
@@ -78,12 +78,10 @@ export default function WarehouseFloorPlan({ warehouseId, selectedProductId, sel
   });
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" height="100%"
-        preserveAspectRatio="xMidYMid meet" style={{ display: 'block' }}>
-        {rackElements}
-      </svg>
-    </div>
+    <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" height={SVG_H}
+      preserveAspectRatio="xMidYMid meet" style={{ display: 'block' }}>
+      {rackElements}
+    </svg>
   );
 }
 

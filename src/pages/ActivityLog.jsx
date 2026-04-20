@@ -1,7 +1,10 @@
 import { useState, useMemo } from 'react';
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { ko } from 'date-fns/locale/ko';
 import { useDataStore } from '../store/useDataStore.js';
+
+registerLocale('ko', ko);
 
 const FEATURE_LABEL = {
   inbound: '입고',
@@ -133,6 +136,7 @@ export default function ActivityLog() {
               onChange={(update) => setDateRange(update)}
               inline
               monthsShown={1}
+              locale="ko"
             />
           </div>
 
