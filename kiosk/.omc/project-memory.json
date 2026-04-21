@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1776728136349,
+  "projectRoot": "/Users/lovizu/Projects/outsourcing/ynk/kiosk",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      }
+    ],
+    "frameworks": [],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": "npm run dev",
+    "scripts": {
+      "start": "electron .",
+      "dev": "electron . --dev",
+      "build": "electron-builder"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": "CommonJS",
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "src"
+    ],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 2,
+      "lastAccessed": 1776728136319,
+      "keyFiles": [
+        "main.js",
+        "preload.js"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "package.json",
+      "accessCount": 2,
+      "lastAccessed": 1776728179946,
+      "type": "file"
+    },
+    {
+      "path": "src/main.js",
+      "accessCount": 2,
+      "lastAccessed": 1776728254382,
+      "type": "file"
+    },
+    {
+      "path": "src/preload.js",
+      "accessCount": 1,
+      "lastAccessed": 1776728223045,
+      "type": "file"
+    },
+    {
+      "path": "public/index.html",
+      "accessCount": 1,
+      "lastAccessed": 1776728243265,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

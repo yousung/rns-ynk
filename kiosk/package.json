@@ -1,0 +1,24 @@
+{
+  "name": "kiosk-app",
+  "version": "1.0.0",
+  "description": "Kiosk application built with Electron",
+  "main": "src/main.js",
+  "preload": "src/preload.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder"
+  },
+  "keywords": [
+    "electron",
+    "kiosk"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "latest",
+    "electron-builder": "latest",
+    "electron-is-dev": "^3.0.1"
+  }
+}
