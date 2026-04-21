@@ -90,7 +90,7 @@ export default function WarehouseMatrix({
         <table className="rack-matrix" ref={tableRef}>
           <thead>
             <tr>
-              <th className="label-cell">단/랙</th>
+              <th className="label-cell">열/랙</th>
               {whRacks.map((rack) => (
                 <th key={rack.id}>{rack.rack_no}</th>
               ))}
@@ -103,7 +103,7 @@ export default function WarehouseMatrix({
           <tbody>
             {floors.map((floor) => (
               <tr key={floor}>
-                <td className="label-cell">{floor}단</td>
+                <td className="label-cell">{floor}열</td>
                 {whRacks.map((rack) => {
                   const hasFloor = floor <= rack.floors;
                   if (!hasFloor) {

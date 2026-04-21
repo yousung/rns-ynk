@@ -26,7 +26,7 @@ export function KanDetailPanel({ rackId, floor, kan }) {
   return (
     <div style={panelStyle}>
       <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: 8 }}>
-        {rack?.rack_no}번 랙 {floor}칸 {kan}단 — 적재 상세
+        {rack?.rack_no}번 랙 {floor}열 {kan}단 — 적재 상세
       </div>
       {items.length === 0 ? (
         <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>빈 단입니다</div>
