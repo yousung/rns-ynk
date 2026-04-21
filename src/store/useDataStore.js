@@ -1,13 +1,32 @@
 import { create } from 'zustand';
 
+// 창고 데이터 계층 구조:
+//   warehouse (창고)
+//     └─ rack (랙, rack_no 1..N)
+//          └─ floor (층, 1..floors)
+//               └─ slot (칸/그룹, 1..groups)
+//                    └─ pallet (팔레트, location = "${rack.id}-${floor}-${slot}")
+//                         └─ inventoryItem (재고 항목, pallet_id로 연결)
+//                              └─ product (상품, product_id로 연결)
+//
+// 명명 규칙:
+//   - warehouse_id / rack_id / product_id / pallet_id : 숫자 ID
+//   - rack.floors : 층 개수 (랙의 물리적 층수)
+//   - rack.groups : 한 층당 슬롯(칸) 개수
+//   - pallet.location : "rackId-floor-slot" 문자열 포맷
+
 export const MAX_RACK_COUNT = 31;
 
+// warehouses: 창고 마스터
+// { id, name, type: 'normal' | 'electric', max_rack_count? }
 const warehouses = [
   { id: 1, name: '크로이드 원자재 창고', type: 'normal' },
   { id: 2, name: '부자재창고', type: 'normal' },
-  { id: 3, name: '전동랙창고', type: 'electric', max_rack_count: 30 },
+  { id: 3, name: '전동랙창고', type: 'electric', max_rack_count: 31 },
 ];
 
+// racks: 랙 마스터 (warehouse_id로 창고에 귀속)
+// floors = 해당 랙의 층 개수, groups = 층당 슬롯(칸) 개수
 const racks = [
   { id: 1,  warehouse_id: 1, rack_no: 1,  floors: 12, groups: 3 },
   { id: 2,  warehouse_id: 1, rack_no: 2,  floors: 12, groups: 3 },

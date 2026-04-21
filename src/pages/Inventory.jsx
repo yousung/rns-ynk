@@ -7,7 +7,7 @@ import WarehouseRackGrid from '../components/warehouse/WarehouseRackGrid.jsx';
 import WarehouseFloorPlan, { FloorPlanRackDetail } from '../components/warehouse/WarehouseFloorPlan.jsx';
 import WarehouseElevation from '../components/warehouse/WarehouseElevation.jsx';
 import WarehouseMinimap from '../components/warehouse/WarehouseMinimap.jsx';
-import { KanDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
+import { KanDetailPanel as SlotDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
 
 export default function Inventory() {
   const [view, setView] = useState(() => localStorage.getItem('wms_inventory_view') || 'list');
@@ -22,7 +22,7 @@ export default function Inventory() {
 
   const [hoveredRackId, setHoveredRackId] = useState(null);
   const [hoveredFloor, setHoveredFloor] = useState(null);
-  const [hoveredKan, setHoveredKan] = useState(null);
+  const [hoveredSlot, setHoveredSlot] = useState(null);
 
   const { products, inventoryItems, pallets, racks } = useDataStore();
   const { warehouseType } = useUIStore();
@@ -75,8 +75,8 @@ export default function Inventory() {
 
   // ─── Type B: getCellClass (WarehouseRackGrid용) ──────────
   const getCellClass = useCallback(
-    (rackId, floor, kan) => {
-      const pallet = pallets.find((p) => p.location === `${rackId}-${floor}-${kan}`);
+    (rackId, floor, slot) => {
+      const pallet = pallets.find((p) => p.location === `${rackId}-${floor}-${slot}`);
       if (!pallet) return 'rc-empty';
       if (selectedProductId) {
         const hasProduct = inventoryItems.some(
@@ -95,9 +95,9 @@ export default function Inventory() {
       const rack = racks.find((r) => r.id === rackId);
       if (!rack) return [];
       return Array.from({ length: rack.groups }, (_, i) => {
-        const kan = i + 1;
-        const pallet = pallets.find((p) => p.location === `${rackId}-${floor}-${kan}`);
-        const isCellSel = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.kan === kan;
+        const slot = i + 1;
+        const pallet = pallets.find((p) => p.location === `${rackId}-${floor}-${slot}`);
+        const isCellSel = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.slot === slot;
         if (isCellSel) return 'mini-sel';
         if (!pallet) return 'mini-empty';
         if (selectedProductId) {
@@ -283,13 +283,13 @@ export default function Inventory() {
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                   </div>
                   <div style={{ position: 'relative', paddingBottom: 6 }}>
-                    <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredKan={hoveredKan} />
+                    <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredSlot={hoveredSlot} />
                     {warehouseType === 'a' ? (
                       <div style={{ padding: '10px 230px 10px 10px', maxHeight: 520, overflowY: 'auto' }}>
                         <WarehouseRackGrid
                           warehouseId={selectedWarehouseId}
                           selectedRackId={selectedCell?.rackId}
-                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null })}
+                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null })}
                           onRackHover={setHoveredRackId}
                           highlightedRackIds={
                             selectedProductId
@@ -312,7 +312,7 @@ export default function Inventory() {
                           warehouseId={selectedWarehouseId}
                           selectedProductId={selectedProductId}
                           selectedRackId={selectedCell?.rackId}
-                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null })}
+                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null })}
                           onRackHover={setHoveredRackId}
                         />
                       </div>
@@ -322,7 +322,7 @@ export default function Inventory() {
                           warehouseId={selectedWarehouseId}
                           selectedProductId={selectedProductId}
                           selectedRackId={selectedCell?.rackId}
-                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null })}
+                          onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null })}
                           onRackHover={setHoveredRackId}
                         />
                       </div>
@@ -333,7 +333,7 @@ export default function Inventory() {
                           selectedCell={selectedCell}
                           onCellClick={(rackId, floor) =>
                             setSelectedCell((prev) =>
-                              prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor, kan: null }
+                              prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor, slot: null }
                             )
                           }
                           onCellHover={(rackId, floor) => { setHoveredRackId(rackId); setHoveredFloor(floor ?? null); }}
@@ -344,27 +344,27 @@ export default function Inventory() {
                     )}
                   </div>
                 </div>
-                {/* 칸별현황 + 적재 상세 (가로 분할) */}
+                {/* 단별현황 + 적재 상세 (가로 분할) */}
                 <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
-                  {/* 칸별 현황 */}
+                  {/* 단별 현황 */}
                   <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                     <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                       <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                        {selectedCell ? `랙 — 칸별 현황` : '칸별 현황'}
+                        {selectedCell ? `랙 — 단별 현황` : '단별 현황'}
                       </span>
                     </div>
                     <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
                       <FloorPlanRackDetail
                         rackId={selectedCell?.rackId}
                         selectedFloor={selectedCell?.floor}
-                        selectedKan={selectedCell?.kan}
-                        onKanClick={(floor, kan) => setSelectedCell(prev => {
+                        selectedSlot={selectedCell?.slot}
+                        onSlotClick={(floor, slot) => setSelectedCell(prev => {
                           if (!prev) return null;
-                          if (prev.floor === floor && prev.kan === kan) return { ...prev, kan: null };
-                          return { ...prev, floor, kan };
+                          if (prev.floor === floor && prev.slot === slot) return { ...prev, slot: null };
+                          return { ...prev, floor, slot };
                         })}
-                        onKanHover={(floor, kan) => setHoveredKan(floor != null ? { rackId: selectedCell?.rackId, floor, kan } : null)}
-                        disableEmptyKan={true}
+                        onSlotHover={(floor, slot) => setHoveredSlot(floor != null ? { rackId: selectedCell?.rackId, floor, slot } : null)}
+                        disableEmptySlot={true}
                       />
                     </div>
                   </div>
@@ -372,14 +372,14 @@ export default function Inventory() {
                   <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                       <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                        {selectedCell?.kan ? `${selectedCell.kan}칸 적재 상세` : '적재 상세'}
+                        {selectedCell?.slot ? `${selectedCell.slot}단 적재 상세` : '적재 상세'}
                       </span>
                     </div>
                     <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
-                      <KanDetailPanel
+                      <SlotDetailPanel
                         rackId={selectedCell?.rackId}
                         floor={selectedCell?.floor}
-                        kan={selectedCell?.kan}
+                        kan={selectedCell?.slot}
                       />
                     </div>
                   </div>

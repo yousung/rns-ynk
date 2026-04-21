@@ -85,7 +85,7 @@ export default function WarehouseFloorPlan({ warehouseId, selectedProductId, sel
   );
 }
 
-export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanClick, onKanHover, disableEmptyKan = false }) {
+export function FloorPlanRackDetail({ rackId, selectedFloor, selectedSlot, onSlotClick, onSlotHover, disableEmptySlot = false }) {
   const { racks, pallets, inventoryItems, products } = useDataStore();
 
   const panelStyle = {
@@ -100,7 +100,7 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanC
   if (!rack) {
     return (
       <div style={panelStyle}>
-        <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>랙을 선택하면 칸별 현황이 표시됩니다</div>
+        <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>랙을 선택하면 단별 현황이 표시됩니다</div>
       </div>
     );
   }
@@ -113,20 +113,20 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanC
       const items = pallet ? inventoryItems.filter(i => i.pallet_id === pallet.id) : [];
       const firstItem = items[0] ? products.find(pr => pr.id === items[0].product_id) : null;
       const catColor = firstItem ? (CAT_COLORS[firstItem.category] || 'var(--cyan)') : null;
-      const isSel = selectedFloor === fl && selectedKan === g;
+      const isSel = selectedFloor === fl && selectedSlot === g;
       cells.push(
-        <div key={g} onClick={(e) => { e.stopPropagation(); if (disableEmptyKan && !pallet) return; onKanClick?.(fl, g); }} onMouseEnter={() => onKanHover?.(fl, g)} onMouseLeave={() => onKanHover?.(null, null)} style={{
+        <div key={g} onClick={(e) => { e.stopPropagation(); if (disableEmptySlot && !pallet) return; onSlotClick?.(fl, g); }} onMouseEnter={() => onSlotHover?.(fl, g)} onMouseLeave={() => onSlotHover?.(null, null)} style={{
           display: 'inline-flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           width: 52, height: 42, borderRadius: 5,
           border: isSel ? '2px solid var(--cyan)' : `1px solid ${pallet ? (catColor || 'var(--cyan)') : 'var(--border)'}`,
           background: isSel ? 'var(--cyan-dim)' : (pallet ? (catColor ? catColor + '22' : 'var(--cyan-dim)') : 'var(--bg-surface)'),
           color: isSel ? 'var(--cyan)' : (pallet ? (catColor || 'var(--cyan)') : 'var(--text-secondary)'),
           fontSize: '0.65rem', gap: 2,
-          cursor: (disableEmptyKan && !pallet) ? 'not-allowed' : (onKanClick ? 'pointer' : 'default'),
+          cursor: (disableEmptySlot && !pallet) ? 'not-allowed' : (onSlotClick ? 'pointer' : 'default'),
           boxShadow: isSel ? '0 0 0 1px var(--cyan)' : 'none',
         }}>
-          <span>K{g}</span>
-          <span style={{ fontSize: '0.6rem' }}>{pallet ? items.length + '종' : '빈칸'}</span>
+          <span>D{g}</span>
+          <span style={{ fontSize: '0.6rem' }}>{pallet ? items.length + '종' : '빈빈'}</span>
         </div>
       );
     }
@@ -154,7 +154,7 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedKan, onKanC
   }
   return (
     <div style={panelStyle}>
-      <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: 10 }}>{rack.rack_no}번 랙 — 칸별 현황</div>
+      <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: 10 }}>{rack.rack_no}번 랙 — 단별 현황</div>
       {rows}
     </div>
   );

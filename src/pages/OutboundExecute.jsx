@@ -8,7 +8,7 @@ import WarehouseRackGrid from '../components/warehouse/WarehouseRackGrid.jsx';
 import WarehouseFloorPlan, { FloorPlanRackDetail } from '../components/warehouse/WarehouseFloorPlan.jsx';
 import WarehouseElevation from '../components/warehouse/WarehouseElevation.jsx';
 import StatsBar from '../components/warehouse/StatsBar.jsx';
-import { KanDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
+import { KanDetailPanel as SlotDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
 import WarehouseMinimap from '../components/warehouse/WarehouseMinimap.jsx';
 
 export default function OutboundExecute() {
@@ -20,7 +20,7 @@ export default function OutboundExecute() {
   const [selectedCell, setSelectedCell] = useState(null);
   const [hoveredRackId, setHoveredRackId] = useState(null);
   const [hoveredFloor, setHoveredFloor] = useState(null);
-  const [hoveredKan, setHoveredKan] = useState(null);
+  const [hoveredSlot, setHoveredSlot] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [execQty, setExecQty] = useState('');
 
@@ -41,7 +41,7 @@ export default function OutboundExecute() {
     const rackIds = new Set(whRacks.map((r) => r.id));
     const slots = [];
     pallets.forEach((pallet) => {
-      const [rId, floor, kan] = pallet.location.split('-').map(Number);
+      const [rId, floor, slot] = pallet.location.split('-').map(Number);
       if (!rackIds.has(rId)) return;
       const items = inventoryItems.filter(
         (i) => i.pallet_id === pallet.id && i.product_id === sched.product_id
@@ -52,7 +52,7 @@ export default function OutboundExecute() {
         items[0].received_at
       );
       const qty = items.reduce((s, i) => s + i.quantity, 0);
-      slots.push({ rackId: rId, floor, kan, key: pallet.location, received_at: earliest, qty });
+      slots.push({ rackId: rId, floor, slot, key: pallet.location, received_at: earliest, qty });
     });
     slots.sort((a, b) => a.received_at.localeCompare(b.received_at));
     slots.forEach((s, i) => { s.rank = i + 1; });
@@ -110,11 +110,11 @@ export default function OutboundExecute() {
       let bestFifo = null;
       let hasOther = false;
 
-      for (let kan = 1; kan <= rack.groups; kan++) {
-        const key = `${rackId}-${floor}-${kan}`;
-        const slot = fifoSlots.find((s) => s.key === key);
-        if (slot) {
-          if (!bestFifo || slot.rank < bestFifo.rank) bestFifo = slot;
+      for (let slot = 1; slot <= rack.groups; slot++) {
+        const key = `${rackId}-${floor}-${slot}`;
+        const fifoEntry = fifoSlots.find((s) => s.key === key);
+        if (fifoEntry) {
+          if (!bestFifo || fifoEntry.rank < bestFifo.rank) bestFifo = fifoEntry;
         } else {
           const pallet = pallets.find((p) => p.location === key);
           if (pallet && inventoryItems.some((i) => i.pallet_id === pallet.id)) hasOther = true;
@@ -134,12 +134,12 @@ export default function OutboundExecute() {
       const rack = racks.find((r) => r.id === rackId);
       if (!rack) return [];
       return Array.from({ length: rack.groups }, (_, i) => {
-        const kan = i + 1;
-        const key = `${rackId}-${floor}-${kan}`;
-        const slot = fifoSlots.find((s) => s.key === key);
-        if (slot) {
-          if (slot.rank === 1) return 'mini-fifo1';
-          if (slot.rank === 2) return 'mini-fifo2';
+        const slot = i + 1;
+        const key = `${rackId}-${floor}-${slot}`;
+        const fifoEntry = fifoSlots.find((s) => s.key === key);
+        if (fifoEntry) {
+          if (fifoEntry.rank === 1) return 'mini-fifo1';
+          if (fifoEntry.rank === 2) return 'mini-fifo2';
           return 'mini-fifon';
         }
         const pallet = pallets.find((p) => p.location === key);
@@ -152,12 +152,12 @@ export default function OutboundExecute() {
 
   // ─── getCellClass (Type A) ────────────────────────────────
   const getCellClass = useCallback(
-    (rackId, floor, kan) => {
-      const key = `${rackId}-${floor}-${kan}`;
-      const slot = fifoSlots.find((s) => s.key === key);
-      if (slot) {
-        if (slot.rank === 1) return 'rc-fifo1';
-        if (slot.rank === 2) return 'rc-fifo2';
+    (rackId, floor, slot) => {
+      const key = `${rackId}-${floor}-${slot}`;
+      const fifoEntry = fifoSlots.find((s) => s.key === key);
+      if (fifoEntry) {
+        if (fifoEntry.rank === 1) return 'rc-fifo1';
+        if (fifoEntry.rank === 2) return 'rc-fifo2';
         return 'rc-fifon';
       }
       const hasPallet = !!pallets.find((p) => p.location === key);
@@ -195,7 +195,7 @@ export default function OutboundExecute() {
     if (!canExecute) return;
     const topSlots = fifoSlots.slice(0, 3).map((sl) => {
       const r = racks.find((x) => x.id === sl.rackId);
-      return `  F${sl.rank}: ${r?.rack_no}번 랙 · ${sl.floor}칸 · ${sl.kan}단 (${sl.qty}개)`;
+      return `  F${sl.rank}: ${r?.rack_no}번 랙 · ${sl.floor}단 · ${sl.slot}열 (${sl.qty}개)`;
     }).join('\n');
     alert(`✅ 출고 완료!\n${schedProduct?.name} ${outboundQty}개 출고\n\nFIFO 출고 위치:\n${topSlots}\n\n(데모: 실제 저장 없음)`);
     setSelectedScheduleId(null);
@@ -246,7 +246,7 @@ export default function OutboundExecute() {
                     </span>
                     {top && topRack && (
                       <span style={{ marginLeft: 8 }}>
-                        | <span className="action-highlight">FIFO F{top.rank}: {topRack.rack_no}번 랙 · {top.floor}칸 · {top.kan}단 ({top.qty}개)</span>
+                        | <span className="action-highlight">FIFO F{top.rank}: {topRack.rack_no}번 랙 · {top.floor}단 · {top.slot}열 ({top.qty}개)</span>
                       </span>
                     )}
                     {totalAvailable < outboundQty && (
@@ -288,13 +288,13 @@ export default function OutboundExecute() {
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                 </div>
                 <div style={{ position: 'relative', paddingBottom: 6 }}>
-                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredKan={hoveredKan} />
+                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredSlot={hoveredSlot} />
                   {warehouseType === 'a' ? (
                     <div style={{ padding: '10px 230px 10px 10px', maxHeight: 520, overflowY: 'auto' }}>
                       <WarehouseRackGrid
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: null }); }}
+                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, slot: null }); }}
                         onRackHover={setHoveredRackId}
                         getCellClass={getCellClass}
                       />
@@ -304,7 +304,7 @@ export default function OutboundExecute() {
                       <WarehouseFloorPlan
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: null }); }}
+                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, slot: null }); }}
                         onRackHover={setHoveredRackId}
                       />
                     </div>
@@ -313,7 +313,7 @@ export default function OutboundExecute() {
                       <WarehouseElevation
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, kan: null }); }}
+                        onRackClick={(rackId) => { setSelectedCell((prev) => prev?.rackId === rackId ? null : { rackId, floor: 1, slot: null }); }}
                         onRackHover={setHoveredRackId}
                       />
                     </div>
@@ -322,7 +322,7 @@ export default function OutboundExecute() {
                       <WarehouseMatrix
                         warehouseId={selectedWarehouseId}
                         selectedCell={selectedCell}
-                        onCellClick={(rackId, floor) => { setSelectedCell({ rackId, floor, kan: null }); }}
+                        onCellClick={(rackId, floor) => { setSelectedCell({ rackId, floor, slot: null }); }}
                         onCellHover={(rackId, floor) => { setHoveredRackId(rackId); setHoveredFloor(floor ?? null); }}
                         getCellFifoInfo={getCellFifoInfo}
                         getMiniBlocksFn={getMiniBlocksFn}
@@ -333,31 +333,31 @@ export default function OutboundExecute() {
                 </div>
               </div>
 
-              {/* 칸별현황 | 적재 상세 | 재고 리스트 (3분할) */}
+              {/* 단별현황 | 적재 상세 | 재고 리스트 (3분할) */}
               <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
-                {/* 칸별 현황 */}
+                {/* 단별 현황 */}
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell ? `랙 ${selectedRack?.rack_no ?? ''} — ${selectedCell.floor}칸 단별 현황` : '단별 현황'}
+                      {selectedCell ? `랙 ${selectedRack?.rack_no ?? ''} — ${selectedCell.floor}단 단별 현황` : '단별 현황'}
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
                     <FloorPlanRackDetail
                       rackId={selectedCell?.rackId}
                       selectedFloor={selectedCell?.floor}
-                      selectedKan={selectedCell?.kan}
-                      onKanClick={(floor, kan) => {
-                        const hasPallet = !!pallets.find(p => p.location === `${selectedCell?.rackId}-${floor}-${kan}`);
+                      selectedSlot={selectedCell?.slot}
+                      onSlotClick={(floor, slot) => {
+                        const hasPallet = !!pallets.find(p => p.location === `${selectedCell?.rackId}-${floor}-${slot}`);
                         if (!hasPallet) return;
                         setSelectedCell(prev => {
                           if (!prev) return null;
-                          if (prev.floor === floor && prev.kan === kan) return { ...prev, kan: null };
-                          return { ...prev, floor, kan };
+                          if (prev.floor === floor && prev.slot === slot) return { ...prev, slot: null };
+                          return { ...prev, floor, slot };
                         });
                       }}
-                      onKanHover={(floor, kan) => setHoveredKan(floor != null ? { rackId: selectedCell?.rackId, floor, kan } : null)}
-                      disableEmptyKan={true}
+                      onSlotHover={(floor, slot) => setHoveredSlot(floor != null ? { rackId: selectedCell?.rackId, floor, slot } : null)}
+                      disableEmptySlot={true}
                     />
                   </div>
                 </div>
@@ -365,14 +365,14 @@ export default function OutboundExecute() {
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell?.kan ? `${selectedCell.kan}단 적재 상세` : '적재 상세'}
+                      {selectedCell?.slot ? `${selectedCell.slot}열 적재 상세` : '적재 상세'}
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
-                    <KanDetailPanel
+                    <SlotDetailPanel
                       rackId={selectedCell?.rackId}
                       floor={selectedCell?.floor}
-                      kan={selectedCell?.kan}
+                      kan={selectedCell?.slot}
                     />
                   </div>
                 </div>
@@ -399,13 +399,13 @@ export default function OutboundExecute() {
                           </tr>
                         </thead>
                         <tbody>
-                          {fifoSlots.map((slot) => {
-                            const r = racks.find((x) => x.id === slot.rackId);
-                            const isSelected = selectedCell?.rackId === slot.rackId && selectedCell?.floor === slot.floor && selectedCell?.kan === slot.kan;
+                          {fifoSlots.map((fifoItem) => {
+                            const r = racks.find((x) => x.id === fifoItem.rackId);
+                            const isSelected = selectedCell?.rackId === fifoItem.rackId && selectedCell?.floor === fifoItem.floor && selectedCell?.slot === fifoItem.slot;
                             return (
                               <tr
-                                key={slot.key}
-                                onClick={() => setSelectedCell({ rackId: slot.rackId, floor: slot.floor, kan: slot.kan })}
+                                key={fifoItem.key}
+                                onClick={() => setSelectedCell({ rackId: fifoItem.rackId, floor: fifoItem.floor, slot: fifoItem.slot })}
                                 style={{
                                   cursor: 'pointer',
                                   background: isSelected ? 'var(--bg-hover, rgba(250,189,47,0.12))' : 'transparent',
@@ -414,14 +414,14 @@ export default function OutboundExecute() {
                                 onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'var(--bg-hover, rgba(255,255,255,0.04))'; }}
                                 onMouseLeave={e => { e.currentTarget.style.background = isSelected ? 'var(--bg-hover, rgba(250,189,47,0.12))' : 'transparent'; }}
                               >
-                                <td style={{ padding: '5px 8px', textAlign: 'center', color: slot.rank === 1 ? 'var(--amber)' : slot.rank === 2 ? '#60A5FA' : 'var(--text-secondary)', fontWeight: slot.rank <= 2 ? 700 : 400 }}>
-                                  F{slot.rank}
+                                <td style={{ padding: '5px 8px', textAlign: 'center', color: fifoItem.rank === 1 ? 'var(--amber)' : fifoItem.rank === 2 ? '#60A5FA' : 'var(--text-secondary)', fontWeight: fifoItem.rank <= 2 ? 700 : 400 }}>
+                                  F{fifoItem.rank}
                                 </td>
-                                <td style={{ padding: '5px 8px', color: 'var(--text-primary)' }}>{slot.received_at?.slice(0, 10) ?? '-'}</td>
+                                <td style={{ padding: '5px 8px', color: 'var(--text-primary)' }}>{fifoItem.received_at?.slice(0, 10) ?? '-'}</td>
                                 <td style={{ padding: '5px 8px', color: 'var(--text-primary)', fontFamily: 'monospace', fontSize: '0.73rem' }}>
-                                  {r?.rack_no ?? slot.rackId}번-{slot.floor}칸-{slot.kan}단
+                                  {r?.rack_no ?? fifoItem.rackId}번-{fifoItem.floor}단-{fifoItem.slot}열
                                 </td>
-                                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--text-primary)', fontWeight: 600 }}>{slot.qty}</td>
+                                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--text-primary)', fontWeight: 600 }}>{fifoItem.qty}</td>
                               </tr>
                             );
                           })}

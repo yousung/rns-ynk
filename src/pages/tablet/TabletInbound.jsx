@@ -13,7 +13,7 @@ export default function TabletInbound() {
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);
   const [selectedRackId, setSelectedRackId] = useState(null);
   const [selectedFloor, setSelectedFloor] = useState(null);
-  const [selectedKan, setSelectedKan] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
   const [qty, setQty] = useState('');
   const [toast, setToast] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -28,13 +28,13 @@ export default function TabletInbound() {
   const warehouseRacks = racks.filter(r => r.warehouse_id === selectedWarehouseId);
   const selectedRack = warehouseRacks.find(r => r.id === selectedRackId) ?? null;
   const floors = selectedRack ? Array.from({ length: selectedRack.floors }, (_, i) => selectedRack.floors - i) : [];
-  const kans = selectedRack ? Array.from({ length: selectedRack.groups }, (_, i) => i + 1) : [];
+  const slots = selectedRack ? Array.from({ length: selectedRack.groups }, (_, i) => i + 1) : [];
 
   function handleWhModeChange(mode) {
     setWhMode(mode);
     setSelectedRackId(null);
     setSelectedFloor(null);
-    setSelectedKan(null);
+    setSelectedSlot(null);
     if (mode === 'electric') {
       setSelectedWarehouseId(electricWarehouse?.id ?? null);
     } else {
@@ -46,22 +46,22 @@ export default function TabletInbound() {
     setSelectedWarehouseId(id);
     setSelectedRackId(null);
     setSelectedFloor(null);
-    setSelectedKan(null);
+    setSelectedSlot(null);
   }
 
   function handleSelectRack(id) {
     setSelectedRackId(id);
     setSelectedFloor(null);
-    setSelectedKan(null);
+    setSelectedSlot(null);
   }
 
   function handleSelectFloor(f) {
     setSelectedFloor(f);
-    setSelectedKan(null);
+    setSelectedSlot(null);
   }
 
-  function isOccupied(rackId, floor, kan) {
-    return pallets.some(p => p.location === `${rackId}-${floor}-${kan}`);
+  function isOccupied(rackId, floor, slot) {
+    return pallets.some(p => p.location === `${rackId}-${floor}-${slot}`);
   }
 
   function showToast(msg, color) {
@@ -69,7 +69,7 @@ export default function TabletInbound() {
     setTimeout(() => setToast(null), 2500);
   }
 
-  const hasLocation = selectedRackId !== null && selectedFloor !== null && selectedKan !== null;
+  const hasLocation = selectedRackId !== null && selectedFloor !== null && selectedSlot !== null;
   const qtyNum = Number(qty);
   const validQty = qty !== '' && qtyNum > 0 && (!selectedSchedule || qtyNum <= selectedSchedule.quantity);
   const canConfirm = selectedScheduleId !== null && hasLocation && validQty;
@@ -78,12 +78,12 @@ export default function TabletInbound() {
     if (!canConfirm) return;
     const rack = racks.find(r => r.id === selectedRackId);
     const wh = warehouses.find(w => w.id === selectedWarehouseId);
-    showToast(`입고 완료: ${selectedProduct?.name} ${qtyNum.toLocaleString()}개 → ${wh?.name} ${rack?.rack_no}번랙 ${selectedFloor}칸 ${selectedKan}단`, 'green');
+    showToast(`입고 완료: ${selectedProduct?.name} ${qtyNum.toLocaleString()}개 → ${wh?.name} ${rack?.rack_no}번랙 ${selectedFloor}열 ${selectedSlot}열`, 'green');
     setTimeout(() => {
       setSelectedScheduleId(null);
       setSelectedRackId(null);
       setSelectedFloor(null);
-      setSelectedKan(null);
+      setSelectedSlot(null);
       setQty('');
     }, 2600);
   }
@@ -163,7 +163,7 @@ export default function TabletInbound() {
                     <span>예정 {selectedSchedule?.quantity.toLocaleString()}개</span>
                     {hasLocation && (
                       <span>
-                        → {racks.find(r => r.id === selectedRackId)?.rack_no}번랙 {selectedFloor}칸 {selectedKan}단
+                        → {racks.find(r => r.id === selectedRackId)?.rack_no}번랙 {selectedFloor}열 {selectedSlot}열
                       </span>
                     )}
                   </div>
@@ -208,14 +208,14 @@ export default function TabletInbound() {
 
               {selectedRackId && (
                 <>
-                  <div className="t-section-title">칸 선택</div>
+                  <div className="t-section-title">열 선택</div>
                   <div className="t-floor-grid">
                     {floors.map(f => (
                       <button
                         key={f}
                         className={`t-grid-btn${selectedFloor === f ? ' active' : ''}`}
                         onClick={() => handleSelectFloor(f)}
-                      >{f}칸</button>
+                      >{f}열</button>
                     ))}
                   </div>
                 </>
@@ -225,13 +225,13 @@ export default function TabletInbound() {
                 <>
                   <div className="t-section-title">단 선택</div>
                   <div className="t-kan-grid">
-                    {kans.map(k => {
+                    {slots.map(k => {
                       const occ = isOccupied(selectedRackId, selectedFloor, k);
                       return (
                         <button
                           key={k}
-                          className={`t-grid-btn${selectedKan === k ? ' active' : ''}${occ ? ' occupied' : ''}`}
-                          onClick={() => !occ && setSelectedKan(k)}
+                          className={`t-grid-btn${selectedSlot === k ? ' active' : ''}${occ ? ' occupied' : ''}`}
+                          onClick={() => !occ && setSelectedSlot(k)}
                           disabled={occ}
                         >{k}단</button>
                       );

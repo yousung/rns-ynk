@@ -14,7 +14,7 @@ function polyPts(corners) {
   return corners.map(([x, y]) => `${x},${y}`).join(' ');
 }
 
-export default function WarehouseMinimap({ warehouseId, selectedRackId, selectedCell, hoveredRackId, hoveredFloor, hoveredKan }) {
+export default function WarehouseMinimap({ warehouseId, selectedRackId, selectedCell, hoveredRackId, hoveredFloor, hoveredSlot }) {
   const { racks } = useDataStore();
   const { theme } = useUIStore();
   const isDark = theme === 'dark';
@@ -31,15 +31,15 @@ export default function WarehouseMinimap({ warehouseId, selectedRackId, selected
       const x0 = i * (Wx + GAP);
       const cellW = Wx / rack.groups;
       for (let floor = 1; floor <= rack.floors; floor++) {
-        for (let kan = 1; kan <= rack.groups; kan++) {
-          const xs = x0 + (kan - 1) * cellW;
+        for (let slot = 1; slot <= rack.groups; slot++) {
+          const xs = x0 + (slot - 1) * cellW;
           const xe = xs + cellW;
           const zs = (floor - 1) * Zh;
           const ze = floor * Zh;
           cells.push({
             rackId: rack.id,
             floor,
-            kan,
+            slot,
             sortX: xs,
             right: polyPts([iso(xe,0,zs), iso(xe,Dy,zs), iso(xe,Dy,ze), iso(xe,0,ze)]),
             front: polyPts([iso(xs,0,zs), iso(xe,0,zs), iso(xe,0,ze), iso(xs,0,ze)]),
@@ -163,19 +163,19 @@ export default function WarehouseMinimap({ warehouseId, selectedRackId, selected
         MINIMAP
       </div>
       <svg viewBox={viewBox} width={svgW} height={svgH} style={{ display: 'block' }}>
-        {cells.map(({ rackId, floor, kan, right, front, top }) => {
-          const isCellActive = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.kan === kan;
-          const isKanHovered = !isCellActive && hoveredKan?.rackId === rackId && hoveredKan?.floor === floor && hoveredKan?.kan === kan;
-          const isFloorHovered = !isCellActive && !isKanHovered && hoveredRackId === rackId && hoveredFloor === floor;
-          const isFloorActive = !isCellActive && !isKanHovered && !isFloorHovered && selectedCell?.rackId === rackId && selectedCell?.floor === floor && !hoveredRackId;
-          const isRackHovered = !isCellActive && !isKanHovered && !isFloorHovered && !isFloorActive && hoveredRackId === rackId;
-          const isRackSelected = !isCellActive && !isKanHovered && !isFloorHovered && !isFloorActive && !isRackHovered && (selectedRackId === rackId || selectedCell?.rackId === rackId);
+        {cells.map(({ rackId, floor, slot, right, front, top }) => {
+          const isCellActive = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.slot === slot;
+          const isSlotHovered = !isCellActive && hoveredSlot?.rackId === rackId && hoveredSlot?.floor === floor && hoveredSlot?.slot === slot;
+          const isFloorHovered = !isCellActive && !isSlotHovered && hoveredRackId === rackId && hoveredFloor === floor;
+          const isFloorActive = !isCellActive && !isSlotHovered && !isFloorHovered && selectedCell?.rackId === rackId && selectedCell?.floor === floor && !hoveredRackId;
+          const isRackHovered = !isCellActive && !isSlotHovered && !isFloorHovered && !isFloorActive && hoveredRackId === rackId;
+          const isRackSelected = !isCellActive && !isSlotHovered && !isFloorHovered && !isFloorActive && !isRackHovered && (selectedRackId === rackId || selectedCell?.rackId === rackId);
 
           let tF, fF, sF, stroke, glowStyle = {};
           if (isCellActive) {
             tF = c.aTop; fF = c.aFront; sF = c.aSide; stroke = c.aStroke;
             glowStyle = { filter: `drop-shadow(${c.aGlow})` };
-          } else if (isKanHovered) {
+          } else if (isSlotHovered) {
             tF = c.khTop; fF = c.khFront; sF = c.khSide; stroke = c.khStroke;
           } else if (isFloorHovered) {
             tF = c.yTop; fF = c.yFront; sF = c.ySide; stroke = c.yStroke;
@@ -193,7 +193,7 @@ export default function WarehouseMinimap({ warehouseId, selectedRackId, selected
           }
 
           return (
-            <g key={`${rackId}-${floor}-${kan}`} style={glowStyle}>
+            <g key={`${rackId}-${floor}-${slot}`} style={glowStyle}>
               <polygon points={right} fill={sF}  stroke={stroke} strokeWidth={0.2} />
               <polygon points={front} fill={fF}  stroke={stroke} strokeWidth={0.2} />
               <polygon points={top}   fill={tF}  stroke={stroke} strokeWidth={0.2} />

@@ -2,7 +2,7 @@ import { useRef, useEffect, useCallback } from 'react';
 import { useDataStore, MAX_RACK_COUNT } from '../../store/useDataStore.js';
 import MiniBlocks from './MiniBlocks.jsx';
 
-function getCellClass(occupiedKans, groups, selectedKan, fifoInfo) {
+function getCellClass(occupiedSlots, groups, selectedSlot, fifoInfo) {
   if (fifoInfo) {
     if (fifoInfo.type === 'fifo' && fifoInfo.rank === 1) return 'rm-fifo1';
     if (fifoInfo.type === 'fifo' && fifoInfo.rank === 2) return 'rm-fifo2';
@@ -10,7 +10,7 @@ function getCellClass(occupiedKans, groups, selectedKan, fifoInfo) {
     if (fifoInfo.type === 'occupied') return 'rm-occupied';
     return 'rm-empty';
   }
-  const filled = occupiedKans;
+  const filled = occupiedSlots;
   if (filled === 0) return 'rm-empty';
   if (filled >= groups) return 'rm-full';
   const ratio = filled / groups;
@@ -53,13 +53,13 @@ export default function WarehouseMatrix({
     return () => observer.disconnect();
   }, [warehouseId]);
 
-  const getOccupiedKans = useCallback(
+  const getOccupiedSlots = useCallback(
     (rackId, floor) => {
       const rack = racks.find((r) => r.id === rackId);
       if (!rack) return 0;
       let count = 0;
-      for (let kan = 1; kan <= rack.groups; kan++) {
-        if (pallets.find((p) => p.location === `${rackId}-${floor}-${kan}`)) count++;
+      for (let slot = 1; slot <= rack.groups; slot++) {
+        if (pallets.find((p) => p.location === `${rackId}-${floor}-${slot}`)) count++;
       }
       return count;
     },
@@ -72,9 +72,9 @@ export default function WarehouseMatrix({
       const rack = racks.find((r) => r.id === rackId);
       if (!rack) return [];
       const blocks = [];
-      for (let kan = 1; kan <= rack.groups; kan++) {
-        const hasPallet = !!pallets.find((p) => p.location === `${rackId}-${floor}-${kan}`);
-        const isSel = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.kan === kan;
+      for (let slot = 1; slot <= rack.groups; slot++) {
+        const hasPallet = !!pallets.find((p) => p.location === `${rackId}-${floor}-${slot}`);
+        const isSel = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.slot === slot;
         blocks.push(isSel ? 'mini-sel' : hasPallet ? 'mini-filled' : 'mini-empty');
       }
       return blocks;
@@ -90,7 +90,7 @@ export default function WarehouseMatrix({
         <table className="rack-matrix" ref={tableRef}>
           <thead>
             <tr>
-              <th className="label-cell">칸/랙</th>
+              <th className="label-cell">단/랙</th>
               {whRacks.map((rack) => (
                 <th key={rack.id}>{rack.rack_no}</th>
               ))}
@@ -103,7 +103,7 @@ export default function WarehouseMatrix({
           <tbody>
             {floors.map((floor) => (
               <tr key={floor}>
-                <td className="label-cell">{floor}칸</td>
+                <td className="label-cell">{floor}단</td>
                 {whRacks.map((rack) => {
                   const hasFloor = floor <= rack.floors;
                   if (!hasFloor) {
@@ -116,8 +116,8 @@ export default function WarehouseMatrix({
                   const isSelected =
                     selectedCell?.rackId === rack.id && selectedCell?.floor === floor;
                   const fifoInfo = getCellFifoInfo ? getCellFifoInfo(rack.id, floor) : null;
-                  const occupiedKans = getOccupiedKans(rack.id, floor);
-                  const cellClass = getCellClass(occupiedKans, rack.groups, null, fifoInfo);
+                  const occupiedSlots = getOccupiedSlots(rack.id, floor);
+                  const cellClass = getCellClass(occupiedSlots, rack.groups, null, fifoInfo);
                   const miniBlocks = getMiniBlocks(rack.id, floor);
 
                   return (

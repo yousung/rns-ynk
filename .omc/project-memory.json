@@ -123,21 +123,75 @@
   },
   "hotPaths": [
     {
+      "path": "src/pages/OutboundExecute.jsx",
+      "accessCount": 42,
+      "lastAccessed": 1776758232071,
+      "type": "file"
+    },
+    {
       "path": "src/store/useDataStore.js",
-      "accessCount": 28,
-      "lastAccessed": 1776754058124,
+      "accessCount": 39,
+      "lastAccessed": 1776758258689,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/InboundExecute.jsx",
+      "accessCount": 37,
+      "lastAccessed": 1776758228489,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Inventory.jsx",
+      "accessCount": 27,
+      "lastAccessed": 1776758235610,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/tablet/TabletInbound.jsx",
+      "accessCount": 20,
+      "lastAccessed": 1776757737114,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "accessCount": 19,
+      "lastAccessed": 1776758218470,
       "type": "file"
     },
     {
       "path": "src/components/warehouse/WarehouseMatrix.jsx",
-      "accessCount": 2,
-      "lastAccessed": 1776754033221,
+      "accessCount": 18,
+      "lastAccessed": 1776758239450,
       "type": "file"
     },
     {
+      "path": "src/components/warehouse/WarehouseMinimap.jsx",
+      "accessCount": 11,
+      "lastAccessed": 1776758223524,
+      "type": "file"
+    },
+    {
+      "path": "src/pages",
+      "accessCount": 5,
+      "lastAccessed": 1776756410630,
+      "type": "directory"
+    },
+    {
       "path": "src/components/warehouse/CellDetailsPanel.jsx",
+      "accessCount": 3,
+      "lastAccessed": 1776756687713,
+      "type": "file"
+    },
+    {
+      "path": "src",
+      "accessCount": 3,
+      "lastAccessed": 1776757738513,
+      "type": "directory"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseRackGrid.jsx",
       "accessCount": 2,
-      "lastAccessed": 1776754037393,
+      "lastAccessed": 1776758231125,
       "type": "file"
     },
     {
@@ -145,24 +199,6 @@
       "accessCount": 1,
       "lastAccessed": 1776753997836,
       "type": "directory"
-    },
-    {
-      "path": "src",
-      "accessCount": 1,
-      "lastAccessed": 1776754007388,
-      "type": "directory"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776754033352,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseRackGrid.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776754033539,
-      "type": "file"
     },
     {
       "path": "src/styles/warehouse.css",
@@ -189,33 +225,9 @@
       "type": "file"
     },
     {
-      "path": "src/pages/InboundExecute.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776754038475,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/OutboundExecute.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776754038601,
-      "type": "file"
-    },
-    {
-      "path": "src/pages/Inventory.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776754042095,
-      "type": "file"
-    },
-    {
       "path": "src/pages/Dashboard.jsx",
       "accessCount": 1,
       "lastAccessed": 1776754042264,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseMinimap.jsx",
-      "accessCount": 1,
-      "lastAccessed": 1776754042611,
       "type": "file"
     },
     {

@@ -8,7 +8,7 @@ import WarehouseRackGrid from '../components/warehouse/WarehouseRackGrid.jsx';
 import WarehouseFloorPlan, { FloorPlanRackDetail } from '../components/warehouse/WarehouseFloorPlan.jsx';
 import WarehouseElevation from '../components/warehouse/WarehouseElevation.jsx';
 import StatsBar from '../components/warehouse/StatsBar.jsx';
-import { KanDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
+import { KanDetailPanel as SlotDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
 import WarehouseMinimap from '../components/warehouse/WarehouseMinimap.jsx';
 
 export default function InboundExecute() {
@@ -17,10 +17,10 @@ export default function InboundExecute() {
 
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(1);
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
-  const [selectedCell, setSelectedCell] = useState(null); // { rackId, floor, kan }
+  const [selectedCell, setSelectedCell] = useState(null); // { rackId, floor, slot }
   const [hoveredRackId, setHoveredRackId] = useState(null);
   const [hoveredFloor, setHoveredFloor] = useState(null);
-  const [hoveredKan, setHoveredKan] = useState(null);
+  const [hoveredSlot, setHoveredSlot] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [execQty, setExecQty] = useState('');
 
@@ -49,14 +49,14 @@ export default function InboundExecute() {
       return;
     }
 
-    const occupiedKans = new Set();
-    for (let kan = 1; kan <= rack.groups; kan++) {
-      if (pallets.find((p) => p.location === `${rackId}-${floor}-${kan}`)) occupiedKans.add(kan);
+    const occupiedSlots = new Set();
+    for (let slot = 1; slot <= rack.groups; slot++) {
+      if (pallets.find((p) => p.location === `${rackId}-${floor}-${slot}`)) occupiedSlots.add(slot);
     }
-    const emptyKan = Array.from({ length: rack.groups }, (_, i) => i + 1).find(
-      (k) => !occupiedKans.has(k)
+    const emptySlot = Array.from({ length: rack.groups }, (_, i) => i + 1).find(
+      (k) => !occupiedSlots.has(k)
     );
-    setSelectedCell({ rackId, floor, kan: null });
+    setSelectedCell({ rackId, floor, slot: null });
   }
 
   // ─── 랙 클릭 (Type A) ────────────────────────────────────
@@ -64,7 +64,7 @@ export default function InboundExecute() {
     const rack = racks.find((r) => r.id === rackId);
     if (!rack) return;
     if (selectedCell?.rackId === rackId) { setSelectedCell(null); return; }
-    setSelectedCell({ rackId, floor: 1, kan: null });
+    setSelectedCell({ rackId, floor: 1, slot: null });
   }
 
   // ─── getMiniBlocksFn ──────────────────────────────────────
@@ -77,21 +77,21 @@ export default function InboundExecute() {
         ? inboundSchedules.find((s) => s.id === selectedScheduleId)
         : null;
 
-      const productKans = new Set();
+      const productSlots = new Set();
       if (schedule) {
-        for (let kan = 1; kan <= rack.groups; kan++) {
-          const pallet = pallets.find((p) => p.location === `${rackId}-${floor}-${kan}`);
+        for (let slot = 1; slot <= rack.groups; slot++) {
+          const pallet = pallets.find((p) => p.location === `${rackId}-${floor}-${slot}`);
           if (pallet && inventoryItems.some((i) => i.pallet_id === pallet.id && i.product_id === schedule.product_id)) {
-            productKans.add(kan);
+            productSlots.add(slot);
           }
         }
       }
 
       return Array.from({ length: rack.groups }, (_, i) => {
-        const kan = i + 1;
-        const hasPallet = !!pallets.find((p) => p.location === `${rackId}-${floor}-${kan}`);
-        const isSel = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.kan === kan;
-        const isProduct = productKans.has(kan);
+        const slot = i + 1;
+        const hasPallet = !!pallets.find((p) => p.location === `${rackId}-${floor}-${slot}`);
+        const isSel = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.slot === slot;
+        const isProduct = productSlots.has(slot);
         if (isSel) return 'mini-sel';
         if (isProduct) return 'mini-product';
         return hasPallet ? 'mini-filled' : 'mini-empty';
@@ -102,10 +102,10 @@ export default function InboundExecute() {
 
   // ─── getCellClass (Type A) ────────────────────────────────
   const getCellClass = useCallback(
-    (rackId, floor, kan) => {
-      const isSel = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.kan === kan;
+    (rackId, floor, slot) => {
+      const isSel = selectedCell?.rackId === rackId && selectedCell?.floor === floor && selectedCell?.slot === slot;
       if (isSel) return 'rc-highlight';
-      const hasPallet = !!pallets.find((p) => p.location === `${rackId}-${floor}-${kan}`);
+      const hasPallet = !!pallets.find((p) => p.location === `${rackId}-${floor}-${slot}`);
       return hasPallet ? 'rc-filled' : 'rc-empty';
     },
     [pallets, selectedCell]
@@ -126,7 +126,7 @@ export default function InboundExecute() {
 
   function executeInbound() {
     if (!sched || !selectedCell || !rack) return;
-    alert(`✅ 입고 완료!\n${schedProduct?.name} ${inQty}개\n→ ${rack.rack_no}번 랙 · ${selectedCell.floor}칸 · ${selectedCell.kan}단\n\n(데모: 실제 저장 없음)`);
+    alert(`✅ 입고 완료!\n${schedProduct?.name} ${inQty}개\n→ ${rack.rack_no}번 랙 · ${selectedCell.floor}단 · ${selectedCell.slot}열\n\n(데모: 실제 저장 없음)`);
     setSelectedScheduleId(null);
     setSelectedCell(null);
     setExecQty('');
@@ -178,7 +178,7 @@ export default function InboundExecute() {
                 )}
                 {selectedCell && rack ? (
                   <>
-                    <span style={{ marginLeft: 8 }}>위치: <span className="action-highlight">{rack.rack_no}번 랙 · {selectedCell.floor}칸{selectedCell.kan ? ` · ${selectedCell.kan}단` : ''}</span></span>
+                    <span style={{ marginLeft: 8 }}>위치: <span className="action-highlight">{rack.rack_no}번 랙 · {selectedCell.floor}단{selectedCell.slot ? ` · ${selectedCell.slot}열` : ''}</span></span>
                   </>
                 ) : (
                   <span style={{ color: 'var(--text-secondary)', marginLeft: 8 }}>← 매트릭스에서 위치 클릭</span>
@@ -209,7 +209,7 @@ export default function InboundExecute() {
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                 </div>
                 <div style={{ position: 'relative', paddingBottom: 6 }}>
-                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredKan={hoveredKan} />
+                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredSlot={hoveredSlot} />
                   {warehouseType === 'a' ? (
                     <div style={{ padding: '10px 230px 10px 10px', maxHeight: 520, overflowY: 'auto' }}>
                       <WarehouseRackGrid
@@ -225,7 +225,7 @@ export default function InboundExecute() {
                       <WarehouseFloorPlan
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null }); }}
+                        onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null }); }}
                         onRackHover={setHoveredRackId}
                       />
                     </div>
@@ -234,7 +234,7 @@ export default function InboundExecute() {
                       <WarehouseElevation
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
-                        onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, kan: null }); }}
+                        onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null }); }}
                         onRackHover={setHoveredRackId}
                       />
                     </div>
@@ -253,26 +253,26 @@ export default function InboundExecute() {
                 </div>
               </div>
 
-              {/* 칸별현황 + 적재 상세 (가로 분할) */}
+              {/* 단별현황 + 적재 상세 (가로 분할) */}
               <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
-                {/* 칸별 현황 */}
+                {/* 단별 현황 */}
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell ? `랙 ${rack?.rack_no ?? ''} — ${selectedCell.floor}칸 단별 현황` : '단별 현황'}
+                      {selectedCell ? `랙 ${rack?.rack_no ?? ''} — ${selectedCell.floor}열 단별 현황` : '딘별 현황'}
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
                     <FloorPlanRackDetail
                       rackId={selectedCell?.rackId}
                       selectedFloor={selectedCell?.floor}
-                      selectedKan={selectedCell?.kan}
-                      onKanClick={(floor, kan) => setSelectedCell(prev => {
+                      selectedSlot={selectedCell?.slot}
+                      onSlotClick={(floor, slot) => setSelectedCell(prev => {
                         if (!prev) return null;
-                        if (prev.floor === floor && prev.kan === kan) return { ...prev, kan: null };
-                        return { ...prev, floor, kan };
+                        if (prev.floor === floor && prev.slot === slot) return { ...prev, slot: null };
+                        return { ...prev, floor, slot };
                       })}
-                      onKanHover={(floor, kan) => setHoveredKan(floor != null ? { rackId: selectedCell?.rackId, floor, kan } : null)}
+                      onSlotHover={(floor, slot) => setHoveredSlot(floor != null ? { rackId: selectedCell?.rackId, floor, slot } : null)}
                     />
                   </div>
                 </div>
@@ -280,14 +280,14 @@ export default function InboundExecute() {
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell?.kan ? `${selectedCell.kan}단 적재 상세` : '적재 상세'}
+                      {selectedCell?.slot ? `${selectedCell.slot}열 적재 상세` : '적재 상세'}
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
-                    <KanDetailPanel
+                    <SlotDetailPanel
                       rackId={selectedCell?.rackId}
                       floor={selectedCell?.floor}
-                      kan={selectedCell?.kan}
+                      kan={selectedCell?.slot}
                     />
                   </div>
                 </div>
