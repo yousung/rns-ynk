@@ -51,41 +51,48 @@ const racks = [
   { id: 100, warehouse_id: 3, rack_no: 31, floors: 10, groups: 3 },
 ];
 
-const pallets = (() => {
-  const racksByWarehouse = {
-    1: [{ id: 1, floors: 12, groups: 3 }, { id: 2, floors: 12, groups: 3 }, { id: 3, floors: 12, groups: 3 }],
-    2: [{ id: 5, floors: 8, groups: 3 }, { id: 6, floors: 8, groups: 3 }, { id: 7, floors: 8, groups: 3 }, { id: 48, floors: 8, groups: 3 }, { id: 49, floors: 8, groups: 3 }, { id: 50, floors: 8, groups: 3 }],
-    3: [{ id: 10, floors: 10, groups: 4 }, { id: 11, floors: 10, groups: 4 }, { id: 12, floors: 10, groups: 4 }, { id: 13, floors: 10, groups: 4 }, { id: 14, floors: 10, groups: 4 }, { id: 15, floors: 10, groups: 4 }, { id: 16, floors: 10, groups: 4 }, { id: 17, floors: 10, groups: 4 }, { id: 18, floors: 10, groups: 4 }, { id: 19, floors: 10, groups: 4 }, { id: 20, floors: 10, groups: 4 }, { id: 21, floors: 10, groups: 4 }, { id: 22, floors: 10, groups: 4 }, { id: 23, floors: 10, groups: 4 }, { id: 24, floors: 10, groups: 4 }, { id: 25, floors: 10, groups: 3 }, { id: 26, floors: 10, groups: 3 }, { id: 27, floors: 10, groups: 3 }, { id: 28, floors: 10, groups: 3 }, { id: 29, floors: 10, groups: 3 }, { id: 30, floors: 10, groups: 3 }, { id: 31, floors: 10, groups: 3 }, { id: 32, floors: 10, groups: 3 }, { id: 33, floors: 10, groups: 3 }, { id: 34, floors: 10, groups: 3 }, { id: 35, floors: 10, groups: 3 }, { id: 36, floors: 10, groups: 3 }, { id: 37, floors: 10, groups: 3 }, { id: 38, floors: 10, groups: 3 }, { id: 39, floors: 10, groups: 3 }, { id: 100, floors: 10, groups: 3 }],
-  };
-  const pallets = [];
-  let id = 1;
-  const usedLocations = new Set();
-  for (const warehouseId of [1, 2, 3]) {
-    const racks = racksByWarehouse[warehouseId];
-    for (const rack of racks) {
-      const maxCells = rack.floors * rack.groups;
-      const cellsToFill = Math.floor(maxCells * 0.05);
-      const availableCells = [];
-      for (let f = 1; f <= rack.floors; f++) {
-        for (let g = 1; g <= rack.groups; g++) {
-          availableCells.push([f, g]);
-        }
-      }
-      for (let i = 0; i < cellsToFill && availableCells.length > 0; i++) {
-        const idx = Math.floor(Math.random() * availableCells.length);
-        const [floor, group] = availableCells[idx];
-        const location = `${rack.id}-${floor}-${group}`;
-        if (!usedLocations.has(location)) {
-          pallets.push({ id, location });
-          usedLocations.add(location);
-          id++;
-          availableCells.splice(idx, 1);
-        }
-      }
-    }
-  }
-  return pallets;
-})();
+const pallets = [
+  // 창고 1 (11개 팔레트, 10% 점유율)
+  { id: 1, location: '1-2-1' }, { id: 2, location: '1-5-2' }, { id: 3, location: '1-8-3' },
+  { id: 4, location: '2-3-1' }, { id: 5, location: '2-7-2' }, { id: 6, location: '2-10-3' },
+  { id: 7, location: '3-1-2' }, { id: 8, location: '3-6-1' }, { id: 9, location: '3-11-3' },
+  { id: 10, location: '1-12-2' }, { id: 11, location: '2-1-3' },
+  // 창고 2 (15개 팔레트, 10% 점유율)
+  { id: 12, location: '5-2-1' }, { id: 13, location: '5-5-2' }, { id: 14, location: '5-8-3' },
+  { id: 15, location: '6-1-2' }, { id: 16, location: '6-4-1' }, { id: 17, location: '6-7-3' },
+  { id: 18, location: '7-3-1' }, { id: 19, location: '7-6-2' }, { id: 20, location: '48-2-3' },
+  { id: 21, location: '48-5-1' }, { id: 22, location: '49-1-2' }, { id: 23, location: '49-4-3' },
+  { id: 24, location: '50-3-1' }, { id: 25, location: '50-7-2' }, { id: 26, location: '7-8-1' },
+  // 창고 3 (110개 팔레트, 10% 점유율)
+  { id: 27, location: '10-1-1' }, { id: 28, location: '10-3-2' }, { id: 29, location: '10-5-3' }, { id: 30, location: '10-7-4' },
+  { id: 31, location: '11-2-1' }, { id: 32, location: '11-4-2' }, { id: 33, location: '11-6-3' }, { id: 34, location: '11-8-4' },
+  { id: 35, location: '12-1-2' }, { id: 36, location: '12-3-3' }, { id: 37, location: '12-5-4' }, { id: 38, location: '12-7-1' },
+  { id: 39, location: '13-2-2' }, { id: 40, location: '13-4-3' }, { id: 41, location: '13-6-4' }, { id: 42, location: '13-8-1' },
+  { id: 43, location: '14-1-3' }, { id: 44, location: '14-3-4' }, { id: 45, location: '14-5-1' }, { id: 46, location: '14-7-2' },
+  { id: 47, location: '15-2-3' }, { id: 48, location: '15-4-4' }, { id: 49, location: '15-6-1' }, { id: 50, location: '15-8-2' },
+  { id: 51, location: '16-1-4' }, { id: 52, location: '16-3-1' }, { id: 53, location: '16-5-2' }, { id: 54, location: '16-7-3' },
+  { id: 55, location: '17-2-1' }, { id: 56, location: '17-4-2' }, { id: 57, location: '17-6-3' }, { id: 58, location: '17-8-4' },
+  { id: 59, location: '18-1-2' }, { id: 60, location: '18-3-3' }, { id: 61, location: '18-5-4' }, { id: 62, location: '18-7-1' },
+  { id: 63, location: '19-2-2' }, { id: 64, location: '19-4-3' }, { id: 65, location: '19-6-4' }, { id: 66, location: '19-8-1' },
+  { id: 67, location: '20-1-3' }, { id: 68, location: '20-3-4' }, { id: 69, location: '20-5-1' }, { id: 70, location: '20-7-2' },
+  { id: 71, location: '21-2-3' }, { id: 72, location: '21-4-4' }, { id: 73, location: '21-6-1' }, { id: 74, location: '21-8-2' },
+  { id: 75, location: '22-1-4' }, { id: 76, location: '22-3-1' }, { id: 77, location: '22-5-2' }, { id: 78, location: '22-7-3' },
+  { id: 79, location: '23-2-1' }, { id: 80, location: '23-4-2' }, { id: 81, location: '23-6-3' }, { id: 82, location: '23-8-4' },
+  { id: 83, location: '24-1-2' }, { id: 84, location: '24-3-3' }, { id: 85, location: '24-5-4' }, { id: 86, location: '24-7-1' },
+  { id: 87, location: '25-2-1' }, { id: 88, location: '25-4-2' }, { id: 89, location: '25-6-3' }, { id: 90, location: '25-8-2' },
+  { id: 91, location: '26-1-1' }, { id: 92, location: '26-3-2' }, { id: 93, location: '26-5-3' }, { id: 94, location: '26-7-1' },
+  { id: 95, location: '27-2-1' }, { id: 96, location: '27-4-2' }, { id: 97, location: '27-6-3' }, { id: 98, location: '27-8-2' },
+  { id: 99, location: '28-1-1' }, { id: 100, location: '28-3-2' }, { id: 101, location: '28-5-3' }, { id: 102, location: '28-7-1' },
+  { id: 103, location: '29-2-1' }, { id: 104, location: '29-4-2' }, { id: 105, location: '29-6-3' }, { id: 106, location: '29-8-2' },
+  { id: 107, location: '30-1-1' }, { id: 108, location: '30-3-2' }, { id: 109, location: '30-5-3' }, { id: 110, location: '30-7-1' },
+  { id: 111, location: '31-2-1' }, { id: 112, location: '31-4-2' }, { id: 113, location: '31-6-3' }, { id: 114, location: '31-8-2' },
+  { id: 115, location: '32-1-1' }, { id: 116, location: '32-3-2' }, { id: 117, location: '32-5-3' }, { id: 118, location: '32-7-1' },
+  { id: 119, location: '33-2-1' }, { id: 120, location: '33-4-2' }, { id: 121, location: '33-6-3' }, { id: 122, location: '33-8-2' },
+  { id: 123, location: '34-1-1' }, { id: 124, location: '34-3-2' }, { id: 125, location: '34-5-3' }, { id: 126, location: '34-7-1' },
+  { id: 127, location: '35-2-1' }, { id: 128, location: '35-4-2' }, { id: 129, location: '35-6-3' }, { id: 130, location: '36-1-2' },
+  { id: 131, location: '37-3-1' }, { id: 132, location: '38-2-2' }, { id: 133, location: '39-4-3' }, { id: 134, location: '100-1-1' },
+  { id: 135, location: '100-5-2' }, { id: 136, location: '100-9-3' },
+];
 
 const products = [
   { id: 1,  code: 'FP-001', name: '일반 밴드 20매입',         category: '의료용 밴드', created_at: '2025-06-01' },
@@ -105,46 +112,191 @@ const products = [
   { id: 15, code: 'RM-005', name: '포장 비닐 (박스/1000개)',  category: '포장재',      created_at: '2025-08-01' },
 ];
 
-const inventoryItems = (() => {
-  const items = [];
-  const productQuantities = [
-    { productId: 1, minQty: 1200, maxQty: 5000 },
-    { productId: 2, minQty: 1200, maxQty: 3000 },
-    { productId: 3, minQty: 800, maxQty: 2000 },
-    { productId: 4, minQty: 400, maxQty: 1200 },
-    { productId: 5, minQty: 300, maxQty: 900 },
-    { productId: 6, minQty: 200, maxQty: 600 },
-    { productId: 7, minQty: 200, maxQty: 800 },
-    { productId: 8, minQty: 200, maxQty: 700 },
-    { productId: 9, minQty: 400, maxQty: 1500 },
-    { productId: 10, minQty: 150, maxQty: 500 },
-    { productId: 11, minQty: 20, maxQty: 80 },
-    { productId: 12, minQty: 15, maxQty: 50 },
-    { productId: 13, minQty: 20, maxQty: 100 },
-    { productId: 14, minQty: 15, maxQty: 80 },
-    { productId: 15, minQty: 30, maxQty: 300 },
-  ];
-  const dates = [
-    '2026-02-10', '2026-02-15', '2026-02-20', '2026-02-25',
-    '2026-03-05', '2026-03-10', '2026-03-15', '2026-03-20', '2026-03-25', '2026-03-30',
-    '2026-04-05', '2026-04-10', '2026-04-15', '2026-04-20',
-  ];
-  let id = 1;
-  for (let palletId = 1; palletId <= 250; palletId++) {
-    const productInfo = productQuantities[Math.floor(Math.random() * productQuantities.length)];
-    const date = dates[Math.floor(Math.random() * dates.length)];
-    const quantity = productInfo.minQty + Math.floor(Math.random() * (productInfo.maxQty - productInfo.minQty));
-    items.push({
-      id,
-      product_id: productInfo.productId,
-      pallet_id: palletId,
-      quantity,
-      received_at: date,
-    });
-    id++;
-  }
-  return items;
-})();
+const inventoryItems = [
+  // 창고 1 팔레트 (1-11): 20개 항목
+  { id: 1, product_id: 1, pallet_id: 1, quantity: 2500, received_at: '2026-02-10' },
+  { id: 2, product_id: 2, pallet_id: 2, quantity: 1800, received_at: '2026-02-15' },
+  { id: 3, product_id: 3, pallet_id: 3, quantity: 1200, received_at: '2026-02-20' },
+  { id: 4, product_id: 4, pallet_id: 4, quantity: 800, received_at: '2026-02-25' },
+  { id: 5, product_id: 5, pallet_id: 5, quantity: 600, received_at: '2026-03-05' },
+  { id: 6, product_id: 6, pallet_id: 6, quantity: 400, received_at: '2026-03-10' },
+  { id: 7, product_id: 7, pallet_id: 7, quantity: 500, received_at: '2026-03-15' },
+  { id: 8, product_id: 8, pallet_id: 8, quantity: 450, received_at: '2026-03-20' },
+  { id: 9, product_id: 9, pallet_id: 9, quantity: 900, received_at: '2026-03-25' },
+  { id: 10, product_id: 10, pallet_id: 10, quantity: 300, received_at: '2026-03-30' },
+  { id: 11, product_id: 1, pallet_id: 11, quantity: 3000, received_at: '2026-04-05' },
+  { id: 12, product_id: 2, pallet_id: 1, quantity: 2200, received_at: '2026-04-10' },
+  { id: 13, product_id: 3, pallet_id: 2, quantity: 1500, received_at: '2026-04-15' },
+  { id: 14, product_id: 11, pallet_id: 3, quantity: 60, received_at: '2026-04-20' },
+  { id: 15, product_id: 12, pallet_id: 4, quantity: 40, received_at: '2026-02-15' },
+  { id: 16, product_id: 13, pallet_id: 5, quantity: 80, received_at: '2026-02-20' },
+  { id: 17, product_id: 14, pallet_id: 6, quantity: 50, received_at: '2026-03-05' },
+  { id: 18, product_id: 15, pallet_id: 7, quantity: 200, received_at: '2026-03-15' },
+  { id: 19, product_id: 4, pallet_id: 8, quantity: 1000, received_at: '2026-03-20' },
+  { id: 20, product_id: 5, pallet_id: 9, quantity: 700, received_at: '2026-04-05' },
+  // 창고 2 팔레트 (12-26): 25개 항목
+  { id: 21, product_id: 6, pallet_id: 12, quantity: 550, received_at: '2026-02-10' },
+  { id: 22, product_id: 7, pallet_id: 13, quantity: 600, received_at: '2026-02-15' },
+  { id: 23, product_id: 8, pallet_id: 14, quantity: 500, received_at: '2026-02-20' },
+  { id: 24, product_id: 9, pallet_id: 15, quantity: 1100, received_at: '2026-02-25' },
+  { id: 25, product_id: 10, pallet_id: 16, quantity: 350, received_at: '2026-03-05' },
+  { id: 26, product_id: 11, pallet_id: 17, quantity: 70, received_at: '2026-03-10' },
+  { id: 27, product_id: 12, pallet_id: 18, quantity: 45, received_at: '2026-03-15' },
+  { id: 28, product_id: 13, pallet_id: 19, quantity: 90, received_at: '2026-03-20' },
+  { id: 29, product_id: 14, pallet_id: 20, quantity: 60, received_at: '2026-03-25' },
+  { id: 30, product_id: 15, pallet_id: 21, quantity: 250, received_at: '2026-03-30' },
+  { id: 31, product_id: 1, pallet_id: 12, quantity: 2800, received_at: '2026-04-05' },
+  { id: 32, product_id: 2, pallet_id: 13, quantity: 2000, received_at: '2026-04-10' },
+  { id: 33, product_id: 3, pallet_id: 14, quantity: 1400, received_at: '2026-04-15' },
+  { id: 34, product_id: 4, pallet_id: 15, quantity: 900, received_at: '2026-04-20' },
+  { id: 35, product_id: 5, pallet_id: 16, quantity: 650, received_at: '2026-02-15' },
+  { id: 36, product_id: 6, pallet_id: 17, quantity: 480, received_at: '2026-02-20' },
+  { id: 37, product_id: 7, pallet_id: 18, quantity: 550, received_at: '2026-03-05' },
+  { id: 38, product_id: 8, pallet_id: 19, quantity: 480, received_at: '2026-03-15' },
+  { id: 39, product_id: 9, pallet_id: 20, quantity: 1000, received_at: '2026-03-20' },
+  { id: 40, product_id: 10, pallet_id: 21, quantity: 320, received_at: '2026-04-05' },
+  { id: 41, product_id: 11, pallet_id: 12, quantity: 65, received_at: '2026-04-10' },
+  { id: 42, product_id: 12, pallet_id: 13, quantity: 42, received_at: '2026-04-15' },
+  { id: 43, product_id: 13, pallet_id: 14, quantity: 85, received_at: '2026-04-20' },
+  { id: 44, product_id: 14, pallet_id: 15, quantity: 55, received_at: '2026-02-10' },
+  { id: 45, product_id: 15, pallet_id: 16, quantity: 220, received_at: '2026-02-20' },
+  // 창고 3 팔레트 (27-136): 156개 항목
+  { id: 46, product_id: 1, pallet_id: 27, quantity: 3200, received_at: '2026-02-10' },
+  { id: 47, product_id: 2, pallet_id: 28, quantity: 2400, received_at: '2026-02-15' },
+  { id: 48, product_id: 3, pallet_id: 29, quantity: 1600, received_at: '2026-02-20' },
+  { id: 49, product_id: 4, pallet_id: 30, quantity: 1000, received_at: '2026-02-25' },
+  { id: 50, product_id: 5, pallet_id: 31, quantity: 700, received_at: '2026-03-05' },
+  { id: 51, product_id: 6, pallet_id: 32, quantity: 500, received_at: '2026-03-10' },
+  { id: 52, product_id: 7, pallet_id: 33, quantity: 600, received_at: '2026-03-15' },
+  { id: 53, product_id: 8, pallet_id: 34, quantity: 550, received_at: '2026-03-20' },
+  { id: 54, product_id: 9, pallet_id: 35, quantity: 1200, received_at: '2026-03-25' },
+  { id: 55, product_id: 10, pallet_id: 36, quantity: 400, received_at: '2026-03-30' },
+  { id: 56, product_id: 11, pallet_id: 37, quantity: 75, received_at: '2026-04-05' },
+  { id: 57, product_id: 12, pallet_id: 38, quantity: 50, received_at: '2026-04-10' },
+  { id: 58, product_id: 13, pallet_id: 39, quantity: 100, received_at: '2026-04-15' },
+  { id: 59, product_id: 14, pallet_id: 40, quantity: 70, received_at: '2026-04-20' },
+  { id: 60, product_id: 15, pallet_id: 41, quantity: 300, received_at: '2026-02-15' },
+  { id: 61, product_id: 1, pallet_id: 42, quantity: 3500, received_at: '2026-02-20' },
+  { id: 62, product_id: 2, pallet_id: 43, quantity: 2600, received_at: '2026-03-05' },
+  { id: 63, product_id: 3, pallet_id: 44, quantity: 1800, received_at: '2026-03-15' },
+  { id: 64, product_id: 4, pallet_id: 45, quantity: 1100, received_at: '2026-03-20' },
+  { id: 65, product_id: 5, pallet_id: 46, quantity: 750, received_at: '2026-04-05' },
+  { id: 66, product_id: 6, pallet_id: 47, quantity: 520, received_at: '2026-04-10' },
+  { id: 67, product_id: 7, pallet_id: 48, quantity: 620, received_at: '2026-04-15' },
+  { id: 68, product_id: 8, pallet_id: 49, quantity: 580, received_at: '2026-04-20' },
+  { id: 69, product_id: 9, pallet_id: 50, quantity: 1300, received_at: '2026-02-10' },
+  { id: 70, product_id: 10, pallet_id: 51, quantity: 420, received_at: '2026-02-20' },
+  { id: 71, product_id: 11, pallet_id: 52, quantity: 80, received_at: '2026-02-25' },
+  { id: 72, product_id: 12, pallet_id: 53, quantity: 55, received_at: '2026-03-10' },
+  { id: 73, product_id: 13, pallet_id: 54, quantity: 110, received_at: '2026-03-15' },
+  { id: 74, product_id: 14, pallet_id: 55, quantity: 75, received_at: '2026-03-20' },
+  { id: 75, product_id: 15, pallet_id: 56, quantity: 280, received_at: '2026-03-30' },
+  { id: 76, product_id: 1, pallet_id: 57, quantity: 2900, received_at: '2026-04-05' },
+  { id: 77, product_id: 2, pallet_id: 58, quantity: 2100, received_at: '2026-04-10' },
+  { id: 78, product_id: 3, pallet_id: 59, quantity: 1500, received_at: '2026-04-15' },
+  { id: 79, product_id: 4, pallet_id: 60, quantity: 950, received_at: '2026-04-20' },
+  { id: 80, product_id: 5, pallet_id: 61, quantity: 680, received_at: '2026-02-15' },
+  { id: 81, product_id: 6, pallet_id: 62, quantity: 480, received_at: '2026-02-20' },
+  { id: 82, product_id: 7, pallet_id: 63, quantity: 580, received_at: '2026-03-05' },
+  { id: 83, product_id: 8, pallet_id: 64, quantity: 520, received_at: '2026-03-15' },
+  { id: 84, product_id: 9, pallet_id: 65, quantity: 1100, received_at: '2026-03-20' },
+  { id: 85, product_id: 10, pallet_id: 66, quantity: 380, received_at: '2026-04-05' },
+  { id: 86, product_id: 11, pallet_id: 67, quantity: 72, received_at: '2026-04-10' },
+  { id: 87, product_id: 12, pallet_id: 68, quantity: 48, received_at: '2026-04-15' },
+  { id: 88, product_id: 13, pallet_id: 69, quantity: 95, received_at: '2026-04-20' },
+  { id: 89, product_id: 14, pallet_id: 70, quantity: 65, received_at: '2026-02-10' },
+  { id: 90, product_id: 15, pallet_id: 71, quantity: 260, received_at: '2026-02-25' },
+  { id: 91, product_id: 1, pallet_id: 72, quantity: 3400, received_at: '2026-03-05' },
+  { id: 92, product_id: 2, pallet_id: 73, quantity: 2300, received_at: '2026-03-10' },
+  { id: 93, product_id: 3, pallet_id: 74, quantity: 1700, received_at: '2026-03-20' },
+  { id: 94, product_id: 4, pallet_id: 75, quantity: 1050, received_at: '2026-03-25' },
+  { id: 95, product_id: 5, pallet_id: 76, quantity: 720, received_at: '2026-03-30' },
+  { id: 96, product_id: 6, pallet_id: 77, quantity: 510, received_at: '2026-04-05' },
+  { id: 97, product_id: 7, pallet_id: 78, quantity: 610, received_at: '2026-04-10' },
+  { id: 98, product_id: 8, pallet_id: 79, quantity: 560, received_at: '2026-04-15' },
+  { id: 99, product_id: 9, pallet_id: 80, quantity: 1150, received_at: '2026-04-20' },
+  { id: 100, product_id: 10, pallet_id: 81, quantity: 390, received_at: '2026-02-15' },
+  { id: 101, product_id: 11, pallet_id: 82, quantity: 68, received_at: '2026-02-20' },
+  { id: 102, product_id: 12, pallet_id: 83, quantity: 46, received_at: '2026-03-05' },
+  { id: 103, product_id: 13, pallet_id: 84, quantity: 98, received_at: '2026-03-15' },
+  { id: 104, product_id: 14, pallet_id: 85, quantity: 68, received_at: '2026-03-20' },
+  { id: 105, product_id: 15, pallet_id: 86, quantity: 270, received_at: '2026-04-05' },
+  { id: 106, product_id: 1, pallet_id: 87, quantity: 3100, received_at: '2026-04-10' },
+  { id: 107, product_id: 2, pallet_id: 88, quantity: 2200, received_at: '2026-04-15' },
+  { id: 108, product_id: 3, pallet_id: 89, quantity: 1550, received_at: '2026-04-20' },
+  { id: 109, product_id: 4, pallet_id: 90, quantity: 980, received_at: '2026-02-10' },
+  { id: 110, product_id: 5, pallet_id: 91, quantity: 690, received_at: '2026-02-20' },
+  { id: 111, product_id: 6, pallet_id: 92, quantity: 490, received_at: '2026-02-25' },
+  { id: 112, product_id: 7, pallet_id: 93, quantity: 590, received_at: '2026-03-10' },
+  { id: 113, product_id: 8, pallet_id: 94, quantity: 530, received_at: '2026-03-15' },
+  { id: 114, product_id: 9, pallet_id: 95, quantity: 1050, received_at: '2026-03-25' },
+  { id: 115, product_id: 10, pallet_id: 96, quantity: 360, received_at: '2026-03-30' },
+  { id: 116, product_id: 11, pallet_id: 97, quantity: 77, received_at: '2026-04-05' },
+  { id: 117, product_id: 12, pallet_id: 98, quantity: 52, received_at: '2026-04-10' },
+  { id: 118, product_id: 13, pallet_id: 99, quantity: 105, received_at: '2026-04-15' },
+  { id: 119, product_id: 14, pallet_id: 100, quantity: 72, received_at: '2026-04-20' },
+  { id: 120, product_id: 15, pallet_id: 101, quantity: 290, received_at: '2026-02-15' },
+  { id: 121, product_id: 1, pallet_id: 102, quantity: 3300, received_at: '2026-02-20' },
+  { id: 122, product_id: 2, pallet_id: 103, quantity: 2500, received_at: '2026-03-05' },
+  { id: 123, product_id: 3, pallet_id: 104, quantity: 1900, received_at: '2026-03-15' },
+  { id: 124, product_id: 4, pallet_id: 105, quantity: 1150, received_at: '2026-03-20' },
+  { id: 125, product_id: 5, pallet_id: 106, quantity: 760, received_at: '2026-04-05' },
+  { id: 126, product_id: 6, pallet_id: 107, quantity: 540, received_at: '2026-04-10' },
+  { id: 127, product_id: 7, pallet_id: 108, quantity: 650, received_at: '2026-04-15' },
+  { id: 128, product_id: 8, pallet_id: 109, quantity: 600, received_at: '2026-04-20' },
+  { id: 129, product_id: 9, pallet_id: 110, quantity: 1400, received_at: '2026-02-10' },
+  { id: 130, product_id: 10, pallet_id: 111, quantity: 440, received_at: '2026-02-20' },
+  { id: 131, product_id: 11, pallet_id: 112, quantity: 82, received_at: '2026-02-25' },
+  { id: 132, product_id: 12, pallet_id: 113, quantity: 58, received_at: '2026-03-10' },
+  { id: 133, product_id: 13, pallet_id: 114, quantity: 115, received_at: '2026-03-15' },
+  { id: 134, product_id: 14, pallet_id: 115, quantity: 78, received_at: '2026-03-20' },
+  { id: 135, product_id: 15, pallet_id: 116, quantity: 310, received_at: '2026-03-30' },
+  { id: 136, product_id: 1, pallet_id: 117, quantity: 3600, received_at: '2026-04-05' },
+  { id: 137, product_id: 2, pallet_id: 118, quantity: 2700, received_at: '2026-04-10' },
+  { id: 138, product_id: 3, pallet_id: 119, quantity: 1850, received_at: '2026-04-15' },
+  { id: 139, product_id: 4, pallet_id: 120, quantity: 1080, received_at: '2026-04-20' },
+  { id: 140, product_id: 5, pallet_id: 121, quantity: 710, received_at: '2026-02-15' },
+  { id: 141, product_id: 6, pallet_id: 122, quantity: 510, received_at: '2026-02-20' },
+  { id: 142, product_id: 7, pallet_id: 123, quantity: 620, received_at: '2026-03-05' },
+  { id: 143, product_id: 8, pallet_id: 124, quantity: 570, received_at: '2026-03-15' },
+  { id: 144, product_id: 9, pallet_id: 125, quantity: 1250, received_at: '2026-03-20' },
+  { id: 145, product_id: 10, pallet_id: 126, quantity: 410, received_at: '2026-04-05' },
+  { id: 146, product_id: 11, pallet_id: 127, quantity: 74, received_at: '2026-04-10' },
+  { id: 147, product_id: 12, pallet_id: 128, quantity: 51, received_at: '2026-04-15' },
+  { id: 148, product_id: 13, pallet_id: 129, quantity: 102, received_at: '2026-04-20' },
+  { id: 149, product_id: 14, pallet_id: 130, quantity: 71, received_at: '2026-02-10' },
+  { id: 150, product_id: 15, pallet_id: 131, quantity: 295, received_at: '2026-02-25' },
+  { id: 151, product_id: 1, pallet_id: 132, quantity: 3250, received_at: '2026-03-05' },
+  { id: 152, product_id: 2, pallet_id: 133, quantity: 2350, received_at: '2026-03-10' },
+  { id: 153, product_id: 3, pallet_id: 134, quantity: 1750, received_at: '2026-03-20' },
+  { id: 154, product_id: 4, pallet_id: 135, quantity: 1020, received_at: '2026-03-25' },
+  { id: 155, product_id: 5, pallet_id: 136, quantity: 730, received_at: '2026-03-30' },
+  { id: 156, product_id: 11, pallet_id: 27, quantity: 76, received_at: '2026-04-05' },
+  { id: 157, product_id: 12, pallet_id: 28, quantity: 49, received_at: '2026-04-10' },
+  { id: 158, product_id: 13, pallet_id: 29, quantity: 108, received_at: '2026-04-15' },
+  { id: 159, product_id: 14, pallet_id: 30, quantity: 73, received_at: '2026-04-20' },
+  { id: 160, product_id: 15, pallet_id: 31, quantity: 305, received_at: '2026-02-15' },
+  { id: 161, product_id: 1, pallet_id: 32, quantity: 3150, received_at: '2026-02-20' },
+  { id: 162, product_id: 2, pallet_id: 33, quantity: 2250, received_at: '2026-03-05' },
+  { id: 163, product_id: 3, pallet_id: 34, quantity: 1650, received_at: '2026-03-15' },
+  { id: 164, product_id: 4, pallet_id: 35, quantity: 920, received_at: '2026-03-20' },
+  { id: 165, product_id: 5, pallet_id: 36, quantity: 640, received_at: '2026-04-05' },
+  { id: 166, product_id: 6, pallet_id: 37, quantity: 470, received_at: '2026-04-10' },
+  { id: 167, product_id: 7, pallet_id: 38, quantity: 560, received_at: '2026-04-15' },
+  { id: 168, product_id: 8, pallet_id: 39, quantity: 500, received_at: '2026-04-20' },
+  { id: 169, product_id: 9, pallet_id: 40, quantity: 1000, received_at: '2026-02-10' },
+  { id: 170, product_id: 10, pallet_id: 41, quantity: 340, received_at: '2026-02-20' },
+  { id: 171, product_id: 11, pallet_id: 42, quantity: 70, received_at: '2026-02-25' },
+  { id: 172, product_id: 12, pallet_id: 43, quantity: 44, received_at: '2026-03-10' },
+  { id: 173, product_id: 13, pallet_id: 44, quantity: 88, received_at: '2026-03-15' },
+  { id: 174, product_id: 14, pallet_id: 45, quantity: 62, received_at: '2026-03-20' },
+  { id: 175, product_id: 15, pallet_id: 46, quantity: 240, received_at: '2026-03-30' },
+  { id: 176, product_id: 1, pallet_id: 47, quantity: 2700, received_at: '2026-04-05' },
+  { id: 177, product_id: 2, pallet_id: 48, quantity: 1950, received_at: '2026-04-10' },
+  { id: 178, product_id: 3, pallet_id: 49, quantity: 1450, received_at: '2026-04-15' },
+  { id: 179, product_id: 4, pallet_id: 50, quantity: 850, received_at: '2026-04-20' },
+  { id: 180, product_id: 5, pallet_id: 51, quantity: 600, received_at: '2026-02-15' },
+];
 
 const inboundSchedules = [
   { id: 1, product_id: 11, quantity: 50,   scheduled_date: '2026-04-16', status: 'pending', note: '긴급 — 한국의료소재(주)' },
