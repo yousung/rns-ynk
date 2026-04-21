@@ -262,7 +262,7 @@ function SlidePlatforms({ v }) {
     },
     {
       label: '키오스크 모니터',
-      desc: '무인 운영 창고 상시 모니터링. 실시간 시계·활동 로그·전동랙 상태 표시. 웹에서 로그인하면 입고·출고 화면에 전동랙 리모컨 제어 기능이 추가됩니다.',
+      desc: '관리자 웹 + 입고·출고 화면에 전동랙 리모컨 제어 기능이 추가됩니다.',
       color: v.green,
       colorDim: v.greenDim,
       icon: (<><rect x="2" y="2" width="20" height="20" rx="3" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="12" y1="8" x2="12" y2="16" /></>),
@@ -275,19 +275,6 @@ function SlidePlatforms({ v }) {
         {platforms.map((p) => (
           <FeatureCard key={p.label} v={v} {...p} />
         ))}
-      </div>
-      <div style={{
-        marginTop: 22,
-        padding: '14px 18px',
-        background: v.bgSubtle,
-        border: `1px dashed ${v.border}`,
-        borderRadius: 12,
-        fontSize: '0.8rem',
-        color: v.textSecondary,
-        lineHeight: 1.7,
-        wordBreak: 'keep-all',
-      }}>
-        시작 화면에서 세 플랫폼 중 하나를 선택하여 진입합니다. 관리자 웹은 로그인이 필수이며, 현장 태블릿과 키오스크는 바로 접근 가능합니다.
       </div>
     </div>
   );
