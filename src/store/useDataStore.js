@@ -64,7 +64,7 @@ const pallets = (() => {
     const racks = racksByWarehouse[warehouseId];
     for (const rack of racks) {
       const maxCells = rack.floors * rack.groups;
-      const cellsToFill = Math.floor(maxCells * 0.6) + Math.floor(Math.random() * Math.floor(maxCells * 0.3));
+      const cellsToFill = Math.floor(maxCells * 0.5) + Math.floor(Math.random() * Math.floor(maxCells * 0.1));
       const availableCells = [];
       for (let f = 1; f <= rack.floors; f++) {
         for (let g = 1; g <= rack.groups; g++) {
