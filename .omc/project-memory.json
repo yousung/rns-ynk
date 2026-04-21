@@ -124,8 +124,104 @@
   "hotPaths": [
     {
       "path": "src/store/useDataStore.js",
-      "accessCount": 18,
-      "lastAccessed": 1776753461973,
+      "accessCount": 28,
+      "lastAccessed": 1776754058124,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseMatrix.jsx",
+      "accessCount": 2,
+      "lastAccessed": 1776754033221,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/CellDetailsPanel.jsx",
+      "accessCount": 2,
+      "lastAccessed": 1776754037393,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1776753997836,
+      "type": "directory"
+    },
+    {
+      "path": "src",
+      "accessCount": 1,
+      "lastAccessed": 1776754007388,
+      "type": "directory"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776754033352,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776754033539,
+      "type": "file"
+    },
+    {
+      "path": "src/styles/warehouse.css",
+      "accessCount": 1,
+      "lastAccessed": 1776754034088,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 1,
+      "lastAccessed": 1776754035204,
+      "type": "file"
+    },
+    {
+      "path": "docs/service-overview.md",
+      "accessCount": 1,
+      "lastAccessed": 1776754035629,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseElevation.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776754038211,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/InboundExecute.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776754038475,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/OutboundExecute.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776754038601,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Inventory.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776754042095,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Dashboard.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776754042264,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseMinimap.jsx",
+      "accessCount": 1,
+      "lastAccessed": 1776754042611,
+      "type": "file"
+    },
+    {
+      "path": ".claude/worktrees/frosty-lichterman-faa2ed/demo/data.js",
+      "accessCount": 1,
+      "lastAccessed": 1776754061358,
       "type": "file"
     }
   ],
