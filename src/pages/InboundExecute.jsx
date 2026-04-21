@@ -256,7 +256,7 @@ export default function InboundExecute() {
               {/* 단별현황 + 적재 상세 (가로 분할) */}
               <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
                 {/* 단별 현황 */}
-                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
+                <div style={{ flex: 3, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                       {selectedCell ? `랙 ${rack?.rack_no ?? ''} — ${selectedCell.floor}열 단별 현황` : '딘별 현황'}
@@ -277,7 +277,7 @@ export default function InboundExecute() {
                   </div>
                 </div>
                 {/* 적재 상세 */}
-                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div style={{ flex: 7, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                       {selectedCell?.slot ? `${selectedCell.slot}열 적재 상세` : '적재 상세'}

@@ -179,11 +179,11 @@ tfoot .label-cell { position: sticky; left: 0; z-index: 1; background: #06101A; 
 .btn-exec:not(:disabled):hover { filter: brightness(1.1); }
 
 /* 재고 범례 배지 */
-.lg-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-.lg-stock { background: rgba(59,130,246,0.2); color: #93C5FD; border: 1px solid rgba(59,130,246,0.4); }
-.lg-inbound { background: rgba(245,158,11,0.2); color: #FCD34D; border: 1px solid rgba(245,158,11,0.4); }
-.lg-outbound { background: rgba(239,68,68,0.2); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.4); }
-.lg-after { background: rgba(16,185,129,0.2); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.4); }
+.lg-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 4px; font-size: 0.73rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin: 0 6px; }
+.lg-stock { background: rgba(59,130,246,0.35); color: #000; border: 1px solid rgba(59,130,246,0.6); }
+.lg-inbound { background: rgba(245,158,11,0.35); color: #000; border: 1px solid rgba(245,158,11,0.6); }
+.lg-outbound { background: rgba(239,68,68,0.35); color: #000; border: 1px solid rgba(239,68,68,0.6); }
+.lg-after { background: rgba(16,185,129,0.35); color: #000; border: 1px solid rgba(16,185,129,0.6); }
 
 /* 창고 탭 */
 .wh-tab { padding: 4px 12px; border-radius: 5px; font-size: 0.8rem; cursor: pointer; border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-secondary); transition: all 0.15s; font-family: inherit; }

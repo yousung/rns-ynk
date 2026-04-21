@@ -358,11 +358,15 @@ export default function Inventory() {
                         rackId={selectedCell?.rackId}
                         selectedFloor={selectedCell?.floor}
                         selectedSlot={selectedCell?.slot}
-                        onSlotClick={(floor, slot) => setSelectedCell(prev => {
-                          if (!prev) return null;
-                          if (prev.floor === floor && prev.slot === slot) return { ...prev, slot: null };
-                          return { ...prev, floor, slot };
-                        })}
+                        onSlotClick={(floor, slot) => {
+                          const hasPallet = !!pallets.find(p => p.location === `${selectedCell?.rackId}-${floor}-${slot}`);
+                          if (!hasPallet) return;
+                          setSelectedCell(prev => {
+                            if (!prev) return null;
+                            if (prev.floor === floor && prev.slot === slot) return { ...prev, slot: null };
+                            return { ...prev, floor, slot };
+                          });
+                        }}
                         onSlotHover={(floor, slot) => setHoveredSlot(floor != null ? { rackId: selectedCell?.rackId, floor, slot } : null)}
                         disableEmptySlot={true}
                       />

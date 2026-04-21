@@ -124,38 +124,38 @@
   "hotPaths": [
     {
       "path": "src/pages/OutboundExecute.jsx",
-      "accessCount": 42,
-      "lastAccessed": 1776758232071,
+      "accessCount": 67,
+      "lastAccessed": 1776773845463,
       "type": "file"
     },
     {
       "path": "src/store/useDataStore.js",
-      "accessCount": 39,
-      "lastAccessed": 1776758258689,
+      "accessCount": 53,
+      "lastAccessed": 1776773823661,
       "type": "file"
     },
     {
       "path": "src/pages/InboundExecute.jsx",
-      "accessCount": 37,
-      "lastAccessed": 1776758228489,
+      "accessCount": 43,
+      "lastAccessed": 1776773166564,
       "type": "file"
     },
     {
       "path": "src/pages/Inventory.jsx",
-      "accessCount": 27,
-      "lastAccessed": 1776758235610,
+      "accessCount": 34,
+      "lastAccessed": 1776769762630,
+      "type": "file"
+    },
+    {
+      "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "accessCount": 30,
+      "lastAccessed": 1776769129657,
       "type": "file"
     },
     {
       "path": "src/pages/tablet/TabletInbound.jsx",
       "accessCount": 20,
       "lastAccessed": 1776757737114,
-      "type": "file"
-    },
-    {
-      "path": "src/components/warehouse/WarehouseFloorPlan.jsx",
-      "accessCount": 19,
-      "lastAccessed": 1776758218470,
       "type": "file"
     },
     {
@@ -171,16 +171,22 @@
       "type": "file"
     },
     {
-      "path": "src/pages",
-      "accessCount": 5,
-      "lastAccessed": 1776756410630,
-      "type": "directory"
+      "path": "src/components/warehouse/CellDetailsPanel.jsx",
+      "accessCount": 11,
+      "lastAccessed": 1776773836654,
+      "type": "file"
     },
     {
-      "path": "src/components/warehouse/CellDetailsPanel.jsx",
-      "accessCount": 3,
-      "lastAccessed": 1776756687713,
+      "path": "src/styles/warehouse.css",
+      "accessCount": 9,
+      "lastAccessed": 1776772714701,
       "type": "file"
+    },
+    {
+      "path": "src/pages",
+      "accessCount": 6,
+      "lastAccessed": 1776769580200,
+      "type": "directory"
     },
     {
       "path": "src",
@@ -199,12 +205,6 @@
       "accessCount": 1,
       "lastAccessed": 1776753997836,
       "type": "directory"
-    },
-    {
-      "path": "src/styles/warehouse.css",
-      "accessCount": 1,
-      "lastAccessed": 1776754034088,
-      "type": "file"
     },
     {
       "path": "README.md",

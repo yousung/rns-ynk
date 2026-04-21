@@ -18,6 +18,7 @@ export default function OutboundExecute() {
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(1);
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null);
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const [hoveredRackId, setHoveredRackId] = useState(null);
   const [hoveredFloor, setHoveredFloor] = useState(null);
   const [hoveredSlot, setHoveredSlot] = useState(null);
@@ -47,17 +48,25 @@ export default function OutboundExecute() {
         (i) => i.pallet_id === pallet.id && i.product_id === sched.product_id
       );
       if (items.length === 0) return;
-      const earliest = items.reduce(
-        (min, i) => (i.received_at < min ? i.received_at : min),
-        items[0].received_at
-      );
+      const earliestItem = items.reduce((min, i) => (i.received_at < min.received_at ? i : min), items[0]);
+      const earliest = earliestItem.received_at;
       const qty = items.reduce((s, i) => s + i.quantity, 0);
-      slots.push({ rackId: rId, floor, slot, key: pallet.location, received_at: earliest, qty });
+      const prod = products.find(p => p.id === sched.product_id);
+      slots.push({
+        rackId: rId,
+        floor,
+        slot,
+        key: pallet.location,
+        received_at: earliest,
+        qty,
+        code: prod?.code || '-',
+        expiration_date: earliestItem.expiration_date
+      });
     });
     slots.sort((a, b) => a.received_at.localeCompare(b.received_at));
     slots.forEach((s, i) => { s.rank = i + 1; });
     return slots;
-  }, [sched, selectedWarehouseId, racks, pallets, inventoryItems]);
+  }, [sched, selectedWarehouseId, racks, pallets, inventoryItems, products]);
 
   // ─── 창고 선택 시 상품 보유 창고로 자동 이동 ──────────────
   function selectSchedule(id) {
@@ -333,13 +342,71 @@ export default function OutboundExecute() {
                 </div>
               </div>
 
-              {/* 단별현황 | 적재 상세 | 재고 리스트 (3분할) */}
+              {/* 재고 리스트 | 단별 현황 | 적재 상세 (3분할) */}
               <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
+                {/* 재고 리스트 (FIFO) */}
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
+                  <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--amber)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      재고 리스트{fifoSlots.length > 0 ? ` (${fifoSlots.length}건)` : ''}
+                    </span>
+                  </div>
+                  <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+                    {fifoSlots.length === 0 ? (
+                      <div style={{ padding: '16px 12px', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                        {sched ? '해당 상품의 재고가 없습니다.' : '← 출고 예정 항목을 선택하세요'}
+                      </div>
+                    ) : (
+                      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+                        <thead>
+                          <tr style={{ background: 'var(--bg-surface)', position: 'sticky', top: 0 }}>
+                            <th style={{ padding: '4px 8px', textAlign: 'center', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)', width: 32 }}>순위</th>
+                            <th style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>코드</th>
+                            <th style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>입고일</th>
+                            <th style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>위치</th>
+                            <th style={{ padding: '4px 8px', textAlign: 'right', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)', width: 44 }}>수량</th>
+                            <th style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>사용기한</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {fifoSlots.map((fifoItem) => {
+                            const r = racks.find((x) => x.id === fifoItem.rackId);
+                            const isSelected = selectedCell?.rackId === fifoItem.rackId && selectedCell?.floor === fifoItem.floor && selectedCell?.slot === fifoItem.slot;
+                            return (
+                              <tr
+                                key={fifoItem.key}
+                                onClick={() => setSelectedCell({ rackId: fifoItem.rackId, floor: fifoItem.floor, slot: fifoItem.slot })}
+                                style={{
+                                  cursor: 'pointer',
+                                  background: isSelected ? 'var(--bg-hover, rgba(250,189,47,0.12))' : 'transparent',
+                                  borderBottom: '1px solid var(--border)',
+                                }}
+                                onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'var(--bg-hover, rgba(255,255,255,0.04))'; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = isSelected ? 'var(--bg-hover, rgba(250,189,47,0.12))' : 'transparent'; }}
+                              >
+                                <td style={{ padding: '5px 8px', textAlign: 'center', color: fifoItem.rank === 1 ? 'var(--amber)' : fifoItem.rank === 2 ? '#60A5FA' : 'var(--text-secondary)', fontWeight: fifoItem.rank <= 2 ? 700 : 400 }}>
+                                  F{fifoItem.rank}
+                                </td>
+                                <td style={{ padding: '5px 8px', color: 'var(--text-primary)', fontFamily: 'monospace', fontSize: '0.73rem' }}>{fifoItem.code}</td>
+                                <td style={{ padding: '5px 8px', color: 'var(--text-primary)' }}>{fifoItem.received_at?.slice(0, 10) ?? '-'}</td>
+                                <td style={{ padding: '5px 8px', color: 'var(--text-primary)', fontFamily: 'monospace', fontSize: '0.73rem' }}>
+                                  {r?.rack_no ?? fifoItem.rackId}번-{fifoItem.floor}열-{fifoItem.slot}단
+                                </td>
+                                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--text-primary)', fontWeight: 600 }}>{fifoItem.qty}</td>
+                                <td style={{ padding: '5px 8px', color: 'var(--text-secondary)', fontSize: '0.75rem' }}>{fifoItem.expiration_date}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                </div>
                 {/* 단별 현황 */}
                 <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell ? `랙 ${selectedRack?.rack_no ?? ''} — ${selectedCell.floor}열 단별 현황` : '단별 현황'}
+                      단별 현황
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
@@ -362,7 +429,7 @@ export default function OutboundExecute() {
                   </div>
                 </div>
                 {/* 적재 상세 */}
-                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                       {selectedCell?.slot ? `${selectedCell.slot}열 적재 상세` : '적재 상세'}
@@ -373,61 +440,13 @@ export default function OutboundExecute() {
                       rackId={selectedCell?.rackId}
                       floor={selectedCell?.floor}
                       kan={selectedCell?.slot}
+                      selectedProductId={sched?.product_id}
+                      selectedItemId={selectedItemId}
+                      onItemClick={(rackId, floor, kan, itemId) => {
+                        setSelectedCell({ rackId, floor, slot: kan });
+                        setSelectedItemId(itemId);
+                      }}
                     />
-                  </div>
-                </div>
-                {/* 재고 리스트 (FIFO) */}
-                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--amber)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      재고 리스트{fifoSlots.length > 0 ? ` (${fifoSlots.length}건)` : ''}
-                    </span>
-                  </div>
-                  <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
-                    {fifoSlots.length === 0 ? (
-                      <div style={{ padding: '16px 12px', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                        {sched ? '해당 상품의 재고가 없습니다.' : '← 출고 예정 항목을 선택하세요'}
-                      </div>
-                    ) : (
-                      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
-                        <thead>
-                          <tr style={{ background: 'var(--bg-surface)', position: 'sticky', top: 0 }}>
-                            <th style={{ padding: '4px 8px', textAlign: 'center', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)', width: 32 }}>순위</th>
-                            <th style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>입고일</th>
-                            <th style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>위치</th>
-                            <th style={{ padding: '4px 8px', textAlign: 'right', fontWeight: 600, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)', width: 44 }}>수량</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {fifoSlots.map((fifoItem) => {
-                            const r = racks.find((x) => x.id === fifoItem.rackId);
-                            const isSelected = selectedCell?.rackId === fifoItem.rackId && selectedCell?.floor === fifoItem.floor && selectedCell?.slot === fifoItem.slot;
-                            return (
-                              <tr
-                                key={fifoItem.key}
-                                onClick={() => setSelectedCell({ rackId: fifoItem.rackId, floor: fifoItem.floor, slot: fifoItem.slot })}
-                                style={{
-                                  cursor: 'pointer',
-                                  background: isSelected ? 'var(--bg-hover, rgba(250,189,47,0.12))' : 'transparent',
-                                  borderBottom: '1px solid var(--border)',
-                                }}
-                                onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'var(--bg-hover, rgba(255,255,255,0.04))'; }}
-                                onMouseLeave={e => { e.currentTarget.style.background = isSelected ? 'var(--bg-hover, rgba(250,189,47,0.12))' : 'transparent'; }}
-                              >
-                                <td style={{ padding: '5px 8px', textAlign: 'center', color: fifoItem.rank === 1 ? 'var(--amber)' : fifoItem.rank === 2 ? '#60A5FA' : 'var(--text-secondary)', fontWeight: fifoItem.rank <= 2 ? 700 : 400 }}>
-                                  F{fifoItem.rank}
-                                </td>
-                                <td style={{ padding: '5px 8px', color: 'var(--text-primary)' }}>{fifoItem.received_at?.slice(0, 10) ?? '-'}</td>
-                                <td style={{ padding: '5px 8px', color: 'var(--text-primary)', fontFamily: 'monospace', fontSize: '0.73rem' }}>
-                                  {r?.rack_no ?? fifoItem.rackId}번-{fifoItem.floor}단-{fifoItem.slot}열
-                                </td>
-                                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--text-primary)', fontWeight: 600 }}>{fifoItem.qty}</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    )}
                   </div>
                 </div>
               </div>

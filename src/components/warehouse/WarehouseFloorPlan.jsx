@@ -107,7 +107,7 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedSlot, onSlo
 
   function buildCells(fl) {
     const cells = [];
-    for (let g = 1; g <= rack.groups; g++) {
+    for (let g = rack.groups; g >= 1; g--) {
       const key = `${rack.id}-${fl}-${g}`;
       const pallet = pallets.find(p => p.location === key);
       const items = pallet ? inventoryItems.filter(i => i.pallet_id === pallet.id) : [];
@@ -116,17 +116,18 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedSlot, onSlo
       const isSel = selectedFloor === fl && selectedSlot === g;
       cells.push(
         <div key={g} onClick={(e) => { e.stopPropagation(); if (disableEmptySlot && !pallet) return; onSlotClick?.(fl, g); }} onMouseEnter={() => onSlotHover?.(fl, g)} onMouseLeave={() => onSlotHover?.(null, null)} style={{
-          display: 'inline-flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          width: 52, height: 42, borderRadius: 5,
+          display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+          width: '100%', height: 40, borderRadius: 4, paddingLeft: 10, paddingRight: 10,
           border: isSel ? '2px solid var(--cyan)' : `1px solid ${pallet ? (catColor || 'var(--cyan)') : 'var(--border)'}`,
           background: isSel ? 'var(--cyan-dim)' : (pallet ? (catColor ? catColor + '22' : 'var(--cyan-dim)') : 'var(--bg-surface)'),
           color: isSel ? 'var(--cyan)' : (pallet ? (catColor || 'var(--cyan)') : 'var(--text-secondary)'),
-          fontSize: '0.65rem', gap: 2,
+          fontSize: '0.7rem', gap: 8,
           cursor: (disableEmptySlot && !pallet) ? 'not-allowed' : (onSlotClick ? 'pointer' : 'default'),
           boxShadow: isSel ? '0 0 0 1px var(--cyan)' : 'none',
+          fontWeight: isSel ? 600 : 400,
         }}>
           <span>D{g}</span>
-          <span style={{ fontSize: '0.6rem' }}>{pallet ? items.length + '종' : '빈빈'}</span>
+          <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>{pallet ? items.length + '종' : '—'}</span>
         </div>
       );
     }
@@ -146,16 +147,18 @@ export function FloorPlanRackDetail({ rackId, selectedFloor, selectedSlot, onSlo
   const rows = [];
   for (let fl = rack.floors; fl >= 1; fl--) {
     rows.push(
-      <div key={fl} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-        <div style={{ width: 26, fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)', flexShrink: 0 }}>{fl}F</div>
-        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>{buildCells(fl)}</div>
+      <div key={fl} style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 8, padding: '8px 12px', background: 'var(--bg-surface)', borderRadius: 4, border: '1px solid var(--border)' }}>
+        <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--cyan)' }}>{fl}층</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>{buildCells(fl)}</div>
       </div>
     );
   }
   return (
     <div style={panelStyle}>
-      <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: 10 }}>{rack.rack_no}번 랙 — 단별 현황</div>
-      {rows}
+      <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: 12, color: 'var(--text-primary)' }}>{rack.rack_no}번 랙 — 단별 현황</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {rows}
+      </div>
     </div>
   );
 }
