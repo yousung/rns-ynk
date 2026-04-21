@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export const MAX_RACK_COUNT = 30;
+export const MAX_RACK_COUNT = 31;
 
 const warehouses = [
   { id: 1, name: '크로이드 원자재 창고', type: 'normal' },
@@ -51,11 +51,41 @@ const racks = [
   { id: 100, warehouse_id: 3, rack_no: 31, floors: 10, groups: 3 },
 ];
 
-const pallets = [
-  { id: 25, location: '10-2-1' }, { id: 26, location: '10-4-3' }, { id: 27, location: '12-1-2' },
-  { id: 28, location: '15-3-4' }, { id: 29, location: '20-2-2' }, { id: 30, location: '25-5-1' },
-  { id: 31, location: '30-6-3' }, { id: 32, location: '35-4-2' },
-];
+const pallets = (() => {
+  const racksByWarehouse = {
+    1: [{ id: 1, floors: 12, groups: 3 }, { id: 2, floors: 12, groups: 3 }, { id: 3, floors: 12, groups: 3 }],
+    2: [{ id: 5, floors: 8, groups: 3 }, { id: 6, floors: 8, groups: 3 }, { id: 7, floors: 8, groups: 3 }, { id: 48, floors: 8, groups: 3 }, { id: 49, floors: 8, groups: 3 }, { id: 50, floors: 8, groups: 3 }],
+    3: [{ id: 10, floors: 10, groups: 4 }, { id: 11, floors: 10, groups: 4 }, { id: 12, floors: 10, groups: 4 }, { id: 13, floors: 10, groups: 4 }, { id: 14, floors: 10, groups: 4 }, { id: 15, floors: 10, groups: 4 }, { id: 16, floors: 10, groups: 4 }, { id: 17, floors: 10, groups: 4 }, { id: 18, floors: 10, groups: 4 }, { id: 19, floors: 10, groups: 4 }, { id: 20, floors: 10, groups: 4 }, { id: 21, floors: 10, groups: 4 }, { id: 22, floors: 10, groups: 4 }, { id: 23, floors: 10, groups: 4 }, { id: 24, floors: 10, groups: 4 }, { id: 25, floors: 10, groups: 3 }, { id: 26, floors: 10, groups: 3 }, { id: 27, floors: 10, groups: 3 }, { id: 28, floors: 10, groups: 3 }, { id: 29, floors: 10, groups: 3 }, { id: 30, floors: 10, groups: 3 }, { id: 31, floors: 10, groups: 3 }, { id: 32, floors: 10, groups: 3 }, { id: 33, floors: 10, groups: 3 }, { id: 34, floors: 10, groups: 3 }, { id: 35, floors: 10, groups: 3 }, { id: 36, floors: 10, groups: 3 }, { id: 37, floors: 10, groups: 3 }, { id: 38, floors: 10, groups: 3 }, { id: 39, floors: 10, groups: 3 }, { id: 100, floors: 10, groups: 3 }],
+  };
+  const pallets = [];
+  let id = 1;
+  const usedLocations = new Set();
+  for (const warehouseId of [1, 2, 3]) {
+    const racks = racksByWarehouse[warehouseId];
+    for (const rack of racks) {
+      const maxCells = rack.floors * rack.groups;
+      const cellsToFill = Math.floor(maxCells * 0.6) + Math.floor(Math.random() * Math.floor(maxCells * 0.3));
+      const availableCells = [];
+      for (let f = 1; f <= rack.floors; f++) {
+        for (let g = 1; g <= rack.groups; g++) {
+          availableCells.push([f, g]);
+        }
+      }
+      for (let i = 0; i < cellsToFill && availableCells.length > 0; i++) {
+        const idx = Math.floor(Math.random() * availableCells.length);
+        const [floor, group] = availableCells[idx];
+        const location = `${rack.id}-${floor}-${group}`;
+        if (!usedLocations.has(location)) {
+          pallets.push({ id, location });
+          usedLocations.add(location);
+          id++;
+          availableCells.splice(idx, 1);
+        }
+      }
+    }
+  }
+  return pallets;
+})();
 
 const products = [
   { id: 1,  code: 'FP-001', name: '일반 밴드 20매입',         category: '의료용 밴드', created_at: '2025-06-01' },
@@ -75,40 +105,46 @@ const products = [
   { id: 15, code: 'RM-005', name: '포장 비닐 (박스/1000개)',  category: '포장재',      created_at: '2025-08-01' },
 ];
 
-const inventoryItems = [
-  { id: 1,  product_id: 1,  pallet_id: 1,  quantity: 2400, received_at: '2026-03-10' },
-  { id: 2,  product_id: 2,  pallet_id: 2,  quantity: 1800, received_at: '2026-03-10' },
-  { id: 3,  product_id: 3,  pallet_id: 3,  quantity: 1200, received_at: '2026-03-12' },
-  { id: 4,  product_id: 4,  pallet_id: 4,  quantity: 960,  received_at: '2026-03-15' },
-  { id: 5,  product_id: 5,  pallet_id: 5,  quantity: 720,  received_at: '2026-03-22' },
-  { id: 6,  product_id: 6,  pallet_id: 6,  quantity: 480,  received_at: '2026-04-05' },
-  { id: 7,  product_id: 7,  pallet_id: 7,  quantity: 600,  received_at: '2026-04-06' },
-  { id: 8,  product_id: 8,  pallet_id: 8,  quantity: 540,  received_at: '2026-04-07' },
-  { id: 9,  product_id: 9,  pallet_id: 9,  quantity: 1080, received_at: '2026-04-08' },
-  { id: 10, product_id: 10, pallet_id: 10, quantity: 360,  received_at: '2026-04-09' },
-  { id: 11, product_id: 1,  pallet_id: 11, quantity: 1200, received_at: '2026-04-10' },
-  { id: 12, product_id: 3,  pallet_id: 12, quantity: 900,  received_at: '2026-04-11' },
-  { id: 13, product_id: 11, pallet_id: 13, quantity: 40,   received_at: '2026-02-20' },
-  { id: 14, product_id: 12, pallet_id: 14, quantity: 25,   received_at: '2026-02-20' },
-  { id: 15, product_id: 13, pallet_id: 15, quantity: 30,   received_at: '2026-03-05' },
-  { id: 16, product_id: 14, pallet_id: 16, quantity: 20,   received_at: '2026-03-10' },
-  { id: 17, product_id: 15, pallet_id: 17, quantity: 35,   received_at: '2026-03-18' },
-  { id: 18, product_id: 11, pallet_id: 18, quantity: 50,   received_at: '2026-03-20' },
-  { id: 19, product_id: 12, pallet_id: 19, quantity: 30,   received_at: '2026-03-25' },
-  { id: 20, product_id: 13, pallet_id: 20, quantity: 45,   received_at: '2026-03-28' },
-  { id: 21, product_id: 14, pallet_id: 21, quantity: 28,   received_at: '2026-04-02' },
-  { id: 22, product_id: 15, pallet_id: 22, quantity: 60,   received_at: '2026-04-05' },
-  { id: 23, product_id: 11, pallet_id: 23, quantity: 35,   received_at: '2026-04-08' },
-  { id: 24, product_id: 12, pallet_id: 24, quantity: 22,   received_at: '2026-04-10' },
-  { id: 25, product_id: 1,  pallet_id: 25, quantity: 4800, received_at: '2026-04-08' },
-  { id: 26, product_id: 7,  pallet_id: 26, quantity: 600,  received_at: '2026-04-10' },
-  { id: 27, product_id: 9,  pallet_id: 27, quantity: 1200, received_at: '2026-04-10' },
-  { id: 28, product_id: 13, pallet_id: 28, quantity: 60,   received_at: '2026-03-05' },
-  { id: 29, product_id: 14, pallet_id: 29, quantity: 80,   received_at: '2026-03-15' },
-  { id: 30, product_id: 15, pallet_id: 30, quantity: 300,  received_at: '2026-04-01' },
-  { id: 31, product_id: 2,  pallet_id: 31, quantity: 2400, received_at: '2026-04-12' },
-  { id: 32, product_id: 8,  pallet_id: 32, quantity: 420,  received_at: '2026-04-13' },
-];
+const inventoryItems = (() => {
+  const items = [];
+  const productQuantities = [
+    { productId: 1, minQty: 1200, maxQty: 5000 },
+    { productId: 2, minQty: 1200, maxQty: 3000 },
+    { productId: 3, minQty: 800, maxQty: 2000 },
+    { productId: 4, minQty: 400, maxQty: 1200 },
+    { productId: 5, minQty: 300, maxQty: 900 },
+    { productId: 6, minQty: 200, maxQty: 600 },
+    { productId: 7, minQty: 200, maxQty: 800 },
+    { productId: 8, minQty: 200, maxQty: 700 },
+    { productId: 9, minQty: 400, maxQty: 1500 },
+    { productId: 10, minQty: 150, maxQty: 500 },
+    { productId: 11, minQty: 20, maxQty: 80 },
+    { productId: 12, minQty: 15, maxQty: 50 },
+    { productId: 13, minQty: 20, maxQty: 100 },
+    { productId: 14, minQty: 15, maxQty: 80 },
+    { productId: 15, minQty: 30, maxQty: 300 },
+  ];
+  const dates = [
+    '2026-02-10', '2026-02-15', '2026-02-20', '2026-02-25',
+    '2026-03-05', '2026-03-10', '2026-03-15', '2026-03-20', '2026-03-25', '2026-03-30',
+    '2026-04-05', '2026-04-10', '2026-04-15', '2026-04-20',
+  ];
+  let id = 1;
+  for (let palletId = 1; palletId <= 250; palletId++) {
+    const productInfo = productQuantities[Math.floor(Math.random() * productQuantities.length)];
+    const date = dates[Math.floor(Math.random() * dates.length)];
+    const quantity = productInfo.minQty + Math.floor(Math.random() * (productInfo.maxQty - productInfo.minQty));
+    items.push({
+      id,
+      product_id: productInfo.productId,
+      pallet_id: palletId,
+      quantity,
+      received_at: date,
+    });
+    id++;
+  }
+  return items;
+})();
 
 const inboundSchedules = [
   { id: 1, product_id: 11, quantity: 50,   scheduled_date: '2026-04-16', status: 'pending', note: '긴급 — 한국의료소재(주)' },
@@ -125,13 +161,13 @@ const outboundSchedules = [
 ];
 
 const activityLogs = [
-  { id: 1,  user: '김민준', action: '입고 처리',      feature: 'inbound',   detail: '대형 밴드 10매입 3000박스 → 완제품창고 3번랙 2칸 1단',     created_at: '2026-04-15 15:42' },
+  { id: 1,  user: '김민준', action: '입고 처리',      feature: 'inbound',   detail: '대형 밴드 10매입 3000박스 → 완제품창고 3번랙 2열 1단',     created_at: '2026-04-15 15:42' },
   { id: 2,  user: '이지훈', action: '출고 처리',      feature: 'outbound',  detail: '방수 밴드 20매입 1800박스 출고 — CJ올리브영 정기납품',    created_at: '2026-04-15 14:10' },
   { id: 3,  user: '최현우', action: '입고 예정 등록', feature: 'inbound',   detail: '거즈 원단 80롤 예정 등록 — 대한탄성원단',                  created_at: '2026-04-14 09:30' },
   { id: 4,  user: '김민준', action: '재고 조정',      feature: 'inventory', detail: '탄력 붕대 7.5cm 12박스 손실 기록 — 품질 불량',            created_at: '2026-04-14 16:45' },
   { id: 5,  user: '이지훈', action: '출고 처리',      feature: 'outbound',  detail: '거즈 붕대 7.5cm×5m 800박스 출고 — 세브란스병원 납품',    created_at: '2026-04-13 10:20' },
   { id: 6,  user: '최현우', action: '상품 등록',      feature: 'products',  detail: '반창고 롤 2.5cm×5m 신규 등록',                          created_at: '2026-04-13 08:30' },
-  { id: 7,  user: '김민준', action: '위치 변경',      feature: 'inventory', detail: '무릎 보호대 M → 전동랙창고 12번랙 1칸으로 이동',          created_at: '2026-04-12 13:15' },
+  { id: 7,  user: '김민준', action: '위치 변경',      feature: 'inventory', detail: '무릎 보호대 M → 전동랙창고 12번랙 1열로 이동',          created_at: '2026-04-12 13:15' },
   { id: 8,  user: '이지훈', action: '입고 처리',      feature: 'inbound',   detail: '손목 보호대 Free 600개 입고 — 자사 생산',                created_at: '2026-04-12 09:50' },
   { id: 9,  user: '최현우', action: '사용자 추가',    feature: 'users',     detail: '창고 관리자 신규 계정 승인',                              created_at: '2026-04-11 15:30' },
   { id: 10, user: '김민준', action: '재고 확인',      feature: 'inventory', detail: '월말 재고 실사 완료 — 오차율 0.1%',                      created_at: '2026-04-10 18:00' },
