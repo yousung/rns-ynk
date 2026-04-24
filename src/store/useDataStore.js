@@ -36,7 +36,7 @@ const racks = [
   { id: 7,  warehouse_id: 2, rack_no: 3,  floors: 8, groups: 3 },
   { id: 48, warehouse_id: 2, rack_no: 4,  floors: 8, groups: 3 },
   { id: 49, warehouse_id: 2, rack_no: 5,  floors: 8, groups: 3 },
-  { id: 50, warehouse_id: 2, rack_no: 6,  floors: 8, groups: 3 },
+  { id: 50, warehouse_id: 2, rack_no: 6,  floors: 6, groups: 3 },
   { id: 10, warehouse_id: 3, rack_no: 1,  floors: 10, groups: 4 },
   { id: 11, warehouse_id: 3, rack_no: 2,  floors: 10, groups: 4 },
   { id: 12, warehouse_id: 3, rack_no: 3,  floors: 10, groups: 4 },
@@ -67,7 +67,7 @@ const racks = [
   { id: 37, warehouse_id: 3, rack_no: 28, floors: 10, groups: 3 },
   { id: 38, warehouse_id: 3, rack_no: 29, floors: 10, groups: 3 },
   { id: 39, warehouse_id: 3, rack_no: 30, floors: 10, groups: 3 },
-  { id: 100, warehouse_id: 3, rack_no: 31, floors: 10, groups: 3 },
+  { id: 100, warehouse_id: 3, rack_no: 31, floors: 2, groups: 3 },
 ];
 
 const pallets = [
