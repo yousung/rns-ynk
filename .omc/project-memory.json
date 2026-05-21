@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1776753065388,
+  "lastScanned": 1779385984271,
   "projectRoot": "/Users/lovizu/Projects/outsourcing/ynk",
   "techStack": {
     "languages": [
@@ -68,7 +68,7 @@
       "path": "dist",
       "purpose": "Distribution/build output",
       "fileCount": 1,
-      "lastAccessed": 1776753065375,
+      "lastAccessed": 1779385984225,
       "keyFiles": [
         "index.html"
       ]
@@ -77,7 +77,7 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 1,
-      "lastAccessed": 1776753065375,
+      "lastAccessed": 1779385984245,
       "keyFiles": [
         "service-overview.md"
       ]
@@ -86,7 +86,7 @@
       "path": "src",
       "purpose": "Source code",
       "fileCount": 2,
-      "lastAccessed": 1776753065382,
+      "lastAccessed": 1779385984258,
       "keyFiles": [
         "App.jsx",
         "main.jsx"
@@ -96,9 +96,9 @@
       "path": "dist/assets",
       "purpose": "Static assets",
       "fileCount": 2,
-      "lastAccessed": 1776753065382,
+      "lastAccessed": 1779385984259,
       "keyFiles": [
-        "index-8E-S6Rby.js",
+        "index-68-Nxzlm.js",
         "index-DFim0w7f.css"
       ]
     },
@@ -106,14 +106,14 @@
       "path": "src/components",
       "purpose": "UI components",
       "fileCount": 0,
-      "lastAccessed": 1776753065384,
+      "lastAccessed": 1779385984260,
       "keyFiles": []
     },
     "src/pages": {
       "path": "src/pages",
       "purpose": "Page components",
       "fileCount": 13,
-      "lastAccessed": 1776753065384,
+      "lastAccessed": 1779385984261,
       "keyFiles": [
         "ActivityLog.jsx",
         "Dashboard.jsx",
@@ -130,8 +130,8 @@
     },
     {
       "path": "src/store/useDataStore.js",
-      "accessCount": 53,
-      "lastAccessed": 1776773823661,
+      "accessCount": 63,
+      "lastAccessed": 1779386889340,
       "type": "file"
     },
     {
@@ -234,6 +234,12 @@
       "path": ".claude/worktrees/frosty-lichterman-faa2ed/demo/data.js",
       "accessCount": 1,
       "lastAccessed": 1776754061358,
+      "type": "file"
+    },
+    {
+      "path": "graphify-out/.graphify_chunk_02.json",
+      "accessCount": 1,
+      "lastAccessed": 1779386340651,
       "type": "file"
     }
   ],
