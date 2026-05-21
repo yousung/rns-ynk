@@ -1,0 +1,3456 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "warehouse_visualization_group",
+        "label": "Warehouse Visualization Components",
+        "nodes": [
+          "warehouse_tabs",
+          "warehouse_rackgrid",
+          "warehouse_celldetails",
+          "warehouse_elevation",
+          "warehouse_matrix",
+          "warehouse_floorplan",
+          "warehouse_statsbar",
+          "warehouse_minimap",
+          "warehouse_miniblocks"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "src/components/warehouse/"
+      },
+      {
+        "id": "page_components_group",
+        "label": "Page Components",
+        "nodes": [
+          "pages_dashboard",
+          "pages_inbound_execute",
+          "pages_outbound_execute",
+          "pages_inbound_schedule",
+          "pages_outbound_schedule",
+          "pages_users",
+          "pages_activitylog",
+          "pages_products"
+        ],
+        "relation": "implement",
+        "confidence": "INFERRED",
+        "confidence_score": 0.9,
+        "source_file": "src/pages/"
+      },
+      {
+        "id": "inbound_outbound_pattern",
+        "label": "Inbound/Outbound Processing Flow",
+        "nodes": [
+          "pages_inbound_schedule",
+          "pages_inbound_execute",
+          "pages_outbound_schedule",
+          "pages_outbound_execute"
+        ],
+        "relation": "form",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "src/pages/"
+      },
+      {
+        "nodes": [
+          "outbound_execute",
+          "warehouse_matrix",
+          "fifo_logic"
+        ],
+        "type": "shared_concept",
+        "concept": "outbound_processing_with_visualization",
+        "confidence": 0.95,
+        "description": "Outbound execution integrates FIFO logic with warehouse matrix visualization"
+      },
+      {
+        "nodes": [
+          "inbound_execute",
+          "warehouse_visualization",
+          "inventory_item"
+        ],
+        "type": "shared_concept",
+        "concept": "inbound_inventory_placement",
+        "confidence": 0.9,
+        "description": "Inbound execution processes inventory items into warehouse visualization"
+      },
+      {
+        "nodes": [
+          "inventory",
+          "warehouse_type_a",
+          "warehouse_type_b"
+        ],
+        "type": "shared_concept",
+        "concept": "multi_warehouse_view",
+        "confidence": 0.85,
+        "description": "Inventory page supports dual-view rendering for both warehouse types"
+      },
+      {
+        "nodes": [
+          "use_auth_store",
+          "use_ui_store",
+          "use_data_store"
+        ],
+        "type": "shared_concept",
+        "concept": "store_subscription_pattern",
+        "confidence": 1.0,
+        "description": "All pages subscribe to three core Zustand stores for state management"
+      },
+      {
+        "nodes": [
+          "platform_web",
+          "platform_tablet",
+          "platform_kiosk"
+        ],
+        "type": "shared_concept",
+        "concept": "multi_platform_architecture",
+        "confidence": 0.95,
+        "description": "Application supports web, tablet, and kiosk platform variants"
+      },
+      {
+        "nodes": [
+          "warehouse_type_a",
+          "warehouse_type_b",
+          "inbound_scheduling",
+          "outbound_scheduling"
+        ],
+        "type": "shared_concept",
+        "concept": "warehouse_operations_variant_specific",
+        "confidence": 0.85,
+        "description": "Both warehouse types implement variant-specific inbound/outbound scheduling"
+      },
+      {
+        "nodes": [
+          "outbound_execute",
+          "tablet_outbound",
+          "platform_tablet",
+          "platform_web"
+        ],
+        "type": "shared_concept",
+        "concept": "outbound_platform_variants",
+        "confidence": 0.8,
+        "description": "Outbound execution has platform-specific implementations across web and tablet"
+      },
+      {
+        "nodes": [
+          "inbound_execute",
+          "tablet_inbound",
+          "platform_tablet",
+          "platform_web"
+        ],
+        "type": "shared_concept",
+        "concept": "inbound_platform_variants",
+        "confidence": 0.8,
+        "description": "Inbound execution has platform-specific implementations across web and tablet"
+      },
+      {
+        "nodes": [
+          "fifo_logic",
+          "outbound_execute",
+          "inventory_tracking",
+          "pallet"
+        ],
+        "type": "shared_concept",
+        "concept": "fifo_inventory_flow",
+        "confidence": 0.9,
+        "description": "FIFO logic drives outbound processing and pallet inventory tracking"
+      },
+      {
+        "nodes": [
+          "inventory",
+          "warehouse_visualization",
+          "rack",
+          "pallet",
+          "inventory_item"
+        ],
+        "type": "shared_concept",
+        "concept": "warehouse_state_representation",
+        "confidence": 0.95,
+        "description": "Inventory page displays complete warehouse state including racks, pallets, items"
+      },
+      {
+        "nodes": [
+          "use_ui_store",
+          "platform_select",
+          "outbound_execute",
+          "inbound_execute"
+        ],
+        "type": "shared_concept",
+        "concept": "platform_state_routing",
+        "confidence": 0.85,
+        "description": "UI store platform state guides routing between platform-specific execute pages"
+      },
+      {
+        "nodes": [
+          "use_data_store",
+          "inventory_item",
+          "pallet",
+          "rack"
+        ],
+        "type": "shared_concept",
+        "concept": "data_store_warehouse_entities",
+        "confidence": 1.0,
+        "description": "Data store manages core warehouse entities (items, pallets, racks)"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "vite.config.js",
+      "file_type": "code",
+      "source_file": "vite.config.js",
+      "source_location": "L1",
+      "id": "vite_config_js",
+      "community": 34,
+      "norm_label": "vite.config.js"
+    },
+    {
+      "label": "main.jsx",
+      "file_type": "code",
+      "source_file": "src/main.jsx",
+      "source_location": "L1",
+      "id": "src_main_jsx",
+      "community": 35,
+      "norm_label": "main.jsx"
+    },
+    {
+      "label": "App.jsx",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L1",
+      "id": "src_app_jsx",
+      "community": 8,
+      "norm_label": "app.jsx"
+    },
+    {
+      "label": "RequireAuth()",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L21",
+      "id": "app_requireauth",
+      "community": 8,
+      "norm_label": "requireauth()"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L27",
+      "id": "app_app",
+      "community": 8,
+      "norm_label": "app()"
+    },
+    {
+      "label": "Layout.jsx",
+      "file_type": "code",
+      "source_file": "src/components/layout/Layout.jsx",
+      "source_location": "L1",
+      "id": "src_components_layout_layout_jsx",
+      "community": 13,
+      "norm_label": "layout.jsx"
+    },
+    {
+      "label": "Layout()",
+      "file_type": "code",
+      "source_file": "src/components/layout/Layout.jsx",
+      "source_location": "L5",
+      "id": "layout_layout",
+      "community": 13,
+      "norm_label": "layout()"
+    },
+    {
+      "label": "Sidebar.jsx",
+      "file_type": "code",
+      "source_file": "src/components/layout/Sidebar.jsx",
+      "source_location": "L1",
+      "id": "src_components_layout_sidebar_jsx",
+      "community": 14,
+      "norm_label": "sidebar.jsx"
+    },
+    {
+      "label": "Sidebar()",
+      "file_type": "code",
+      "source_file": "src/components/layout/Sidebar.jsx",
+      "source_location": "L33",
+      "id": "sidebar_sidebar",
+      "community": 14,
+      "norm_label": "sidebar()"
+    },
+    {
+      "label": "ScheduleScroll.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/ScheduleScroll.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_schedulescroll_jsx",
+      "community": 15,
+      "norm_label": "schedulescroll.jsx"
+    },
+    {
+      "label": "ScheduleScroll()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/ScheduleScroll.jsx",
+      "source_location": "L3",
+      "id": "schedulescroll_schedulescroll",
+      "community": 15,
+      "norm_label": "schedulescroll()"
+    },
+    {
+      "label": "WarehouseRackGrid.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_warehouserackgrid_jsx",
+      "community": 16,
+      "norm_label": "warehouserackgrid.jsx"
+    },
+    {
+      "label": "WarehouseRackGrid()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": "L3",
+      "id": "warehouserackgrid_warehouserackgrid",
+      "community": 16,
+      "norm_label": "warehouserackgrid()"
+    },
+    {
+      "label": "CellDetailsPanel.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_celldetailspanel_jsx",
+      "community": 9,
+      "norm_label": "celldetailspanel.jsx"
+    },
+    {
+      "label": "KanDetailPanel()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": "L3",
+      "id": "celldetailspanel_kandetailpanel",
+      "community": 9,
+      "norm_label": "kandetailpanel()"
+    },
+    {
+      "label": "CellDetailsPanel()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": "L77",
+      "id": "celldetailspanel_celldetailspanel",
+      "community": 9,
+      "norm_label": "celldetailspanel()"
+    },
+    {
+      "label": "WarehouseElevation.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_warehouseelevation_jsx",
+      "community": 3,
+      "norm_label": "warehouseelevation.jsx"
+    },
+    {
+      "label": "heatColor()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L7",
+      "id": "warehouseelevation_heatcolor",
+      "community": 3,
+      "norm_label": "heatcolor()"
+    },
+    {
+      "label": "getRackX()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L14",
+      "id": "warehouseelevation_getrackx",
+      "community": 3,
+      "norm_label": "getrackx()"
+    },
+    {
+      "label": "getFloorY()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L18",
+      "id": "warehouseelevation_getfloory",
+      "community": 3,
+      "norm_label": "getfloory()"
+    },
+    {
+      "label": "WarehouseElevation()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L22",
+      "id": "warehouseelevation_warehouseelevation",
+      "community": 3,
+      "norm_label": "warehouseelevation()"
+    },
+    {
+      "label": "WarehouseTabs.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseTabs.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_warehousetabs_jsx",
+      "community": 17,
+      "norm_label": "warehousetabs.jsx"
+    },
+    {
+      "label": "WarehouseTabs()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseTabs.jsx",
+      "source_location": "L3",
+      "id": "warehousetabs_warehousetabs",
+      "community": 17,
+      "norm_label": "warehousetabs()"
+    },
+    {
+      "label": "WarehouseMatrix.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMatrix.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_warehousematrix_jsx",
+      "community": 10,
+      "norm_label": "warehousematrix.jsx"
+    },
+    {
+      "label": "getCellClass()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMatrix.jsx",
+      "source_location": "L5",
+      "id": "warehousematrix_getcellclass",
+      "community": 10,
+      "norm_label": "getcellclass()"
+    },
+    {
+      "label": "WarehouseMatrix()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMatrix.jsx",
+      "source_location": "L22",
+      "id": "warehousematrix_warehousematrix",
+      "community": 10,
+      "norm_label": "warehousematrix()"
+    },
+    {
+      "label": "WarehouseFloorPlan.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_warehousefloorplan_jsx",
+      "community": 5,
+      "norm_label": "warehousefloorplan.jsx"
+    },
+    {
+      "label": "heatColor()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": "L13",
+      "id": "warehousefloorplan_heatcolor",
+      "community": 5,
+      "norm_label": "heatcolor()"
+    },
+    {
+      "label": "WarehouseFloorPlan()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": "L20",
+      "id": "warehousefloorplan_warehousefloorplan",
+      "community": 5,
+      "norm_label": "warehousefloorplan()"
+    },
+    {
+      "label": "FloorPlanRackDetail()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": "L88",
+      "id": "warehousefloorplan_floorplanrackdetail",
+      "community": 5,
+      "norm_label": "floorplanrackdetail()"
+    },
+    {
+      "label": "StatsBar.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/StatsBar.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_statsbar_jsx",
+      "community": 18,
+      "norm_label": "statsbar.jsx"
+    },
+    {
+      "label": "StatsBar()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/StatsBar.jsx",
+      "source_location": "L1",
+      "id": "statsbar_statsbar",
+      "community": 18,
+      "norm_label": "statsbar()"
+    },
+    {
+      "label": "WarehouseMinimap.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_warehouseminimap_jsx",
+      "community": 6,
+      "norm_label": "warehouseminimap.jsx"
+    },
+    {
+      "label": "iso()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": "L9",
+      "id": "warehouseminimap_iso",
+      "community": 6,
+      "norm_label": "iso()"
+    },
+    {
+      "label": "polyPts()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": "L13",
+      "id": "warehouseminimap_polypts",
+      "community": 6,
+      "norm_label": "polypts()"
+    },
+    {
+      "label": "WarehouseMinimap()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": "L17",
+      "id": "warehouseminimap_warehouseminimap",
+      "community": 6,
+      "norm_label": "warehouseminimap()"
+    },
+    {
+      "label": "MiniBlocks.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/MiniBlocks.jsx",
+      "source_location": "L1",
+      "id": "src_components_warehouse_miniblocks_jsx",
+      "community": 19,
+      "norm_label": "miniblocks.jsx"
+    },
+    {
+      "label": "MiniBlocks()",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/MiniBlocks.jsx",
+      "source_location": "L1",
+      "id": "miniblocks_miniblocks",
+      "community": 19,
+      "norm_label": "miniblocks()"
+    },
+    {
+      "label": "Users.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Users.jsx",
+      "source_location": "L1",
+      "id": "src_pages_users_jsx",
+      "community": 20,
+      "norm_label": "users.jsx"
+    },
+    {
+      "label": "Users()",
+      "file_type": "code",
+      "source_file": "src/pages/Users.jsx",
+      "source_location": "L11",
+      "id": "users_users",
+      "community": 20,
+      "norm_label": "users()"
+    },
+    {
+      "label": "ActivityLog.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": "L1",
+      "id": "src_pages_activitylog_jsx",
+      "community": 7,
+      "norm_label": "activitylog.jsx"
+    },
+    {
+      "label": "fmtDate()",
+      "file_type": "code",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": "L18",
+      "id": "activitylog_fmtdate",
+      "community": 7,
+      "norm_label": "fmtdate()"
+    },
+    {
+      "label": "toStr()",
+      "file_type": "code",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": "L26",
+      "id": "activitylog_tostr",
+      "community": 7,
+      "norm_label": "tostr()"
+    },
+    {
+      "label": "ActivityLog()",
+      "file_type": "code",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": "L31",
+      "id": "activitylog_activitylog",
+      "community": 7,
+      "norm_label": "activitylog()"
+    },
+    {
+      "label": "Products.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Products.jsx",
+      "source_location": "L1",
+      "id": "src_pages_products_jsx",
+      "community": 21,
+      "norm_label": "products.jsx"
+    },
+    {
+      "label": "Products()",
+      "file_type": "code",
+      "source_file": "src/pages/Products.jsx",
+      "source_location": "L4",
+      "id": "products_products",
+      "community": 21,
+      "norm_label": "products()"
+    },
+    {
+      "label": "InboundExecute.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": "L1",
+      "id": "src_pages_inboundexecute_jsx",
+      "community": 22,
+      "norm_label": "inboundexecute.jsx"
+    },
+    {
+      "label": "InboundExecute()",
+      "file_type": "code",
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": "L14",
+      "id": "inboundexecute_inboundexecute",
+      "community": 22,
+      "norm_label": "inboundexecute()"
+    },
+    {
+      "label": "Dashboard.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1",
+      "id": "src_pages_dashboard_jsx",
+      "community": 11,
+      "norm_label": "dashboard.jsx"
+    },
+    {
+      "label": "KpiCard()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L9",
+      "id": "dashboard_kpicard",
+      "community": 11,
+      "norm_label": "kpicard()"
+    },
+    {
+      "label": "Dashboard()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L24",
+      "id": "dashboard_dashboard",
+      "community": 11,
+      "norm_label": "dashboard()"
+    },
+    {
+      "label": "Login.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Login.jsx",
+      "source_location": "L1",
+      "id": "src_pages_login_jsx",
+      "community": 23,
+      "norm_label": "login.jsx"
+    },
+    {
+      "label": "Login()",
+      "file_type": "code",
+      "source_file": "src/pages/Login.jsx",
+      "source_location": "L6",
+      "id": "login_login",
+      "community": 23,
+      "norm_label": "login()"
+    },
+    {
+      "label": "OutboundSchedule.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/OutboundSchedule.jsx",
+      "source_location": "L1",
+      "id": "src_pages_outboundschedule_jsx",
+      "community": 24,
+      "norm_label": "outboundschedule.jsx"
+    },
+    {
+      "label": "OutboundSchedule()",
+      "file_type": "code",
+      "source_file": "src/pages/OutboundSchedule.jsx",
+      "source_location": "L14",
+      "id": "outboundschedule_outboundschedule",
+      "community": 24,
+      "norm_label": "outboundschedule()"
+    },
+    {
+      "label": "Inventory.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Inventory.jsx",
+      "source_location": "L1",
+      "id": "src_pages_inventory_jsx",
+      "community": 25,
+      "norm_label": "inventory.jsx"
+    },
+    {
+      "label": "Inventory()",
+      "file_type": "code",
+      "source_file": "src/pages/Inventory.jsx",
+      "source_location": "L12",
+      "id": "inventory_inventory",
+      "community": 25,
+      "norm_label": "inventory()"
+    },
+    {
+      "label": "Settings.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Settings.jsx",
+      "source_location": "L1",
+      "id": "src_pages_settings_jsx",
+      "community": 26,
+      "norm_label": "settings.jsx"
+    },
+    {
+      "label": "Settings()",
+      "file_type": "code",
+      "source_file": "src/pages/Settings.jsx",
+      "source_location": "L16",
+      "id": "settings_settings",
+      "community": 26,
+      "norm_label": "settings()"
+    },
+    {
+      "label": "Presentation.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L1",
+      "id": "src_pages_presentation_jsx",
+      "community": 2,
+      "norm_label": "presentation.jsx"
+    },
+    {
+      "label": "IconBox()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L44",
+      "id": "presentation_iconbox",
+      "community": 2,
+      "norm_label": "iconbox()"
+    },
+    {
+      "label": "StepList()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L64",
+      "id": "presentation_steplist",
+      "community": 2,
+      "norm_label": "steplist()"
+    },
+    {
+      "label": "FeatureCard()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L114",
+      "id": "presentation_featurecard",
+      "community": 2,
+      "norm_label": "featurecard()"
+    },
+    {
+      "label": "SlideHeader()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L142",
+      "id": "presentation_slideheader",
+      "community": 2,
+      "norm_label": "slideheader()"
+    },
+    {
+      "label": "SlideCover()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L186",
+      "id": "presentation_slidecover",
+      "community": 2,
+      "norm_label": "slidecover()"
+    },
+    {
+      "label": "SlidePlatforms()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L247",
+      "id": "presentation_slideplatforms",
+      "community": 2,
+      "norm_label": "slideplatforms()"
+    },
+    {
+      "label": "SlideLoginDashboard()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L283",
+      "id": "presentation_slidelogindashboard",
+      "community": 2,
+      "norm_label": "slidelogindashboard()"
+    },
+    {
+      "label": "SlideInbound()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L308",
+      "id": "presentation_slideinbound",
+      "community": 2,
+      "norm_label": "slideinbound()"
+    },
+    {
+      "label": "SlideOutbound()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L323",
+      "id": "presentation_slideoutbound",
+      "community": 2,
+      "norm_label": "slideoutbound()"
+    },
+    {
+      "label": "SlideInventory()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L343",
+      "id": "presentation_slideinventory",
+      "community": 2,
+      "norm_label": "slideinventory()"
+    },
+    {
+      "label": "SlideTablet()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L368",
+      "id": "presentation_slidetablet",
+      "community": 2,
+      "norm_label": "slidetablet()"
+    },
+    {
+      "label": "SlideKiosk()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L395",
+      "id": "presentation_slidekiosk",
+      "community": 2,
+      "norm_label": "slidekiosk()"
+    },
+    {
+      "label": "SlideUserManagement()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L437",
+      "id": "presentation_slideusermanagement",
+      "community": 2,
+      "norm_label": "slideusermanagement()"
+    },
+    {
+      "label": "SlideOutro()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L497",
+      "id": "presentation_slideoutro",
+      "community": 2,
+      "norm_label": "slideoutro()"
+    },
+    {
+      "label": "Presentation()",
+      "file_type": "code",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L553",
+      "id": "presentation_presentation",
+      "community": 2,
+      "norm_label": "presentation()"
+    },
+    {
+      "label": "PlatformSelect.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/PlatformSelect.jsx",
+      "source_location": "L1",
+      "id": "src_pages_platformselect_jsx",
+      "community": 12,
+      "norm_label": "platformselect.jsx"
+    },
+    {
+      "label": "Card()",
+      "file_type": "code",
+      "source_file": "src/pages/PlatformSelect.jsx",
+      "source_location": "L32",
+      "id": "platformselect_card",
+      "community": 12,
+      "norm_label": "card()"
+    },
+    {
+      "label": "PlatformSelect()",
+      "file_type": "code",
+      "source_file": "src/pages/PlatformSelect.jsx",
+      "source_location": "L94",
+      "id": "platformselect_platformselect",
+      "community": 12,
+      "norm_label": "platformselect()"
+    },
+    {
+      "label": "InboundSchedule.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/InboundSchedule.jsx",
+      "source_location": "L1",
+      "id": "src_pages_inboundschedule_jsx",
+      "community": 27,
+      "norm_label": "inboundschedule.jsx"
+    },
+    {
+      "label": "InboundSchedule()",
+      "file_type": "code",
+      "source_file": "src/pages/InboundSchedule.jsx",
+      "source_location": "L14",
+      "id": "inboundschedule_inboundschedule",
+      "community": 27,
+      "norm_label": "inboundschedule()"
+    },
+    {
+      "label": "OutboundExecute.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": "L1",
+      "id": "src_pages_outboundexecute_jsx",
+      "community": 28,
+      "norm_label": "outboundexecute.jsx"
+    },
+    {
+      "label": "OutboundExecute()",
+      "file_type": "code",
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": "L14",
+      "id": "outboundexecute_outboundexecute",
+      "community": 28,
+      "norm_label": "outboundexecute()"
+    },
+    {
+      "label": "TabletOutbound.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/tablet/TabletOutbound.jsx",
+      "source_location": "L1",
+      "id": "src_pages_tablet_tabletoutbound_jsx",
+      "community": 29,
+      "norm_label": "tabletoutbound.jsx"
+    },
+    {
+      "label": "TabletOutbound()",
+      "file_type": "code",
+      "source_file": "src/pages/tablet/TabletOutbound.jsx",
+      "source_location": "L6",
+      "id": "tabletoutbound_tabletoutbound",
+      "community": 29,
+      "norm_label": "tabletoutbound()"
+    },
+    {
+      "label": "TabletInbound.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/tablet/TabletInbound.jsx",
+      "source_location": "L1",
+      "id": "src_pages_tablet_tabletinbound_jsx",
+      "community": 30,
+      "norm_label": "tabletinbound.jsx"
+    },
+    {
+      "label": "TabletInbound()",
+      "file_type": "code",
+      "source_file": "src/pages/tablet/TabletInbound.jsx",
+      "source_location": "L6",
+      "id": "tabletinbound_tabletinbound",
+      "community": 30,
+      "norm_label": "tabletinbound()"
+    },
+    {
+      "label": "KioskPage.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L1",
+      "id": "src_pages_kiosk_kioskpage_jsx",
+      "community": 4,
+      "norm_label": "kioskpage.jsx"
+    },
+    {
+      "label": "fmtTime()",
+      "file_type": "code",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L36",
+      "id": "kioskpage_fmttime",
+      "community": 4,
+      "norm_label": "fmttime()"
+    },
+    {
+      "label": "fmtDate()",
+      "file_type": "code",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L42",
+      "id": "kioskpage_fmtdate",
+      "community": 4,
+      "norm_label": "fmtdate()"
+    },
+    {
+      "label": "fmtLogTime()",
+      "file_type": "code",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L47",
+      "id": "kioskpage_fmtlogtime",
+      "community": 4,
+      "norm_label": "fmtlogtime()"
+    },
+    {
+      "label": "KioskPage()",
+      "file_type": "code",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L51",
+      "id": "kioskpage_kioskpage",
+      "community": 4,
+      "norm_label": "kioskpage()"
+    },
+    {
+      "label": "useAuthStore.js",
+      "file_type": "code",
+      "source_file": "src/store/useAuthStore.js",
+      "source_location": "L1",
+      "id": "src_store_useauthstore_js",
+      "community": 31,
+      "norm_label": "useauthstore.js"
+    },
+    {
+      "label": "loadUser()",
+      "file_type": "code",
+      "source_file": "src/store/useAuthStore.js",
+      "source_location": "L3",
+      "id": "useauthstore_loaduser",
+      "community": 31,
+      "norm_label": "loaduser()"
+    },
+    {
+      "label": "useUIStore.js",
+      "file_type": "code",
+      "source_file": "src/store/useUIStore.js",
+      "source_location": "L1",
+      "id": "src_store_useuistore_js",
+      "community": 32,
+      "norm_label": "useuistore.js"
+    },
+    {
+      "label": "applyTheme()",
+      "file_type": "code",
+      "source_file": "src/store/useUIStore.js",
+      "source_location": "L3",
+      "id": "useuistore_applytheme",
+      "community": 32,
+      "norm_label": "applytheme()"
+    },
+    {
+      "label": "useDataStore.js",
+      "file_type": "code",
+      "source_file": "src/store/useDataStore.js",
+      "source_location": "L1",
+      "id": "src_store_usedatastore_js",
+      "community": 36,
+      "norm_label": "usedatastore.js"
+    },
+    {
+      "label": "vite.config.js",
+      "file_type": "code",
+      "source_file": "vite.config.js",
+      "source_location": null,
+      "id": "vite_config",
+      "community": 33,
+      "norm_label": "vite.config.js"
+    },
+    {
+      "label": "main.jsx",
+      "file_type": "code",
+      "source_file": "src/main.jsx",
+      "source_location": null,
+      "id": "main_jsx",
+      "community": 33,
+      "norm_label": "main.jsx"
+    },
+    {
+      "label": "App.jsx",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "id": "app_jsx",
+      "community": 1,
+      "norm_label": "app.jsx"
+    },
+    {
+      "label": "Sidebar.jsx",
+      "file_type": "code",
+      "source_file": "src/components/layout/Sidebar.jsx",
+      "source_location": null,
+      "id": "layout_sidebar",
+      "community": 13,
+      "norm_label": "sidebar.jsx"
+    },
+    {
+      "label": "WarehouseTabs.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseTabs.jsx",
+      "source_location": null,
+      "id": "warehouse_tabs",
+      "community": 1,
+      "norm_label": "warehousetabs.jsx"
+    },
+    {
+      "label": "WarehouseRackGrid.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": null,
+      "id": "warehouse_rackgrid",
+      "community": 1,
+      "norm_label": "warehouserackgrid.jsx"
+    },
+    {
+      "label": "CellDetailsPanel.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": null,
+      "id": "warehouse_celldetails",
+      "community": 1,
+      "norm_label": "celldetailspanel.jsx"
+    },
+    {
+      "label": "WarehouseElevation.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": null,
+      "id": "warehouse_elevation",
+      "community": 1,
+      "norm_label": "warehouseelevation.jsx"
+    },
+    {
+      "label": "WarehouseMatrix.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMatrix.jsx",
+      "source_location": null,
+      "id": "warehouse_matrix",
+      "community": 1,
+      "norm_label": "warehousematrix.jsx"
+    },
+    {
+      "label": "WarehouseFloorPlan.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": null,
+      "id": "warehouse_floorplan",
+      "community": 1,
+      "norm_label": "warehousefloorplan.jsx"
+    },
+    {
+      "label": "StatsBar.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/StatsBar.jsx",
+      "source_location": null,
+      "id": "warehouse_statsbar",
+      "community": 1,
+      "norm_label": "statsbar.jsx"
+    },
+    {
+      "label": "WarehouseMinimap.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": null,
+      "id": "warehouse_minimap",
+      "community": 1,
+      "norm_label": "warehouseminimap.jsx"
+    },
+    {
+      "label": "MiniBlocks.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/MiniBlocks.jsx",
+      "source_location": null,
+      "id": "warehouse_miniblocks",
+      "community": 1,
+      "norm_label": "miniblocks.jsx"
+    },
+    {
+      "label": "Dashboard.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": null,
+      "id": "pages_dashboard",
+      "community": 1,
+      "norm_label": "dashboard.jsx"
+    },
+    {
+      "label": "InboundExecute.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "id": "pages_inbound_execute",
+      "community": 1,
+      "norm_label": "inboundexecute.jsx"
+    },
+    {
+      "label": "OutboundExecute.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "id": "pages_outbound_execute",
+      "community": 1,
+      "norm_label": "outboundexecute.jsx"
+    },
+    {
+      "label": "InboundSchedule.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/InboundSchedule.jsx",
+      "source_location": null,
+      "id": "pages_inbound_schedule",
+      "community": 1,
+      "norm_label": "inboundschedule.jsx"
+    },
+    {
+      "label": "OutboundSchedule.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/OutboundSchedule.jsx",
+      "source_location": null,
+      "id": "pages_outbound_schedule",
+      "community": 1,
+      "norm_label": "outboundschedule.jsx"
+    },
+    {
+      "label": "Users.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Users.jsx",
+      "source_location": null,
+      "id": "pages_users",
+      "community": 1,
+      "norm_label": "users.jsx"
+    },
+    {
+      "label": "ActivityLog.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": null,
+      "id": "pages_activitylog",
+      "community": 1,
+      "norm_label": "activitylog.jsx"
+    },
+    {
+      "label": "Products.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Products.jsx",
+      "source_location": null,
+      "id": "pages_products",
+      "community": 1,
+      "norm_label": "products.jsx"
+    },
+    {
+      "label": "useDataStore.js",
+      "file_type": "code",
+      "source_file": "src/store/useDataStore.js",
+      "source_location": null,
+      "id": "store_usedatastore",
+      "community": 1,
+      "norm_label": "usedatastore.js"
+    },
+    {
+      "type": "page",
+      "label": "Login",
+      "description": "Authentication entry point establishing user session",
+      "id": "login",
+      "community": 0,
+      "norm_label": "login"
+    },
+    {
+      "type": "page",
+      "label": "OutboundExecute",
+      "description": "Complex outbound processing with FIFO calculation and warehouse visualization",
+      "id": "outbound_execute",
+      "community": 0,
+      "norm_label": "outboundexecute"
+    },
+    {
+      "type": "page",
+      "label": "InboundExecute",
+      "description": "Inbound processing receiving scheduled items and updating inventory",
+      "id": "inbound_execute",
+      "community": 0,
+      "norm_label": "inboundexecute"
+    },
+    {
+      "type": "page",
+      "label": "Inventory",
+      "description": "Dual-view inventory (list and warehouse visualization) with category filtering",
+      "id": "inventory",
+      "community": 0,
+      "norm_label": "inventory"
+    },
+    {
+      "type": "page",
+      "label": "Presentation",
+      "description": "Presentation and demo page",
+      "id": "presentation",
+      "community": 37,
+      "norm_label": "presentation"
+    },
+    {
+      "type": "page",
+      "label": "PlatformSelect",
+      "description": "Platform selection routing for web, tablet, kiosk variants",
+      "id": "platform_select",
+      "community": 0,
+      "norm_label": "platformselect"
+    },
+    {
+      "type": "page",
+      "label": "Settings",
+      "description": "User settings and preferences management",
+      "id": "settings",
+      "community": 0,
+      "norm_label": "settings"
+    },
+    {
+      "type": "page",
+      "label": "TabletOutbound",
+      "description": "Tablet-specific outbound execution interface",
+      "id": "tablet_outbound",
+      "community": 0,
+      "norm_label": "tabletoutbound"
+    },
+    {
+      "type": "page",
+      "label": "TabletInbound",
+      "description": "Tablet-specific inbound execution interface",
+      "id": "tablet_inbound",
+      "community": 0,
+      "norm_label": "tabletinbound"
+    },
+    {
+      "type": "page",
+      "label": "KioskPage",
+      "description": "Kiosk interface for warehouse operations",
+      "id": "kiosk_page",
+      "community": 0,
+      "norm_label": "kioskpage"
+    },
+    {
+      "type": "store",
+      "label": "useAuthStore",
+      "description": "Authentication state management with currentUser, login/logout, localStorage persistence",
+      "id": "use_auth_store",
+      "community": 0,
+      "norm_label": "useauthstore"
+    },
+    {
+      "type": "store",
+      "label": "useUIStore",
+      "description": "UI state management controlling theme, sidebarSlim, platform-specific rendering. Known bug: missing warehouseType field",
+      "id": "use_ui_store",
+      "community": 0,
+      "norm_label": "useuistore"
+    },
+    {
+      "type": "store",
+      "label": "useDataStore",
+      "description": "In-memory immutable data store managing racks, pallets, products, inventoryItems, schedules, users",
+      "id": "use_data_store",
+      "community": 0,
+      "norm_label": "usedatastore"
+    },
+    {
+      "type": "domain_concept",
+      "label": "FIFO Logic",
+      "description": "First-In-First-Out inventory processing implemented via getMiniBlocksOutbound()",
+      "id": "fifo_logic",
+      "community": 0,
+      "norm_label": "fifo logic"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Warehouse Type A",
+      "description": "General warehouse variant with standard inbound/outbound processing",
+      "id": "warehouse_type_a",
+      "community": 0,
+      "norm_label": "warehouse type a"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Warehouse Type B",
+      "description": "Automated rack warehouse variant with motorized storage system",
+      "id": "warehouse_type_b",
+      "community": 0,
+      "norm_label": "warehouse type b"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Inventory Item",
+      "description": "Core inventory management entity tracked across warehouse operations",
+      "id": "inventory_item",
+      "community": 0,
+      "norm_label": "inventory item"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Pallet",
+      "description": "Physical container for inventory items in warehouse storage",
+      "id": "pallet",
+      "community": 0,
+      "norm_label": "pallet"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Rack",
+      "description": "Storage structure managing pallet placement and retrieval",
+      "id": "rack",
+      "community": 0,
+      "norm_label": "rack"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Platform Web",
+      "description": "Web-based platform target",
+      "id": "platform_web",
+      "community": 0,
+      "norm_label": "platform web"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Platform Tablet",
+      "description": "Tablet-based platform target with touch-optimized UI",
+      "id": "platform_tablet",
+      "community": 0,
+      "norm_label": "platform tablet"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Platform Kiosk",
+      "description": "Kiosk-based platform target for warehouse operations",
+      "id": "platform_kiosk",
+      "community": 0,
+      "norm_label": "platform kiosk"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Warehouse Visualization",
+      "description": "Visual representation of warehouse state and inventory locations",
+      "id": "warehouse_visualization",
+      "community": 0,
+      "norm_label": "warehouse visualization"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Inventory Tracking",
+      "description": "System for tracking inventory movement, location, and availability",
+      "id": "inventory_tracking",
+      "community": 0,
+      "norm_label": "inventory tracking"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Inbound Scheduling",
+      "description": "Planning and scheduling of incoming inventory operations",
+      "id": "inbound_scheduling",
+      "community": 0,
+      "norm_label": "inbound scheduling"
+    },
+    {
+      "type": "domain_concept",
+      "label": "Outbound Scheduling",
+      "description": "Planning and scheduling of outgoing inventory operations",
+      "id": "outbound_scheduling",
+      "community": 0,
+      "norm_label": "outbound scheduling"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_src": "src_app_jsx",
+      "_tgt": "app_requireauth",
+      "source": "src_app_jsx",
+      "target": "app_requireauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_src": "src_app_jsx",
+      "_tgt": "app_app",
+      "source": "src_app_jsx",
+      "target": "app_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/layout/Layout.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "src_components_layout_layout_jsx",
+      "_tgt": "layout_layout",
+      "source": "src_components_layout_layout_jsx",
+      "target": "layout_layout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "app_jsx",
+      "_tgt": "layout_layout",
+      "source": "layout_layout",
+      "target": "app_jsx"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/components/layout/Layout.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "layout_layout",
+      "_tgt": "layout_sidebar",
+      "source": "layout_layout",
+      "target": "layout_sidebar"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/layout/Sidebar.jsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "src_components_layout_sidebar_jsx",
+      "_tgt": "sidebar_sidebar",
+      "source": "src_components_layout_sidebar_jsx",
+      "target": "sidebar_sidebar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/ScheduleScroll.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_schedulescroll_jsx",
+      "_tgt": "schedulescroll_schedulescroll",
+      "source": "src_components_warehouse_schedulescroll_jsx",
+      "target": "schedulescroll_schedulescroll",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehouserackgrid_jsx",
+      "_tgt": "warehouserackgrid_warehouserackgrid",
+      "source": "src_components_warehouse_warehouserackgrid_jsx",
+      "target": "warehouserackgrid_warehouserackgrid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_celldetailspanel_jsx",
+      "_tgt": "celldetailspanel_kandetailpanel",
+      "source": "src_components_warehouse_celldetailspanel_jsx",
+      "target": "celldetailspanel_kandetailpanel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": "L77",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_celldetailspanel_jsx",
+      "_tgt": "celldetailspanel_celldetailspanel",
+      "source": "src_components_warehouse_celldetailspanel_jsx",
+      "target": "celldetailspanel_celldetailspanel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehouseelevation_jsx",
+      "_tgt": "warehouseelevation_heatcolor",
+      "source": "src_components_warehouse_warehouseelevation_jsx",
+      "target": "warehouseelevation_heatcolor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehouseelevation_jsx",
+      "_tgt": "warehouseelevation_getrackx",
+      "source": "src_components_warehouse_warehouseelevation_jsx",
+      "target": "warehouseelevation_getrackx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehouseelevation_jsx",
+      "_tgt": "warehouseelevation_getfloory",
+      "source": "src_components_warehouse_warehouseelevation_jsx",
+      "target": "warehouseelevation_getfloory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehouseelevation_jsx",
+      "_tgt": "warehouseelevation_warehouseelevation",
+      "source": "src_components_warehouse_warehouseelevation_jsx",
+      "target": "warehouseelevation_warehouseelevation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_src": "warehouseelevation_warehouseelevation",
+      "_tgt": "warehouseelevation_getfloory",
+      "source": "warehouseelevation_getfloory",
+      "target": "warehouseelevation_warehouseelevation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseTabs.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehousetabs_jsx",
+      "_tgt": "warehousetabs_warehousetabs",
+      "source": "src_components_warehouse_warehousetabs_jsx",
+      "target": "warehousetabs_warehousetabs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseMatrix.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehousematrix_jsx",
+      "_tgt": "warehousematrix_getcellclass",
+      "source": "src_components_warehouse_warehousematrix_jsx",
+      "target": "warehousematrix_getcellclass",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseMatrix.jsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehousematrix_jsx",
+      "_tgt": "warehousematrix_warehousematrix",
+      "source": "src_components_warehouse_warehousematrix_jsx",
+      "target": "warehousematrix_warehousematrix",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehousefloorplan_jsx",
+      "_tgt": "warehousefloorplan_heatcolor",
+      "source": "src_components_warehouse_warehousefloorplan_jsx",
+      "target": "warehousefloorplan_heatcolor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehousefloorplan_jsx",
+      "_tgt": "warehousefloorplan_warehousefloorplan",
+      "source": "src_components_warehouse_warehousefloorplan_jsx",
+      "target": "warehousefloorplan_warehousefloorplan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehousefloorplan_jsx",
+      "_tgt": "warehousefloorplan_floorplanrackdetail",
+      "source": "src_components_warehouse_warehousefloorplan_jsx",
+      "target": "warehousefloorplan_floorplanrackdetail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/StatsBar.jsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_statsbar_jsx",
+      "_tgt": "statsbar_statsbar",
+      "source": "src_components_warehouse_statsbar_jsx",
+      "target": "statsbar_statsbar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehouseminimap_jsx",
+      "_tgt": "warehouseminimap_iso",
+      "source": "src_components_warehouse_warehouseminimap_jsx",
+      "target": "warehouseminimap_iso",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehouseminimap_jsx",
+      "_tgt": "warehouseminimap_polypts",
+      "source": "src_components_warehouse_warehouseminimap_jsx",
+      "target": "warehouseminimap_polypts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_warehouseminimap_jsx",
+      "_tgt": "warehouseminimap_warehouseminimap",
+      "source": "src_components_warehouse_warehouseminimap_jsx",
+      "target": "warehouseminimap_warehouseminimap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/warehouse/MiniBlocks.jsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "src_components_warehouse_miniblocks_jsx",
+      "_tgt": "miniblocks_miniblocks",
+      "source": "src_components_warehouse_miniblocks_jsx",
+      "target": "miniblocks_miniblocks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Users.jsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "src_pages_users_jsx",
+      "_tgt": "users_users",
+      "source": "src_pages_users_jsx",
+      "target": "users_users",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "src_pages_activitylog_jsx",
+      "_tgt": "activitylog_fmtdate",
+      "source": "src_pages_activitylog_jsx",
+      "target": "activitylog_fmtdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "src_pages_activitylog_jsx",
+      "_tgt": "activitylog_tostr",
+      "source": "src_pages_activitylog_jsx",
+      "target": "activitylog_tostr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_src": "src_pages_activitylog_jsx",
+      "_tgt": "activitylog_activitylog",
+      "source": "src_pages_activitylog_jsx",
+      "target": "activitylog_activitylog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": "L120",
+      "weight": 1.0,
+      "_src": "activitylog_activitylog",
+      "_tgt": "activitylog_fmtdate",
+      "source": "activitylog_fmtdate",
+      "target": "activitylog_activitylog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Products.jsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "src_pages_products_jsx",
+      "_tgt": "products_products",
+      "source": "src_pages_products_jsx",
+      "target": "products_products",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "src_pages_inboundexecute_jsx",
+      "_tgt": "inboundexecute_inboundexecute",
+      "source": "src_pages_inboundexecute_jsx",
+      "target": "inboundexecute_inboundexecute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "src_pages_dashboard_jsx",
+      "_tgt": "dashboard_kpicard",
+      "source": "src_pages_dashboard_jsx",
+      "target": "dashboard_kpicard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_src": "src_pages_dashboard_jsx",
+      "_tgt": "dashboard_dashboard",
+      "source": "src_pages_dashboard_jsx",
+      "target": "dashboard_dashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Login.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "src_pages_login_jsx",
+      "_tgt": "login_login",
+      "source": "src_pages_login_jsx",
+      "target": "login_login",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/OutboundSchedule.jsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "src_pages_outboundschedule_jsx",
+      "_tgt": "outboundschedule_outboundschedule",
+      "source": "src_pages_outboundschedule_jsx",
+      "target": "outboundschedule_outboundschedule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Inventory.jsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_src": "src_pages_inventory_jsx",
+      "_tgt": "inventory_inventory",
+      "source": "src_pages_inventory_jsx",
+      "target": "inventory_inventory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Settings.jsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_src": "src_pages_settings_jsx",
+      "_tgt": "settings_settings",
+      "source": "src_pages_settings_jsx",
+      "target": "settings_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_iconbox",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_iconbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_steplist",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_steplist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L114",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_featurecard",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_featurecard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L142",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slideheader",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slideheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L186",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slidecover",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slidecover",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L247",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slideplatforms",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slideplatforms",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L283",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slidelogindashboard",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slidelogindashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L308",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slideinbound",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slideinbound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L323",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slideoutbound",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slideoutbound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L343",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slideinventory",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slideinventory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L368",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slidetablet",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slidetablet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L395",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slidekiosk",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slidekiosk",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L437",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slideusermanagement",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slideusermanagement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L497",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_slideoutro",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_slideoutro",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Presentation.jsx",
+      "source_location": "L553",
+      "weight": 1.0,
+      "_src": "src_pages_presentation_jsx",
+      "_tgt": "presentation_presentation",
+      "source": "src_pages_presentation_jsx",
+      "target": "presentation_presentation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/PlatformSelect.jsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_src": "src_pages_platformselect_jsx",
+      "_tgt": "platformselect_card",
+      "source": "src_pages_platformselect_jsx",
+      "target": "platformselect_card",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/PlatformSelect.jsx",
+      "source_location": "L94",
+      "weight": 1.0,
+      "_src": "src_pages_platformselect_jsx",
+      "_tgt": "platformselect_platformselect",
+      "source": "src_pages_platformselect_jsx",
+      "target": "platformselect_platformselect",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/InboundSchedule.jsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "src_pages_inboundschedule_jsx",
+      "_tgt": "inboundschedule_inboundschedule",
+      "source": "src_pages_inboundschedule_jsx",
+      "target": "inboundschedule_inboundschedule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "src_pages_outboundexecute_jsx",
+      "_tgt": "outboundexecute_outboundexecute",
+      "source": "src_pages_outboundexecute_jsx",
+      "target": "outboundexecute_outboundexecute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/tablet/TabletOutbound.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "src_pages_tablet_tabletoutbound_jsx",
+      "_tgt": "tabletoutbound_tabletoutbound",
+      "source": "src_pages_tablet_tabletoutbound_jsx",
+      "target": "tabletoutbound_tabletoutbound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/tablet/TabletInbound.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "src_pages_tablet_tabletinbound_jsx",
+      "_tgt": "tabletinbound_tabletinbound",
+      "source": "src_pages_tablet_tabletinbound_jsx",
+      "target": "tabletinbound_tabletinbound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_src": "src_pages_kiosk_kioskpage_jsx",
+      "_tgt": "kioskpage_fmttime",
+      "source": "src_pages_kiosk_kioskpage_jsx",
+      "target": "kioskpage_fmttime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "_src": "src_pages_kiosk_kioskpage_jsx",
+      "_tgt": "kioskpage_fmtdate",
+      "source": "src_pages_kiosk_kioskpage_jsx",
+      "target": "kioskpage_fmtdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "src_pages_kiosk_kioskpage_jsx",
+      "_tgt": "kioskpage_fmtlogtime",
+      "source": "src_pages_kiosk_kioskpage_jsx",
+      "target": "kioskpage_fmtlogtime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_src": "src_pages_kiosk_kioskpage_jsx",
+      "_tgt": "kioskpage_kioskpage",
+      "source": "src_pages_kiosk_kioskpage_jsx",
+      "target": "kioskpage_kioskpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L128",
+      "weight": 1.0,
+      "_src": "kioskpage_kioskpage",
+      "_tgt": "kioskpage_fmttime",
+      "source": "kioskpage_fmttime",
+      "target": "kioskpage_kioskpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/kiosk/KioskPage.jsx",
+      "source_location": "L129",
+      "weight": 1.0,
+      "_src": "kioskpage_kioskpage",
+      "_tgt": "kioskpage_fmtdate",
+      "source": "kioskpage_fmtdate",
+      "target": "kioskpage_kioskpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/store/useAuthStore.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "src_store_useauthstore_js",
+      "_tgt": "useauthstore_loaduser",
+      "source": "src_store_useauthstore_js",
+      "target": "useauthstore_loaduser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/store/useUIStore.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "src_store_useuistore_js",
+      "_tgt": "useuistore_applytheme",
+      "source": "src_store_useuistore_js",
+      "target": "useuistore_applytheme",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "vite.config.js",
+      "source_location": null,
+      "weight": 1,
+      "_src": "vite_config",
+      "_tgt": "main_jsx",
+      "source": "vite_config",
+      "target": "main_jsx"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/main.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "main_jsx",
+      "_tgt": "app_jsx",
+      "source": "main_jsx",
+      "target": "app_jsx"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "app_jsx",
+      "_tgt": "pages_dashboard",
+      "source": "app_jsx",
+      "target": "pages_dashboard"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "app_jsx",
+      "_tgt": "pages_inbound_execute",
+      "source": "app_jsx",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "app_jsx",
+      "_tgt": "pages_outbound_execute",
+      "source": "app_jsx",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "app_jsx",
+      "_tgt": "pages_inbound_schedule",
+      "source": "app_jsx",
+      "target": "pages_inbound_schedule"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "app_jsx",
+      "_tgt": "pages_outbound_schedule",
+      "source": "app_jsx",
+      "target": "pages_outbound_schedule"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "app_jsx",
+      "_tgt": "pages_users",
+      "source": "app_jsx",
+      "target": "pages_users"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "app_jsx",
+      "_tgt": "pages_activitylog",
+      "source": "app_jsx",
+      "target": "pages_activitylog"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "app_jsx",
+      "_tgt": "pages_products",
+      "source": "app_jsx",
+      "target": "pages_products"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "warehouse_tabs",
+      "source": "warehouse_tabs",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "warehouse_tabs",
+      "source": "warehouse_tabs",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseTabs.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_tabs",
+      "_tgt": "store_usedatastore",
+      "source": "warehouse_tabs",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "warehouse_rackgrid",
+      "source": "warehouse_rackgrid",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "warehouse_rackgrid",
+      "source": "warehouse_rackgrid",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_rackgrid",
+      "_tgt": "store_usedatastore",
+      "source": "warehouse_rackgrid",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_rackgrid",
+      "_tgt": "warehouse_matrix",
+      "source": "warehouse_rackgrid",
+      "target": "warehouse_matrix"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_rackgrid",
+      "_tgt": "warehouse_floorplan",
+      "source": "warehouse_rackgrid",
+      "target": "warehouse_floorplan"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_celldetails",
+      "_tgt": "warehouse_rackgrid",
+      "source": "warehouse_rackgrid",
+      "target": "warehouse_celldetails"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/components/warehouse/MiniBlocks.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_miniblocks",
+      "_tgt": "warehouse_rackgrid",
+      "source": "warehouse_rackgrid",
+      "target": "warehouse_miniblocks"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "warehouse_celldetails",
+      "source": "warehouse_celldetails",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "warehouse_celldetails",
+      "source": "warehouse_celldetails",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_celldetails",
+      "_tgt": "store_usedatastore",
+      "source": "warehouse_celldetails",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "warehouse_elevation",
+      "source": "warehouse_elevation",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "warehouse_elevation",
+      "source": "warehouse_elevation",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_elevation",
+      "_tgt": "store_usedatastore",
+      "source": "warehouse_elevation",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.72,
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_elevation",
+      "_tgt": "warehouse_floorplan",
+      "source": "warehouse_elevation",
+      "target": "warehouse_floorplan"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "warehouse_matrix",
+      "source": "warehouse_matrix",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "warehouse_matrix",
+      "source": "warehouse_matrix",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseMatrix.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_matrix",
+      "_tgt": "store_usedatastore",
+      "source": "warehouse_matrix",
+      "target": "store_usedatastore"
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Outbound execute imports and renders WarehouseMatrix component",
+      "_src": "outbound_execute",
+      "_tgt": "warehouse_matrix",
+      "source": "warehouse_matrix",
+      "target": "outbound_execute",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "references",
+      "confidence": 0.9,
+      "description": "Inventory page renders dual-view with warehouse visualization",
+      "_src": "inventory",
+      "_tgt": "warehouse_matrix",
+      "source": "warehouse_matrix",
+      "target": "inventory",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "implements",
+      "confidence": 1.0,
+      "description": "WarehouseMatrix component provides warehouse visualization implementation",
+      "_src": "warehouse_matrix",
+      "_tgt": "warehouse_visualization",
+      "source": "warehouse_matrix",
+      "target": "warehouse_visualization",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "warehouse_floorplan",
+      "source": "warehouse_floorplan",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "warehouse_floorplan",
+      "source": "warehouse_floorplan",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_floorplan",
+      "_tgt": "store_usedatastore",
+      "source": "warehouse_floorplan",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.68,
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_minimap",
+      "_tgt": "warehouse_floorplan",
+      "source": "warehouse_floorplan",
+      "target": "warehouse_minimap"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "warehouse_statsbar",
+      "source": "warehouse_statsbar",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "warehouse_statsbar",
+      "source": "warehouse_statsbar",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/StatsBar.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_statsbar",
+      "_tgt": "store_usedatastore",
+      "source": "warehouse_statsbar",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "warehouse_minimap",
+      "source": "warehouse_minimap",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "warehouse_minimap",
+      "source": "warehouse_minimap",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_minimap",
+      "_tgt": "store_usedatastore",
+      "source": "warehouse_minimap",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "warehouse_miniblocks",
+      "source": "warehouse_miniblocks",
+      "target": "pages_inbound_execute"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "warehouse_miniblocks",
+      "source": "warehouse_miniblocks",
+      "target": "pages_outbound_execute"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/MiniBlocks.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "warehouse_miniblocks",
+      "_tgt": "store_usedatastore",
+      "source": "warehouse_miniblocks",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_dashboard",
+      "_tgt": "store_usedatastore",
+      "source": "pages_dashboard",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_execute",
+      "_tgt": "store_usedatastore",
+      "source": "pages_inbound_execute",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/pages/InboundSchedule.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_schedule",
+      "_tgt": "pages_inbound_execute",
+      "source": "pages_inbound_execute",
+      "target": "pages_inbound_schedule"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_execute",
+      "_tgt": "store_usedatastore",
+      "source": "pages_outbound_execute",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/pages/OutboundSchedule.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_schedule",
+      "_tgt": "pages_outbound_execute",
+      "source": "pages_outbound_execute",
+      "target": "pages_outbound_schedule"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/InboundSchedule.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_inbound_schedule",
+      "_tgt": "store_usedatastore",
+      "source": "pages_inbound_schedule",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/OutboundSchedule.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_outbound_schedule",
+      "_tgt": "store_usedatastore",
+      "source": "pages_outbound_schedule",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/Users.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_users",
+      "_tgt": "store_usedatastore",
+      "source": "pages_users",
+      "target": "store_usedatastore"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/Products.jsx",
+      "source_location": null,
+      "weight": 1,
+      "_src": "pages_products",
+      "_tgt": "store_usedatastore",
+      "source": "pages_products",
+      "target": "store_usedatastore"
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Login page uses authentication store for user session management",
+      "_src": "login",
+      "_tgt": "use_auth_store",
+      "source": "login",
+      "target": "use_auth_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "references",
+      "confidence": 1.0,
+      "description": "Login page initializes data store after authentication",
+      "_src": "login",
+      "_tgt": "use_data_store",
+      "source": "login",
+      "target": "use_data_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Outbound execute page subscribes to data store for inventory and racks",
+      "_src": "outbound_execute",
+      "_tgt": "use_data_store",
+      "source": "outbound_execute",
+      "target": "use_data_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Outbound execute page subscribes to UI store for theme and platform state",
+      "_src": "outbound_execute",
+      "_tgt": "use_ui_store",
+      "source": "outbound_execute",
+      "target": "use_ui_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "rationale_for",
+      "confidence": 0.85,
+      "description": "FIFO logic drives outbound execution priority and sequencing",
+      "_src": "fifo_logic",
+      "_tgt": "outbound_execute",
+      "source": "outbound_execute",
+      "target": "fifo_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "semantically_similar_to",
+      "confidence": 0.8,
+      "description": "Type B warehouse uses outbound execute with motorized rack support",
+      "_src": "warehouse_type_b",
+      "_tgt": "outbound_execute",
+      "source": "outbound_execute",
+      "target": "warehouse_type_b",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "shares_data_with",
+      "confidence": 0.8,
+      "description": "Web platform renders outbound execute page",
+      "_src": "platform_web",
+      "_tgt": "outbound_execute",
+      "source": "outbound_execute",
+      "target": "platform_web",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "rationale_for",
+      "confidence": 0.85,
+      "description": "Scheduled outbound items trigger outbound execute processing",
+      "_src": "outbound_scheduling",
+      "_tgt": "outbound_execute",
+      "source": "outbound_execute",
+      "target": "outbound_scheduling",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Inbound execute page subscribes to data store for inventory updates",
+      "_src": "inbound_execute",
+      "_tgt": "use_data_store",
+      "source": "inbound_execute",
+      "target": "use_data_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Inbound execute page subscribes to UI store for platform detection",
+      "_src": "inbound_execute",
+      "_tgt": "use_ui_store",
+      "source": "inbound_execute",
+      "target": "use_ui_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "references",
+      "confidence": 0.85,
+      "description": "Inbound execute uses warehouse visualization for item placement",
+      "_src": "inbound_execute",
+      "_tgt": "warehouse_visualization",
+      "source": "inbound_execute",
+      "target": "warehouse_visualization",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "semantically_similar_to",
+      "confidence": 0.8,
+      "description": "Type A warehouse has dedicated inbound execute implementation",
+      "_src": "warehouse_type_a",
+      "_tgt": "inbound_execute",
+      "source": "inbound_execute",
+      "target": "warehouse_type_a",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "rationale_for",
+      "confidence": 0.85,
+      "description": "Scheduled inbound items trigger inbound execute processing",
+      "_src": "inbound_scheduling",
+      "_tgt": "inbound_execute",
+      "source": "inbound_execute",
+      "target": "inbound_scheduling",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Inventory page subscribes to data store for current items and racks",
+      "_src": "inventory",
+      "_tgt": "use_data_store",
+      "source": "inventory",
+      "target": "use_data_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Inventory page uses UI store for warehouseType view switching",
+      "_src": "inventory",
+      "_tgt": "use_ui_store",
+      "source": "inventory",
+      "target": "use_ui_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Platform select page sets platform state in UI store",
+      "_src": "platform_select",
+      "_tgt": "use_ui_store",
+      "source": "platform_select",
+      "target": "use_ui_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Settings page modifies UI state (theme, preferences)",
+      "_src": "settings",
+      "_tgt": "use_ui_store",
+      "source": "settings",
+      "target": "use_ui_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Tablet outbound variant subscribes to data store",
+      "_src": "tablet_outbound",
+      "_tgt": "use_data_store",
+      "source": "tablet_outbound",
+      "target": "use_data_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Tablet outbound variant uses UI store for platform state",
+      "_src": "tablet_outbound",
+      "_tgt": "use_ui_store",
+      "source": "tablet_outbound",
+      "target": "use_ui_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "shares_data_with",
+      "confidence": 1.0,
+      "description": "Tablet platform uses tablet-specific outbound variant",
+      "_src": "platform_tablet",
+      "_tgt": "tablet_outbound",
+      "source": "tablet_outbound",
+      "target": "platform_tablet",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Tablet inbound variant subscribes to data store",
+      "_src": "tablet_inbound",
+      "_tgt": "use_data_store",
+      "source": "tablet_inbound",
+      "target": "use_data_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Tablet inbound variant uses UI store for platform state",
+      "_src": "tablet_inbound",
+      "_tgt": "use_ui_store",
+      "source": "tablet_inbound",
+      "target": "use_ui_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "shares_data_with",
+      "confidence": 1.0,
+      "description": "Tablet platform uses tablet-specific inbound variant",
+      "_src": "platform_tablet",
+      "_tgt": "tablet_inbound",
+      "source": "tablet_inbound",
+      "target": "platform_tablet",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Kiosk page subscribes to data store for operations",
+      "_src": "kiosk_page",
+      "_tgt": "use_data_store",
+      "source": "kiosk_page",
+      "target": "use_data_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Kiosk page uses UI store for platform state",
+      "_src": "kiosk_page",
+      "_tgt": "use_ui_store",
+      "source": "kiosk_page",
+      "target": "use_ui_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "shares_data_with",
+      "confidence": 1.0,
+      "description": "Kiosk platform renders kiosk-specific interface",
+      "_src": "platform_kiosk",
+      "_tgt": "kiosk_page",
+      "source": "kiosk_page",
+      "target": "platform_kiosk",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "semantically_similar_to",
+      "confidence": 0.7,
+      "description": "UI store and data store are complementary state management layers",
+      "_src": "use_ui_store",
+      "_tgt": "use_data_store",
+      "source": "use_ui_store",
+      "target": "use_data_store",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "shares_data_with",
+      "confidence": 1.0,
+      "description": "Inventory items are managed within data store",
+      "_src": "inventory_item",
+      "_tgt": "use_data_store",
+      "source": "use_data_store",
+      "target": "inventory_item",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "semantically_similar_to",
+      "confidence": 0.9,
+      "description": "FIFO logic is core to inventory tracking strategy",
+      "_src": "fifo_logic",
+      "_tgt": "inventory_tracking",
+      "source": "fifo_logic",
+      "target": "inventory_tracking",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "semantically_similar_to",
+      "confidence": 0.85,
+      "description": "Racks are primary storage structure in Type A warehouses",
+      "_src": "rack",
+      "_tgt": "warehouse_type_a",
+      "source": "warehouse_type_a",
+      "target": "rack",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "semantically_similar_to",
+      "confidence": 0.85,
+      "description": "Motorized racks are core to Type B warehouse architecture",
+      "_src": "rack",
+      "_tgt": "warehouse_type_b",
+      "source": "warehouse_type_b",
+      "target": "rack",
+      "confidence_score": 1.0
+    },
+    {
+      "type": "shares_data_with",
+      "confidence": 0.9,
+      "description": "Pallets are visualized in warehouse matrix representation",
+      "_src": "pallet",
+      "_tgt": "warehouse_visualization",
+      "source": "pallet",
+      "target": "warehouse_visualization",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "warehouse_visualization_group",
+      "label": "Warehouse Visualization Components",
+      "nodes": [
+        "warehouse_tabs",
+        "warehouse_rackgrid",
+        "warehouse_celldetails",
+        "warehouse_elevation",
+        "warehouse_matrix",
+        "warehouse_floorplan",
+        "warehouse_statsbar",
+        "warehouse_minimap",
+        "warehouse_miniblocks"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/"
+    },
+    {
+      "id": "page_components_group",
+      "label": "Page Components",
+      "nodes": [
+        "pages_dashboard",
+        "pages_inbound_execute",
+        "pages_outbound_execute",
+        "pages_inbound_schedule",
+        "pages_outbound_schedule",
+        "pages_users",
+        "pages_activitylog",
+        "pages_products"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/"
+    },
+    {
+      "id": "inbound_outbound_pattern",
+      "label": "Inbound/Outbound Processing Flow",
+      "nodes": [
+        "pages_inbound_schedule",
+        "pages_inbound_execute",
+        "pages_outbound_schedule",
+        "pages_outbound_execute"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/pages/"
+    },
+    {
+      "nodes": [
+        "outbound_execute",
+        "warehouse_matrix",
+        "fifo_logic"
+      ],
+      "type": "shared_concept",
+      "concept": "outbound_processing_with_visualization",
+      "confidence": 0.95,
+      "description": "Outbound execution integrates FIFO logic with warehouse matrix visualization"
+    },
+    {
+      "nodes": [
+        "inbound_execute",
+        "warehouse_visualization",
+        "inventory_item"
+      ],
+      "type": "shared_concept",
+      "concept": "inbound_inventory_placement",
+      "confidence": 0.9,
+      "description": "Inbound execution processes inventory items into warehouse visualization"
+    },
+    {
+      "nodes": [
+        "inventory",
+        "warehouse_type_a",
+        "warehouse_type_b"
+      ],
+      "type": "shared_concept",
+      "concept": "multi_warehouse_view",
+      "confidence": 0.85,
+      "description": "Inventory page supports dual-view rendering for both warehouse types"
+    },
+    {
+      "nodes": [
+        "use_auth_store",
+        "use_ui_store",
+        "use_data_store"
+      ],
+      "type": "shared_concept",
+      "concept": "store_subscription_pattern",
+      "confidence": 1.0,
+      "description": "All pages subscribe to three core Zustand stores for state management"
+    },
+    {
+      "nodes": [
+        "platform_web",
+        "platform_tablet",
+        "platform_kiosk"
+      ],
+      "type": "shared_concept",
+      "concept": "multi_platform_architecture",
+      "confidence": 0.95,
+      "description": "Application supports web, tablet, and kiosk platform variants"
+    },
+    {
+      "nodes": [
+        "warehouse_type_a",
+        "warehouse_type_b",
+        "inbound_scheduling",
+        "outbound_scheduling"
+      ],
+      "type": "shared_concept",
+      "concept": "warehouse_operations_variant_specific",
+      "confidence": 0.85,
+      "description": "Both warehouse types implement variant-specific inbound/outbound scheduling"
+    },
+    {
+      "nodes": [
+        "outbound_execute",
+        "tablet_outbound",
+        "platform_tablet",
+        "platform_web"
+      ],
+      "type": "shared_concept",
+      "concept": "outbound_platform_variants",
+      "confidence": 0.8,
+      "description": "Outbound execution has platform-specific implementations across web and tablet"
+    },
+    {
+      "nodes": [
+        "inbound_execute",
+        "tablet_inbound",
+        "platform_tablet",
+        "platform_web"
+      ],
+      "type": "shared_concept",
+      "concept": "inbound_platform_variants",
+      "confidence": 0.8,
+      "description": "Inbound execution has platform-specific implementations across web and tablet"
+    },
+    {
+      "nodes": [
+        "fifo_logic",
+        "outbound_execute",
+        "inventory_tracking",
+        "pallet"
+      ],
+      "type": "shared_concept",
+      "concept": "fifo_inventory_flow",
+      "confidence": 0.9,
+      "description": "FIFO logic drives outbound processing and pallet inventory tracking"
+    },
+    {
+      "nodes": [
+        "inventory",
+        "warehouse_visualization",
+        "rack",
+        "pallet",
+        "inventory_item"
+      ],
+      "type": "shared_concept",
+      "concept": "warehouse_state_representation",
+      "confidence": 0.95,
+      "description": "Inventory page displays complete warehouse state including racks, pallets, items"
+    },
+    {
+      "nodes": [
+        "use_ui_store",
+        "platform_select",
+        "outbound_execute",
+        "inbound_execute"
+      ],
+      "type": "shared_concept",
+      "concept": "platform_state_routing",
+      "confidence": 0.85,
+      "description": "UI store platform state guides routing between platform-specific execute pages"
+    },
+    {
+      "nodes": [
+        "use_data_store",
+        "inventory_item",
+        "pallet",
+        "rack"
+      ],
+      "type": "shared_concept",
+      "concept": "data_store_warehouse_entities",
+      "confidence": 1.0,
+      "description": "Data store manages core warehouse entities (items, pallets, racks)"
+    }
+  ]
+}

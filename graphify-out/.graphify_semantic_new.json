@@ -1,0 +1,1316 @@
+{
+  "nodes": [
+    {
+      "id": "vite_config",
+      "label": "vite.config.js",
+      "file_type": "code",
+      "source_file": "vite.config.js",
+      "source_location": null
+    },
+    {
+      "id": "main_jsx",
+      "label": "main.jsx",
+      "file_type": "code",
+      "source_file": "src/main.jsx",
+      "source_location": null
+    },
+    {
+      "id": "app_jsx",
+      "label": "App.jsx",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": null
+    },
+    {
+      "id": "layout_layout",
+      "label": "Layout.jsx",
+      "file_type": "code",
+      "source_file": "src/components/layout/Layout.jsx",
+      "source_location": null
+    },
+    {
+      "id": "layout_sidebar",
+      "label": "Sidebar.jsx",
+      "file_type": "code",
+      "source_file": "src/components/layout/Sidebar.jsx",
+      "source_location": null
+    },
+    {
+      "id": "warehouse_tabs",
+      "label": "WarehouseTabs.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseTabs.jsx",
+      "source_location": null
+    },
+    {
+      "id": "warehouse_rackgrid",
+      "label": "WarehouseRackGrid.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": null
+    },
+    {
+      "id": "warehouse_celldetails",
+      "label": "CellDetailsPanel.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": null
+    },
+    {
+      "id": "warehouse_elevation",
+      "label": "WarehouseElevation.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": null
+    },
+    {
+      "id": "warehouse_matrix",
+      "label": "WarehouseMatrix.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMatrix.jsx",
+      "source_location": null
+    },
+    {
+      "id": "warehouse_floorplan",
+      "label": "WarehouseFloorPlan.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": null
+    },
+    {
+      "id": "warehouse_statsbar",
+      "label": "StatsBar.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/StatsBar.jsx",
+      "source_location": null
+    },
+    {
+      "id": "warehouse_minimap",
+      "label": "WarehouseMinimap.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": null
+    },
+    {
+      "id": "warehouse_miniblocks",
+      "label": "MiniBlocks.jsx",
+      "file_type": "code",
+      "source_file": "src/components/warehouse/MiniBlocks.jsx",
+      "source_location": null
+    },
+    {
+      "id": "pages_dashboard",
+      "label": "Dashboard.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": null
+    },
+    {
+      "id": "pages_inbound_execute",
+      "label": "InboundExecute.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null
+    },
+    {
+      "id": "pages_outbound_execute",
+      "label": "OutboundExecute.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null
+    },
+    {
+      "id": "pages_inbound_schedule",
+      "label": "InboundSchedule.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/InboundSchedule.jsx",
+      "source_location": null
+    },
+    {
+      "id": "pages_outbound_schedule",
+      "label": "OutboundSchedule.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/OutboundSchedule.jsx",
+      "source_location": null
+    },
+    {
+      "id": "pages_users",
+      "label": "Users.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Users.jsx",
+      "source_location": null
+    },
+    {
+      "id": "pages_activitylog",
+      "label": "ActivityLog.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/ActivityLog.jsx",
+      "source_location": null
+    },
+    {
+      "id": "pages_products",
+      "label": "Products.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Products.jsx",
+      "source_location": null
+    },
+    {
+      "id": "store_usedatastore",
+      "label": "useDataStore.js",
+      "file_type": "code",
+      "source_file": "src/store/useDataStore.js",
+      "source_location": null
+    },
+    {
+      "id": "login",
+      "type": "page",
+      "label": "Login",
+      "description": "Authentication entry point establishing user session"
+    },
+    {
+      "id": "outbound_execute",
+      "type": "page",
+      "label": "OutboundExecute",
+      "description": "Complex outbound processing with FIFO calculation and warehouse visualization"
+    },
+    {
+      "id": "inbound_execute",
+      "type": "page",
+      "label": "InboundExecute",
+      "description": "Inbound processing receiving scheduled items and updating inventory"
+    },
+    {
+      "id": "inventory",
+      "type": "page",
+      "label": "Inventory",
+      "description": "Dual-view inventory (list and warehouse visualization) with category filtering"
+    },
+    {
+      "id": "presentation",
+      "type": "page",
+      "label": "Presentation",
+      "description": "Presentation and demo page"
+    },
+    {
+      "id": "platform_select",
+      "type": "page",
+      "label": "PlatformSelect",
+      "description": "Platform selection routing for web, tablet, kiosk variants"
+    },
+    {
+      "id": "settings",
+      "type": "page",
+      "label": "Settings",
+      "description": "User settings and preferences management"
+    },
+    {
+      "id": "tablet_outbound",
+      "type": "page",
+      "label": "TabletOutbound",
+      "description": "Tablet-specific outbound execution interface"
+    },
+    {
+      "id": "tablet_inbound",
+      "type": "page",
+      "label": "TabletInbound",
+      "description": "Tablet-specific inbound execution interface"
+    },
+    {
+      "id": "kiosk_page",
+      "type": "page",
+      "label": "KioskPage",
+      "description": "Kiosk interface for warehouse operations"
+    },
+    {
+      "id": "use_auth_store",
+      "type": "store",
+      "label": "useAuthStore",
+      "description": "Authentication state management with currentUser, login/logout, localStorage persistence"
+    },
+    {
+      "id": "use_ui_store",
+      "type": "store",
+      "label": "useUIStore",
+      "description": "UI state management controlling theme, sidebarSlim, platform-specific rendering. Known bug: missing warehouseType field"
+    },
+    {
+      "id": "use_data_store",
+      "type": "store",
+      "label": "useDataStore",
+      "description": "In-memory immutable data store managing racks, pallets, products, inventoryItems, schedules, users"
+    },
+    {
+      "id": "warehouse_matrix",
+      "type": "component",
+      "label": "WarehouseMatrix",
+      "description": "Visualization component for warehouse matrix display"
+    },
+    {
+      "id": "fifo_logic",
+      "type": "domain_concept",
+      "label": "FIFO Logic",
+      "description": "First-In-First-Out inventory processing implemented via getMiniBlocksOutbound()"
+    },
+    {
+      "id": "warehouse_type_a",
+      "type": "domain_concept",
+      "label": "Warehouse Type A",
+      "description": "General warehouse variant with standard inbound/outbound processing"
+    },
+    {
+      "id": "warehouse_type_b",
+      "type": "domain_concept",
+      "label": "Warehouse Type B",
+      "description": "Automated rack warehouse variant with motorized storage system"
+    },
+    {
+      "id": "inventory_item",
+      "type": "domain_concept",
+      "label": "Inventory Item",
+      "description": "Core inventory management entity tracked across warehouse operations"
+    },
+    {
+      "id": "pallet",
+      "type": "domain_concept",
+      "label": "Pallet",
+      "description": "Physical container for inventory items in warehouse storage"
+    },
+    {
+      "id": "rack",
+      "type": "domain_concept",
+      "label": "Rack",
+      "description": "Storage structure managing pallet placement and retrieval"
+    },
+    {
+      "id": "platform_web",
+      "type": "domain_concept",
+      "label": "Platform Web",
+      "description": "Web-based platform target"
+    },
+    {
+      "id": "platform_tablet",
+      "type": "domain_concept",
+      "label": "Platform Tablet",
+      "description": "Tablet-based platform target with touch-optimized UI"
+    },
+    {
+      "id": "platform_kiosk",
+      "type": "domain_concept",
+      "label": "Platform Kiosk",
+      "description": "Kiosk-based platform target for warehouse operations"
+    },
+    {
+      "id": "warehouse_visualization",
+      "type": "domain_concept",
+      "label": "Warehouse Visualization",
+      "description": "Visual representation of warehouse state and inventory locations"
+    },
+    {
+      "id": "inventory_tracking",
+      "type": "domain_concept",
+      "label": "Inventory Tracking",
+      "description": "System for tracking inventory movement, location, and availability"
+    },
+    {
+      "id": "inbound_scheduling",
+      "type": "domain_concept",
+      "label": "Inbound Scheduling",
+      "description": "Planning and scheduling of incoming inventory operations"
+    },
+    {
+      "id": "outbound_scheduling",
+      "type": "domain_concept",
+      "label": "Outbound Scheduling",
+      "description": "Planning and scheduling of outgoing inventory operations"
+    }
+  ],
+  "edges": [
+    {
+      "source": "main_jsx",
+      "target": "app_jsx",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/main.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "vite_config",
+      "target": "main_jsx",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "vite.config.js",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "app_jsx",
+      "target": "pages_dashboard",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "app_jsx",
+      "target": "pages_inbound_execute",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "app_jsx",
+      "target": "pages_outbound_execute",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "app_jsx",
+      "target": "pages_inbound_schedule",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "app_jsx",
+      "target": "pages_outbound_schedule",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "app_jsx",
+      "target": "pages_users",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "app_jsx",
+      "target": "pages_activitylog",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "app_jsx",
+      "target": "pages_products",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "app_jsx",
+      "target": "layout_layout",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "layout_layout",
+      "target": "layout_sidebar",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/components/layout/Layout.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "warehouse_tabs",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "warehouse_rackgrid",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "warehouse_celldetails",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "warehouse_elevation",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "warehouse_matrix",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "warehouse_floorplan",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "warehouse_minimap",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "warehouse_miniblocks",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "warehouse_statsbar",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "warehouse_tabs",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "warehouse_rackgrid",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "warehouse_celldetails",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "warehouse_elevation",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "warehouse_matrix",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "warehouse_floorplan",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "warehouse_minimap",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "warehouse_miniblocks",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "warehouse_statsbar",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_execute",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/InboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_execute",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/OutboundExecute.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_dashboard",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_schedule",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/InboundSchedule.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_schedule",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/OutboundSchedule.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_users",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/Users.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_products",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/Products.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_tabs",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseTabs.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_rackgrid",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_matrix",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseMatrix.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_floorplan",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseFloorPlan.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_elevation",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_minimap",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_celldetails",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_statsbar",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/StatsBar.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_miniblocks",
+      "target": "store_usedatastore",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/MiniBlocks.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_rackgrid",
+      "target": "warehouse_matrix",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_rackgrid",
+      "target": "warehouse_floorplan",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "src/components/warehouse/WarehouseRackGrid.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_elevation",
+      "target": "warehouse_floorplan",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.72,
+      "source_file": "src/components/warehouse/WarehouseElevation.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_minimap",
+      "target": "warehouse_floorplan",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.68,
+      "source_file": "src/components/warehouse/WarehouseMinimap.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_celldetails",
+      "target": "warehouse_rackgrid",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/components/warehouse/CellDetailsPanel.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "warehouse_miniblocks",
+      "target": "warehouse_rackgrid",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/components/warehouse/MiniBlocks.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_inbound_schedule",
+      "target": "pages_inbound_execute",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/pages/InboundSchedule.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "pages_outbound_schedule",
+      "target": "pages_outbound_execute",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/pages/OutboundSchedule.jsx",
+      "source_location": null,
+      "weight": 1
+    },
+    {
+      "source": "login",
+      "target": "use_auth_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Login page uses authentication store for user session management"
+    },
+    {
+      "source": "login",
+      "target": "use_data_store",
+      "type": "references",
+      "confidence": 1.0,
+      "description": "Login page initializes data store after authentication"
+    },
+    {
+      "source": "outbound_execute",
+      "target": "use_data_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Outbound execute page subscribes to data store for inventory and racks"
+    },
+    {
+      "source": "outbound_execute",
+      "target": "use_ui_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Outbound execute page subscribes to UI store for theme and platform state"
+    },
+    {
+      "source": "outbound_execute",
+      "target": "warehouse_matrix",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Outbound execute imports and renders WarehouseMatrix component"
+    },
+    {
+      "source": "outbound_execute",
+      "target": "fifo_logic",
+      "type": "implements",
+      "confidence": 1.0,
+      "description": "Outbound execute page implements FIFO calculation via getMiniBlocksOutbound()"
+    },
+    {
+      "source": "inbound_execute",
+      "target": "use_data_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Inbound execute page subscribes to data store for inventory updates"
+    },
+    {
+      "source": "inbound_execute",
+      "target": "use_ui_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Inbound execute page subscribes to UI store for platform detection"
+    },
+    {
+      "source": "inbound_execute",
+      "target": "warehouse_visualization",
+      "type": "references",
+      "confidence": 0.85,
+      "description": "Inbound execute uses warehouse visualization for item placement"
+    },
+    {
+      "source": "inventory",
+      "target": "use_data_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Inventory page subscribes to data store for current items and racks"
+    },
+    {
+      "source": "inventory",
+      "target": "use_ui_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Inventory page uses UI store for warehouseType view switching"
+    },
+    {
+      "source": "inventory",
+      "target": "warehouse_matrix",
+      "type": "references",
+      "confidence": 0.9,
+      "description": "Inventory page renders dual-view with warehouse visualization"
+    },
+    {
+      "source": "platform_select",
+      "target": "use_ui_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Platform select page sets platform state in UI store"
+    },
+    {
+      "source": "settings",
+      "target": "use_ui_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Settings page modifies UI state (theme, preferences)"
+    },
+    {
+      "source": "tablet_outbound",
+      "target": "use_data_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Tablet outbound variant subscribes to data store"
+    },
+    {
+      "source": "tablet_outbound",
+      "target": "use_ui_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Tablet outbound variant uses UI store for platform state"
+    },
+    {
+      "source": "tablet_inbound",
+      "target": "use_data_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Tablet inbound variant subscribes to data store"
+    },
+    {
+      "source": "tablet_inbound",
+      "target": "use_ui_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Tablet inbound variant uses UI store for platform state"
+    },
+    {
+      "source": "kiosk_page",
+      "target": "use_data_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Kiosk page subscribes to data store for operations"
+    },
+    {
+      "source": "kiosk_page",
+      "target": "use_ui_store",
+      "type": "calls",
+      "confidence": 1.0,
+      "description": "Kiosk page uses UI store for platform state"
+    },
+    {
+      "source": "warehouse_matrix",
+      "target": "warehouse_visualization",
+      "type": "implements",
+      "confidence": 1.0,
+      "description": "WarehouseMatrix component provides warehouse visualization implementation"
+    },
+    {
+      "source": "fifo_logic",
+      "target": "inventory_tracking",
+      "type": "semantically_similar_to",
+      "confidence": 0.9,
+      "description": "FIFO logic is core to inventory tracking strategy"
+    },
+    {
+      "source": "fifo_logic",
+      "target": "outbound_execute",
+      "type": "rationale_for",
+      "confidence": 0.85,
+      "description": "FIFO logic drives outbound execution priority and sequencing"
+    },
+    {
+      "source": "warehouse_type_a",
+      "target": "inbound_execute",
+      "type": "semantically_similar_to",
+      "confidence": 0.8,
+      "description": "Type A warehouse has dedicated inbound execute implementation"
+    },
+    {
+      "source": "warehouse_type_b",
+      "target": "outbound_execute",
+      "type": "semantically_similar_to",
+      "confidence": 0.8,
+      "description": "Type B warehouse uses outbound execute with motorized rack support"
+    },
+    {
+      "source": "inventory_item",
+      "target": "use_data_store",
+      "type": "shares_data_with",
+      "confidence": 1.0,
+      "description": "Inventory items are managed within data store"
+    },
+    {
+      "source": "pallet",
+      "target": "warehouse_visualization",
+      "type": "shares_data_with",
+      "confidence": 0.9,
+      "description": "Pallets are visualized in warehouse matrix representation"
+    },
+    {
+      "source": "rack",
+      "target": "warehouse_type_a",
+      "type": "semantically_similar_to",
+      "confidence": 0.85,
+      "description": "Racks are primary storage structure in Type A warehouses"
+    },
+    {
+      "source": "rack",
+      "target": "warehouse_type_b",
+      "type": "semantically_similar_to",
+      "confidence": 0.85,
+      "description": "Motorized racks are core to Type B warehouse architecture"
+    },
+    {
+      "source": "platform_web",
+      "target": "outbound_execute",
+      "type": "shares_data_with",
+      "confidence": 0.8,
+      "description": "Web platform renders outbound execute page"
+    },
+    {
+      "source": "platform_tablet",
+      "target": "tablet_outbound",
+      "type": "shares_data_with",
+      "confidence": 1.0,
+      "description": "Tablet platform uses tablet-specific outbound variant"
+    },
+    {
+      "source": "platform_tablet",
+      "target": "tablet_inbound",
+      "type": "shares_data_with",
+      "confidence": 1.0,
+      "description": "Tablet platform uses tablet-specific inbound variant"
+    },
+    {
+      "source": "platform_kiosk",
+      "target": "kiosk_page",
+      "type": "shares_data_with",
+      "confidence": 1.0,
+      "description": "Kiosk platform renders kiosk-specific interface"
+    },
+    {
+      "source": "inbound_scheduling",
+      "target": "inbound_execute",
+      "type": "rationale_for",
+      "confidence": 0.85,
+      "description": "Scheduled inbound items trigger inbound execute processing"
+    },
+    {
+      "source": "outbound_scheduling",
+      "target": "outbound_execute",
+      "type": "rationale_for",
+      "confidence": 0.85,
+      "description": "Scheduled outbound items trigger outbound execute processing"
+    },
+    {
+      "source": "use_ui_store",
+      "target": "use_data_store",
+      "type": "semantically_similar_to",
+      "confidence": 0.7,
+      "description": "UI store and data store are complementary state management layers"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "warehouse_visualization_group",
+      "label": "Warehouse Visualization Components",
+      "nodes": [
+        "warehouse_tabs",
+        "warehouse_rackgrid",
+        "warehouse_celldetails",
+        "warehouse_elevation",
+        "warehouse_matrix",
+        "warehouse_floorplan",
+        "warehouse_statsbar",
+        "warehouse_minimap",
+        "warehouse_miniblocks"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/warehouse/"
+    },
+    {
+      "id": "page_components_group",
+      "label": "Page Components",
+      "nodes": [
+        "pages_dashboard",
+        "pages_inbound_execute",
+        "pages_outbound_execute",
+        "pages_inbound_schedule",
+        "pages_outbound_schedule",
+        "pages_users",
+        "pages_activitylog",
+        "pages_products"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/pages/"
+    },
+    {
+      "id": "inbound_outbound_pattern",
+      "label": "Inbound/Outbound Processing Flow",
+      "nodes": [
+        "pages_inbound_schedule",
+        "pages_inbound_execute",
+        "pages_outbound_schedule",
+        "pages_outbound_execute"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/pages/"
+    },
+    {
+      "nodes": [
+        "outbound_execute",
+        "warehouse_matrix",
+        "fifo_logic"
+      ],
+      "type": "shared_concept",
+      "concept": "outbound_processing_with_visualization",
+      "confidence": 0.95,
+      "description": "Outbound execution integrates FIFO logic with warehouse matrix visualization"
+    },
+    {
+      "nodes": [
+        "inbound_execute",
+        "warehouse_visualization",
+        "inventory_item"
+      ],
+      "type": "shared_concept",
+      "concept": "inbound_inventory_placement",
+      "confidence": 0.9,
+      "description": "Inbound execution processes inventory items into warehouse visualization"
+    },
+    {
+      "nodes": [
+        "inventory",
+        "warehouse_type_a",
+        "warehouse_type_b"
+      ],
+      "type": "shared_concept",
+      "concept": "multi_warehouse_view",
+      "confidence": 0.85,
+      "description": "Inventory page supports dual-view rendering for both warehouse types"
+    },
+    {
+      "nodes": [
+        "use_auth_store",
+        "use_ui_store",
+        "use_data_store"
+      ],
+      "type": "shared_concept",
+      "concept": "store_subscription_pattern",
+      "confidence": 1.0,
+      "description": "All pages subscribe to three core Zustand stores for state management"
+    },
+    {
+      "nodes": [
+        "platform_web",
+        "platform_tablet",
+        "platform_kiosk"
+      ],
+      "type": "shared_concept",
+      "concept": "multi_platform_architecture",
+      "confidence": 0.95,
+      "description": "Application supports web, tablet, and kiosk platform variants"
+    },
+    {
+      "nodes": [
+        "warehouse_type_a",
+        "warehouse_type_b",
+        "inbound_scheduling",
+        "outbound_scheduling"
+      ],
+      "type": "shared_concept",
+      "concept": "warehouse_operations_variant_specific",
+      "confidence": 0.85,
+      "description": "Both warehouse types implement variant-specific inbound/outbound scheduling"
+    },
+    {
+      "nodes": [
+        "outbound_execute",
+        "tablet_outbound",
+        "platform_tablet",
+        "platform_web"
+      ],
+      "type": "shared_concept",
+      "concept": "outbound_platform_variants",
+      "confidence": 0.8,
+      "description": "Outbound execution has platform-specific implementations across web and tablet"
+    },
+    {
+      "nodes": [
+        "inbound_execute",
+        "tablet_inbound",
+        "platform_tablet",
+        "platform_web"
+      ],
+      "type": "shared_concept",
+      "concept": "inbound_platform_variants",
+      "confidence": 0.8,
+      "description": "Inbound execution has platform-specific implementations across web and tablet"
+    },
+    {
+      "nodes": [
+        "fifo_logic",
+        "outbound_execute",
+        "inventory_tracking",
+        "pallet"
+      ],
+      "type": "shared_concept",
+      "concept": "fifo_inventory_flow",
+      "confidence": 0.9,
+      "description": "FIFO logic drives outbound processing and pallet inventory tracking"
+    },
+    {
+      "nodes": [
+        "inventory",
+        "warehouse_visualization",
+        "rack",
+        "pallet",
+        "inventory_item"
+      ],
+      "type": "shared_concept",
+      "concept": "warehouse_state_representation",
+      "confidence": 0.95,
+      "description": "Inventory page displays complete warehouse state including racks, pallets, items"
+    },
+    {
+      "nodes": [
+        "use_ui_store",
+        "platform_select",
+        "outbound_execute",
+        "inbound_execute"
+      ],
+      "type": "shared_concept",
+      "concept": "platform_state_routing",
+      "confidence": 0.85,
+      "description": "UI store platform state guides routing between platform-specific execute pages"
+    },
+    {
+      "nodes": [
+        "use_data_store",
+        "inventory_item",
+        "pallet",
+        "rack"
+      ],
+      "type": "shared_concept",
+      "concept": "data_store_warehouse_entities",
+      "confidence": 1.0,
+      "description": "Data store manages core warehouse entities (items, pallets, racks)"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
