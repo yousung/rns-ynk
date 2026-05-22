@@ -6,8 +6,8 @@ import WarehouseMatrix from '../components/warehouse/WarehouseMatrix.jsx';
 import WarehouseRackGrid from '../components/warehouse/WarehouseRackGrid.jsx';
 import WarehouseFloorPlan, { FloorPlanRackDetail } from '../components/warehouse/WarehouseFloorPlan.jsx';
 import WarehouseElevation from '../components/warehouse/WarehouseElevation.jsx';
-import WarehouseMinimap from '../components/warehouse/WarehouseMinimap.jsx';
 import { KanDetailPanel as SlotDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
+import ProductLabel from '../components/common/ProductLabel.jsx';
 
 export default function Inventory() {
   const [view, setView] = useState(() => localStorage.getItem('wms_inventory_view') || 'list');
@@ -19,10 +19,6 @@ export default function Inventory() {
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(1);
   const [selectedCell, setSelectedCell] = useState(null);
-
-  const [hoveredRackId, setHoveredRackId] = useState(null);
-  const [hoveredFloor, setHoveredFloor] = useState(null);
-  const [hoveredSlot, setHoveredSlot] = useState(null);
 
   const { products, inventoryItems, pallets, racks } = useDataStore();
   const { warehouseType } = useUIStore();
@@ -36,7 +32,11 @@ export default function Inventory() {
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
       const q = listSearch.toLowerCase();
-      const matchSearch = !q || p.name.toLowerCase().includes(q) || p.code.toLowerCase().includes(q);
+      const matchSearch =
+        !q ||
+        p.name.toLowerCase().includes(q) ||
+        p.code.toLowerCase().includes(q) ||
+        (p.description || '').toLowerCase().includes(q);
       const matchCat = !listCategory || p.category === listCategory;
       return matchSearch && matchCat;
     });
@@ -46,7 +46,11 @@ export default function Inventory() {
   const filteredWhProducts = useMemo(() => {
     const q = whSearch.toLowerCase();
     return products.filter(
-      (p) => !q || p.name.toLowerCase().includes(q) || p.code.toLowerCase().includes(q)
+      (p) =>
+        !q ||
+        p.name.toLowerCase().includes(q) ||
+        p.code.toLowerCase().includes(q) ||
+        (p.description || '').toLowerCase().includes(q)
     );
   }, [products, whSearch]);
 
@@ -141,7 +145,7 @@ export default function Inventory() {
               <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>검색:</label>
               <input
                 type="text"
-                placeholder="상품명/코드"
+                placeholder="상품명/코드/설명"
                 value={listSearch}
                 onChange={(e) => setListSearch(e.target.value)}
                 style={{ padding: '0.375rem 0.5rem', border: '1px solid var(--border)', borderRadius: '0.25rem', fontSize: '0.875rem', width: 150, background: 'var(--bg-surface)', color: 'var(--text-primary)' }}
@@ -184,7 +188,7 @@ export default function Inventory() {
                       <>
                         <tr key={p.id}>
                           <td style={{ fontFamily: "'JetBrains Mono', monospace" }}>{p.code}</td>
-                          <td>{p.name}</td>
+                          <td><ProductLabel product={p} /></td>
                           <td>{p.category || '-'}</td>
                           <td>{total}개</td>
                           <td>{items.length}곳</td>
@@ -239,7 +243,7 @@ export default function Inventory() {
               <div className="wh-search-header">
                 <input
                   type="text"
-                  placeholder="상품명/코드 검색"
+                  placeholder="상품명/코드/설명 검색"
                   value={whSearch}
                   onChange={(e) => setWhSearch(e.target.value)}
                 />
@@ -257,7 +261,7 @@ export default function Inventory() {
                         className={`wh-product-card${selectedProductId === p.id ? ' selected' : ''}`}
                         onClick={() => selectProduct(p.id)}
                       >
-                        <div className="wh-product-name">{p.name}</div>
+                        <ProductLabel product={p} compact />
                         <div className="wh-product-meta">
                           <span style={{ fontFamily: "'JetBrains Mono', monospace" }}>{p.code}</span>
                           <span>{total}개</span>
@@ -283,14 +287,12 @@ export default function Inventory() {
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                   </div>
                   <div style={{ position: 'relative', paddingBottom: 6 }}>
-                    <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredSlot={hoveredSlot} />
                     {warehouseType === 'a' ? (
-                      <div style={{ padding: '10px 230px 10px 10px', maxHeight: 520, overflowY: 'auto' }}>
+                      <div style={{ padding: '10px', maxHeight: 520, overflowY: 'auto' }}>
                         <WarehouseRackGrid
                           warehouseId={selectedWarehouseId}
                           selectedRackId={selectedCell?.rackId}
                           onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null })}
-                          onRackHover={setHoveredRackId}
                           highlightedRackIds={
                             selectedProductId
                               ? racks
@@ -307,27 +309,25 @@ export default function Inventory() {
                         />
                       </div>
                     ) : warehouseType === 'c' ? (
-                      <div style={{ paddingRight: 230, minHeight: 186, height: 'auto' }}>
+                      <div style={{ minHeight: 186, height: 'auto' }}>
                         <WarehouseFloorPlan
                           warehouseId={selectedWarehouseId}
                           selectedProductId={selectedProductId}
                           selectedRackId={selectedCell?.rackId}
                           onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null })}
-                          onRackHover={setHoveredRackId}
                         />
                       </div>
                     ) : warehouseType === 'd' ? (
-                      <div style={{ paddingRight: 230, minHeight: 166, height: 'auto' }}>
+                      <div style={{ minHeight: 166, height: 'auto' }}>
                         <WarehouseElevation
                           warehouseId={selectedWarehouseId}
                           selectedProductId={selectedProductId}
                           selectedRackId={selectedCell?.rackId}
                           onRackClick={(id) => setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null })}
-                          onRackHover={setHoveredRackId}
                         />
                       </div>
                     ) : (
-                      <div style={{ paddingRight: 230, maxHeight: 520, overflowY: 'auto' }}>
+                      <div style={{ maxHeight: 520, overflowY: 'auto' }}>
                         <WarehouseMatrix
                           warehouseId={selectedWarehouseId}
                           selectedCell={selectedCell}
@@ -336,7 +336,6 @@ export default function Inventory() {
                               prev?.rackId === rackId && prev?.floor === floor ? null : { rackId, floor, slot: null }
                             )
                           }
-                          onCellHover={(rackId, floor) => { setHoveredRackId(rackId); setHoveredFloor(floor ?? null); }}
                           getMiniBlocksFn={getMiniBlocksFn}
                           mode="inventory"
                         />
@@ -367,7 +366,6 @@ export default function Inventory() {
                             return { ...prev, floor, slot };
                           });
                         }}
-                        onSlotHover={(floor, slot) => setHoveredSlot(floor != null ? { rackId: selectedCell?.rackId, floor, slot } : null)}
                         disableEmptySlot={true}
                       />
                     </div>

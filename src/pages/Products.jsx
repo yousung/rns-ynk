@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useDataStore } from '../store/useDataStore.js';
+import ProductLabel from '../components/common/ProductLabel.jsx';
 
 export default function Products() {
   const [search, setSearch] = useState('');
@@ -18,6 +19,7 @@ export default function Products() {
         !q ||
         p.code.toLowerCase().includes(q) ||
         p.name.toLowerCase().includes(q) ||
+        (p.description || '').toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q);
       const matchCat = !category || p.category === category;
       return matchSearch && matchCat;
@@ -43,7 +45,7 @@ export default function Products() {
             <label style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>검색:</label>
             <input
               type="text"
-              placeholder="상품명/코드"
+              placeholder="상품명/코드/설명"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{ padding: '0.375rem 0.5rem', border: '1px solid var(--border)', borderRadius: '0.25rem', fontSize: '0.875rem', width: 150, background: 'var(--bg-surface)', color: 'var(--text-primary)' }}
@@ -96,7 +98,7 @@ export default function Products() {
                   return (
                     <tr key={p.id}>
                       <td style={{ fontFamily: "'JetBrains Mono', monospace" }}>{p.code}</td>
-                      <td>{p.name}</td>
+                      <td><ProductLabel product={p} /></td>
                       <td>{p.category}</td>
                       <td>{p.created_at}</td>
                       <td>{total}개</td>

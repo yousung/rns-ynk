@@ -125,6 +125,7 @@
 .t-sched-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
 .t-sched-card-name { font-size: 0.92rem; font-weight: 600; color: var(--text-primary); }
 .t-sched-card.selected .t-sched-card-name { color: var(--cyan); }
+.t-sched-card.selected .product-label-name { color: var(--cyan); }
 .t-sched-card-meta { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 4px; }
 .t-sched-meta-item {
   font-size: 0.74rem; color: var(--text-secondary);

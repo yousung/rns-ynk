@@ -9,7 +9,7 @@ import WarehouseFloorPlan, { FloorPlanRackDetail } from '../components/warehouse
 import WarehouseElevation from '../components/warehouse/WarehouseElevation.jsx';
 import StatsBar from '../components/warehouse/StatsBar.jsx';
 import { KanDetailPanel as SlotDetailPanel } from '../components/warehouse/CellDetailsPanel.jsx';
-import WarehouseMinimap from '../components/warehouse/WarehouseMinimap.jsx';
+import ProductLabel from '../components/common/ProductLabel.jsx';
 
 export default function InboundExecute() {
   const { racks, pallets, inventoryItems, inboundSchedules, products } = useDataStore();
@@ -18,19 +18,32 @@ export default function InboundExecute() {
   const [selectedWarehouseId, setSelectedWarehouseId] = useState(1);
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null); // { rackId, floor, slot }
-  const [hoveredRackId, setHoveredRackId] = useState(null);
-  const [hoveredFloor, setHoveredFloor] = useState(null);
-  const [hoveredSlot, setHoveredSlot] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [execQty, setExecQty] = useState('');
 
   // ─── 스케줄 ───────────────────────────────────────────────
   const pendingSchedules = inboundSchedules
     .filter((s) => s.status === 'pending')
-    .map((s) => ({ ...s, productName: products.find((p) => p.id === s.product_id)?.name || '' }));
+    .map((s) => {
+      const product = products.find((p) => p.id === s.product_id);
+      return {
+        ...s,
+        productName: product?.name || '',
+        productDescription: product?.description || '',
+        productCode: product?.code || '',
+      };
+    });
 
   const filteredSchedules = searchQuery
-    ? pendingSchedules.filter(s => s.productName.toLowerCase().includes(searchQuery.toLowerCase()) || (s.scheduled_date || '').includes(searchQuery))
+    ? pendingSchedules.filter(s => {
+        const q = searchQuery.toLowerCase();
+        return (
+          s.productName.toLowerCase().includes(q) ||
+          s.productDescription.toLowerCase().includes(q) ||
+          s.productCode.toLowerCase().includes(q) ||
+          (s.scheduled_date || '').includes(searchQuery)
+        );
+      })
     : pendingSchedules;
 
   function toggleSchedule(id) {
@@ -141,7 +154,7 @@ export default function InboundExecute() {
       </div>
       <div className="content-area" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'row', minHeight: 0 }}>
         {/* 스케줄 사이드패널 */}
-        <div style={{ width: 188, flexShrink: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', background: 'var(--bg-base)', overflow: 'hidden' }}>
+        <div style={{ width: 260, flexShrink: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', background: 'var(--bg-base)', overflow: 'hidden' }}>
           <div style={{ flexShrink: 0, padding: '8px 8px 6px', borderBottom: '1px solid var(--border)' }}>
             <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>입고 예정</div>
             <input
@@ -172,7 +185,13 @@ export default function InboundExecute() {
             <div className="action-bar">
               <div className="action-info">
                 {schedProduct ? (
-                  <span>입고: <span className="action-highlight">{schedProduct.name} {sched.quantity}개</span> · {sched.scheduled_date}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    입고:
+                    <span className="action-highlight">
+                      <ProductLabel product={schedProduct} compact />
+                    </span>
+                    <span>{sched.quantity}개 · {sched.scheduled_date}</span>
+                  </span>
                 ) : (
                   <span style={{ color: 'var(--text-secondary)' }}>← 예정 목록에서 항목 선택</span>
                 )}
@@ -209,42 +228,37 @@ export default function InboundExecute() {
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>창고 시각화</span>
                 </div>
                 <div style={{ position: 'relative', paddingBottom: 6 }}>
-                  <WarehouseMinimap warehouseId={selectedWarehouseId} selectedCell={selectedCell} hoveredRackId={hoveredRackId} hoveredFloor={hoveredFloor} hoveredSlot={hoveredSlot} />
                   {warehouseType === 'a' ? (
-                    <div style={{ padding: '10px 230px 10px 10px', maxHeight: 520, overflowY: 'auto' }}>
+                    <div style={{ padding: '10px', maxHeight: 520, overflowY: 'auto' }}>
                       <WarehouseRackGrid
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
                         onRackClick={handleRackClick}
-                        onRackHover={setHoveredRackId}
                         getCellClass={getCellClass}
                       />
                     </div>
                   ) : warehouseType === 'c' ? (
-                    <div style={{ paddingRight: 230, minHeight: 186 }}>
+                    <div style={{ minHeight: 186 }}>
                       <WarehouseFloorPlan
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
                         onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null }); }}
-                        onRackHover={setHoveredRackId}
                       />
                     </div>
                   ) : warehouseType === 'd' ? (
-                    <div style={{ paddingRight: 230, minHeight: 166 }}>
+                    <div style={{ minHeight: 166 }}>
                       <WarehouseElevation
                         warehouseId={selectedWarehouseId}
                         selectedRackId={selectedCell?.rackId}
                         onRackClick={(id) => { setSelectedCell((prev) => prev?.rackId === id ? null : { rackId: id, floor: 1, slot: null }); }}
-                        onRackHover={setHoveredRackId}
                       />
                     </div>
                   ) : (
-                    <div style={{ paddingRight: 230, maxHeight: 520, overflowY: 'auto' }}>
+                    <div style={{ maxHeight: 520, overflowY: 'auto' }}>
                       <WarehouseMatrix
                         warehouseId={selectedWarehouseId}
                         selectedCell={selectedCell ? { rackId: selectedCell.rackId, floor: selectedCell.floor } : null}
                         onCellClick={handleCellClick}
-                        onCellHover={(rackId, floor) => { setHoveredRackId(rackId); setHoveredFloor(floor ?? null); }}
                         getMiniBlocksFn={getMiniBlocksFn}
                         mode="inbound"
                       />
@@ -256,10 +270,10 @@ export default function InboundExecute() {
               {/* 단별현황 + 적재 상세 (가로 분할) */}
               <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
                 {/* 단별 현황 */}
-                <div style={{ flex: 3, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
+                <div style={{ flex: 0.33, minWidth: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      {selectedCell ? `랙 ${rack?.rack_no ?? ''} — ${selectedCell.floor}열 단별 현황` : '딘별 현황'}
+                      {selectedCell ? `랙 ${rack?.rack_no ?? ''} — ${selectedCell.floor}열 단별 현황` : '단별 현황'}
                     </span>
                   </div>
                   <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
@@ -272,12 +286,11 @@ export default function InboundExecute() {
                         if (prev.floor === floor && prev.slot === slot) return { ...prev, slot: null };
                         return { ...prev, floor, slot };
                       })}
-                      onSlotHover={(floor, slot) => setHoveredSlot(floor != null ? { rackId: selectedCell?.rackId, floor, slot } : null)}
                     />
                   </div>
                 </div>
                 {/* 적재 상세 */}
-                <div style={{ flex: 7, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div style={{ flex: 1.67, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <div style={{ height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                       {selectedCell?.slot ? `${selectedCell.slot}열 적재 상세` : '적재 상세'}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDataStore } from '../../store/useDataStore.js';
+import ProductLabel from '../../components/common/ProductLabel.jsx';
 import '../../styles/tablet.css';
 
 export default function TabletInbound() {
@@ -125,7 +126,7 @@ export default function TabletInbound() {
                   onClick={() => setSelectedScheduleId(s.id)}
                 >
                   <div className="t-sched-card-header">
-                    <span className="t-sched-card-name">{prod?.name}</span>
+                    <ProductLabel product={prod} compact />
                   </div>
                   <div className="t-sched-card-meta">
                     <span className="t-sched-meta-item">{s.quantity.toLocaleString()}개</span>
@@ -158,7 +159,7 @@ export default function TabletInbound() {
             <div className={`t-sel-banner${selectedProduct ? ' active' : ''}`}>
               {selectedProduct ? (
                 <>
-                  <div className="t-sel-product">{selectedProduct.name}</div>
+                  <div className="t-sel-product"><ProductLabel product={selectedProduct} compact /></div>
                   <div className="t-sel-meta">
                     <span>예정 {selectedSchedule?.quantity.toLocaleString()}개</span>
                     {hasLocation && (

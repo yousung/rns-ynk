@@ -1,4 +1,5 @@
 import { useDataStore } from '../../store/useDataStore.js';
+import ProductLabel from '../common/ProductLabel.jsx';
 
 export function KanDetailPanel({ rackId, floor, kan, onItemClick, selectedProductId, selectedItemId }) {
   const { racks, pallets, inventoryItems, products } = useDataStore();
@@ -60,7 +61,9 @@ export function KanDetailPanel({ rackId, floor, kan, onItemClick, selectedProduc
                   onClick={() => isClickable && onItemClick?.(rackId, floor, kan, item.id)}
                 >
                   <td style={{ padding: '3px 8px' }}>{prod?.code || '-'}</td>
-                  <td style={{ padding: '3px 8px' }}>{prod?.name || '-'}</td>
+                  <td style={{ padding: '3px 8px' }}>
+                    <ProductLabel product={prod} compact />
+                  </td>
                   <td style={{ padding: '3px 8px' }}>{item.quantity.toLocaleString()}개</td>
                   <td style={{ padding: '3px 8px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{item.received_at}</td>
                   <td style={{ padding: '3px 8px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{item.expiration_date}</td>
@@ -128,7 +131,7 @@ export default function CellDetailsPanel({ selectedCell }) {
                     <tr key={`${kan}-${idx}`}>
                       {idx === 0 && <td rowSpan={items.length}>{kan}단</td>}
                       <td>{product?.code || '-'}</td>
-                      <td>{product?.name || '-'}</td>
+                      <td><ProductLabel product={product} compact /></td>
                       <td>{item.quantity.toLocaleString()}</td>
                       <td>{item.received_at}</td>
                       <td>{item.expiration_date}</td>

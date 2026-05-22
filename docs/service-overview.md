@@ -41,7 +41,7 @@
 | **화면 수** | 10개 (대시보드·재고·상품·로그·사용자 등) | 2개 (입고처리 / 출고처리) | 1개 (단일 모니터링 페이지) |
 | **기능 범위** | CRUD·조회·분석·관리 전체 | 입고·출고 실행만 | 조회 없음 (로그 시뮬레이션) |
 | **UI 밀도** | 고밀도 (테이블·KPI·차트) | 저밀도 (대형 버튼) | 극저밀도 (시계·상태·로그) |
-| **창고 시각화** | 매트릭스·도면·입면도·미니맵 | 텍스트·버튼 | 없음 |
+| **창고 시각화** | 매트릭스·도면·입면도 | 텍스트·버튼 | 없음 |
 | **전역 Store 사용** | useAuthStore + useDataStore + useUIStore | useDataStore만 사용 | 모두 미사용 (로컬 useState) |
 | **전용 스타일** | 전역 + 컴포넌트 CSS | `tablet.css` | `kiosk.css` |
 | **데이터 연동** | 더미 데이터 + UI CRUD | 더미 데이터 읽기 전용 | 하드코딩 시뮬레이션 |
@@ -92,7 +92,7 @@
   - `d` → `WarehouseElevation` (입면도)
 - **핵심 흐름**: 예정 선택 → 매트릭스 셀 클릭 → 위치 지정 → 수량 입력 → 입고 실행
 - `getMiniBlocksFn`: 선택된 상품이 이미 있는 칸을 `mini-product`로 강조
-- `WarehouseMinimap`: 우측 상단 미니맵, `StatsBar`: 하단 PLT 통계
+- `StatsBar`: 하단 PLT 통계
 
 #### OutboundExecute — 출고 처리 (FIFO 적용)
 InboundExecute와 유사하나 **선입선출(FIFO) 로직**이 추가된다.
@@ -124,7 +124,6 @@ InboundExecute와 유사하나 **선입선출(FIFO) 로직**이 추가된다.
 | `WarehouseRackGrid` | 랙×층×칸 격자 (Type A) |
 | `WarehouseFloorPlan` | 도면형 (Type C) + `FloorPlanRackDetail` |
 | `WarehouseElevation` | 입면도 (Type D) |
-| `WarehouseMinimap` | 우측 상단 미니맵 |
 | `MiniBlocks` | 칸별 상태 미니 블록 |
 | `CellDetailsPanel` (`KanDetailPanel`) | 칸 적재 상세 |
 | `StatsBar` | 하단 PLT 통계 |

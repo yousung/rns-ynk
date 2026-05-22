@@ -1,4 +1,5 @@
 import { useDataStore } from '../../store/useDataStore.js';
+import ProductLabel from '../common/ProductLabel.jsx';
 
 export default function ScheduleScroll({ schedules, selectedId, onSelect, vertical }) {
   const products = useDataStore((s) => s.products);
@@ -18,9 +19,7 @@ export default function ScheduleScroll({ schedules, selectedId, onSelect, vertic
               onClick={() => onSelect(sched.id)}
               style={{ minWidth: 0 }}
             >
-              <div className="sched-card-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {product?.name || '-'}
-              </div>
+              <ProductLabel product={product} compact />
               <div className="sched-card-meta">
                 <span>{sched.quantity.toLocaleString()}개</span>
                 <span>·</span>
@@ -45,7 +44,7 @@ export default function ScheduleScroll({ schedules, selectedId, onSelect, vertic
               className={`sched-card${sched.id === selectedId ? ' selected' : ''}`}
               onClick={() => onSelect(sched.id)}
             >
-              <div className="sched-card-name">{product?.name || '-'}</div>
+              <ProductLabel product={product} compact />
               <div className="sched-card-meta">
                 <span>{sched.quantity.toLocaleString()}개</span>
                 <span>·</span>

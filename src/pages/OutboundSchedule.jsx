@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDataStore } from '../store/useDataStore.js';
+import ProductLabel from '../components/common/ProductLabel.jsx';
 
 const FILTERS = [
   { label: '전체', value: 'all' },
@@ -58,7 +59,7 @@ export default function OutboundSchedule() {
                 return (
                   <tr key={s.id}>
                     <td>{s.id}</td>
-                    <td>{product?.name}</td>
+                    <td><ProductLabel product={product} /></td>
                     <td>{s.quantity}개</td>
                     <td>{s.scheduled_date}</td>
                     <td>

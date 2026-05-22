@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useDataStore } from '../store/useDataStore.js';
+import ProductLabel from '../components/common/ProductLabel.jsx';
 
 const FEATURE_LABEL = {
   inbound: '입고', outbound: '출고', inventory: '재고',
@@ -19,6 +20,18 @@ function KpiCard({ label, value, unit, color, sub }) {
       {sub && <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 6 }}>{sub}</div>}
     </div>
   );
+}
+
+function findProductsInDetail(detail, products) {
+  if (!detail) return [];
+
+  const matched = products.filter((product) => {
+    return detail.includes(product.name) || detail.includes(product.code);
+  });
+
+  return matched.filter((product, index) => {
+    return matched.findIndex((item) => item.id === product.id) === index;
+  });
 }
 
 export default function Dashboard() {
@@ -115,7 +128,7 @@ export default function Dashboard() {
                   const p = products.find((x) => x.id === s.product_id);
                   return (
                     <tr key={s.id}>
-                      <td>{p?.name ?? '-'}</td>
+                      <td><ProductLabel product={p} compact /></td>
                       <td style={{ fontFamily: "'JetBrains Mono', monospace" }}>{s.quantity.toLocaleString()}</td>
                       <td style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{s.scheduled_date}</td>
                     </tr>
@@ -145,7 +158,7 @@ export default function Dashboard() {
                   const p = products.find((x) => x.id === s.product_id);
                   return (
                     <tr key={s.id}>
-                      <td>{p?.name ?? '-'}</td>
+                      <td><ProductLabel product={p} compact /></td>
                       <td style={{ fontFamily: "'JetBrains Mono', monospace" }}>{s.quantity.toLocaleString()}</td>
                       <td style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{s.scheduled_date}</td>
                     </tr>
@@ -157,7 +170,7 @@ export default function Dashboard() {
         </div>
 
         {/* 최근 활동 로그 */}
-        <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden', marginTop: 16 }}>
+        <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 8, overflow: 'visible', marginTop: 16 }}>
           <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', fontWeight: 600, fontSize: '0.875rem' }}>
             최근 활동
           </div>
@@ -171,18 +184,35 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {recentLogs.map((l) => (
-                <tr key={l.id}>
-                  <td style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem', whiteSpace: 'nowrap', color: 'var(--text-secondary)' }}>{l.created_at}</td>
-                  <td>{l.user}</td>
-                  <td>
-                    <span className="badge" style={{ background: 'var(--bg-surface)', color: 'var(--text-secondary)' }}>
-                      {FEATURE_LABEL[l.feature] || l.feature}
-                    </span>
-                  </td>
-                  <td style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{l.detail}</td>
-                </tr>
-              ))}
+              {recentLogs.map((l) => {
+                const matchedProducts = findProductsInDetail(l.detail, products);
+                return (
+                  <tr key={l.id}>
+                    <td style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem', whiteSpace: 'nowrap', color: 'var(--text-secondary)' }}>{l.created_at}</td>
+                    <td>{l.user}</td>
+                    <td>
+                      <span className="badge" style={{ background: 'var(--bg-surface)', color: 'var(--text-secondary)' }}>
+                        {FEATURE_LABEL[l.feature] || l.feature}
+                      </span>
+                    </td>
+                    <td style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'normal', overflowWrap: 'anywhere', wordBreak: 'keep-all' }}>
+                        <span>{l.detail}</span>
+                        {matchedProducts.length > 0 && (
+                          <span className="info-tooltip" aria-label="상품 설명">
+                            i
+                            <span className="info-tooltip-content">
+                              {matchedProducts.map((product) => (
+                                <ProductLabel key={product.id} product={product} compact />
+                              ))}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

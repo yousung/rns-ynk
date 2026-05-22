@@ -201,6 +201,7 @@ tfoot .label-cell { position: sticky; left: 0; z-index: 1; background: #06101A; 
 .sched-card.selected { border-color: var(--cyan); background: var(--cyan-dim); }
 .sched-card-name { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); }
 .sched-card.selected .sched-card-name { color: var(--cyan); }
+.sched-card.selected .product-label-name { color: var(--cyan); }
 .sched-card-meta { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; display: flex; gap: 4px; }
 .sched-note { color: var(--amber); font-weight: 600; }
 
@@ -224,6 +225,7 @@ tfoot .label-cell { position: sticky; left: 0; z-index: 1; background: #06101A; 
 .wh-product-card:hover { background: var(--bg-hover); }
 .wh-product-card.selected { background: var(--cyan-dim); border-left: 3px solid var(--cyan); }
 .wh-product-card.selected .wh-product-name { color: var(--cyan); }
+.wh-product-card.selected .product-label-name { color: var(--cyan); }
 .wh-legend { display: flex; gap: 12px; flex-wrap: wrap; padding: 8px 14px; border-top: 1px solid var(--border); flex-shrink: 0; }
 .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 

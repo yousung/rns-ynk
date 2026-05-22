@@ -114,20 +114,21 @@ const pallets = [
 ];
 
 const products = [
-  { id: 1,  code: 'BKTVDW1BO-2',  name: '닥터원더 스팟패치 무지박스 18매용(100갑)',      category: '포장재',        created_at: '2025-06-01' },
-  { id: 2,  code: 'BKTVDW5PP-1',  name: '닥터원더 원더패치 포장지 10mm-15매용',          category: '원자재/부자재', created_at: '2025-06-01' },
-  { id: 3,  code: 'BKTVDW5PP-2',  name: '닥터원더 원더패치 포장지 12mm-15매용',          category: '원자재/부자재', created_at: '2025-06-15' },
-  { id: 4,  code: 'BKTVDW5SC',    name: '닥터원더 원더패치 소케이스 75매',                category: '콜로이드 패치', created_at: '2025-07-01' },
-  { id: 5,  code: 'MTSR1PP180',   name: 'SOS리페어시카 클리닉매직패치 포장지(180)',       category: '원자재/부자재', created_at: '2025-07-15' },
-  { id: 6,  code: 'MTSR1SC',      name: 'SOS리페어시카 클리닉매직패치 소케이스',          category: '콜로이드 패치', created_at: '2025-08-01' },
-  { id: 7,  code: 'ACNS2BO',      name: '에이블 어퓨후시디움 클리어스팟 대박스_무지',    category: '포장재',        created_at: '2025-08-01' },
-  { id: 8,  code: 'A37-120',      name: '자사 하이드로콜로이드 원단',                     category: '원자재/부자재', created_at: '2025-09-01' },
-  { id: 9,  code: 'TNLCM240-1',   name: '콜로이드원단(240mm, 격자무늬이형지)',            category: '원자재/부자재', created_at: '2025-10-01' },
-  { id: 10, code: 'YKCPU-1',      name: 'PU원단(540)_코팅실 원단',                       category: '원자재/부자재', created_at: '2025-10-01' },
-  { id: 11, code: 'DIBA0PF95',    name: 'PET점착필름(95)',                                category: '원자재/부자재', created_at: '2025-06-01' },
-  { id: 12, code: 'DMWON25',      name: '양면메쉬부직포(25)',                             category: '원자재/부자재', created_at: '2025-06-01' },
-  { id: 13, code: 'RP45',         name: '백색단면 이형지(45) 80g',                        category: '밴드',          created_at: '2025-06-15' },
-  { id: 14, code: 'UAM80',        name: "우레탄방수합지필름(80)_'S'자 반칼",              category: '원자재/부자재', created_at: '2025-07-01' },
+  { id: 1,  code: 'BKTVDW1BO-2',  name: '닥터원더 스팟패치 무지박스 18매용(100갑)',      description: '18매용 100갑 포장',       category: '포장재',        created_at: '2025-06-01' },
+  { id: 2,  code: 'BKTVDW5PP-1',  name: '닥터원더 원더패치 포장지 10mm-15매용',          description: '10mm 15매용',             category: '원자재/부자재', created_at: '2025-06-01' },
+  { id: 3,  code: 'BKTVDW5PP-2',  name: '닥터원더 원더패치 포장지 12mm-15매용',          description: '12mm 15매용',             category: '원자재/부자재', created_at: '2025-06-15' },
+  { id: 4,  code: 'BKTVDW5SC',    name: '닥터원더 원더패치 소케이스 75매',                description: '75매 소케이스',            category: '콜로이드 패치', created_at: '2025-07-01' },
+  { id: 5,  code: 'MTSR1PP180',   name: 'SOS리페어시카 클리닉매직패치 포장지(180)',       description: '180매 포장지',             category: '원자재/부자재', created_at: '2025-07-15' },
+  { id: 6,  code: 'MTSR1SC',      name: 'SOS리페어시카 클리닉매직패치 소케이스',          description: '클리닉매직패치 소케이스',  category: '콜로이드 패치', created_at: '2025-08-01' },
+  { id: 7,  code: 'ACNS2BO',      name: '에이블 어퓨후시디움 클리어스팟 대박스_무지',    description: '무지 대박스',              category: '포장재',        created_at: '2025-08-01' },
+  { id: 8,  code: 'A37-120',      name: '자사 하이드로콜로이드 원단',                     description: 'T0.37*120mm',              category: '원자재/부자재', created_at: '2025-09-01' },
+  { id: 9,  code: 'TNLCM240-1',   name: '콜로이드원단(240mm, 격자무늬이형지)',            description: '240mm 격자무늬이형지',     category: '원자재/부자재', created_at: '2025-10-01' },
+  { id: 10, code: 'YKCPU-1',      name: 'PU원단(540)_코팅실 원단',                       description: '540mm 코팅실 원단',        category: '원자재/부자재', created_at: '2025-10-01' },
+  { id: 11, code: 'DIBA0PF95',    name: 'PET점착필름(95)',                                description: '95mm*2000m',               category: '원자재/부자재', created_at: '2025-06-01' },
+  { id: 12, code: 'DMWON25',      name: '양면메쉬부직포(25)',                             description: '25mm 양면메쉬부직포',      category: '원자재/부자재', created_at: '2025-06-01' },
+  { id: 13, code: 'RP45',         name: '백색단면 이형지(45) 80g',                        description: '45mm 80g',                 category: '밴드',          created_at: '2025-06-15' },
+  { id: 14, code: 'UAM80',        name: "우레탄방수합지필름(80)_'S'자 반칼",              description: "80mm 'S'자 반칼",          category: '원자재/부자재', created_at: '2025-07-01' },
+  { id: 15, code: 'A37-240',      name: '자사 하이드로콜로이드 원단',                     description: '0.37T*240mm',              category: '원자재/부자재', created_at: '2025-09-01' },
 ];
 
 const inventoryItems = [

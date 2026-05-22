@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDataStore } from '../../store/useDataStore.js';
+import ProductLabel from '../../components/common/ProductLabel.jsx';
 import '../../styles/tablet.css';
 
 export default function TabletOutbound() {
@@ -123,7 +124,7 @@ export default function TabletOutbound() {
                   onClick={() => handleSelectSchedule(s.id)}
                 >
                   <div className="t-sched-card-header">
-                    <span className="t-sched-card-name">{prod?.name}</span>
+                    <ProductLabel product={prod} compact />
                   </div>
                   <div className="t-sched-sku">{prod?.code}</div>
                   <div className="t-sched-card-meta">
@@ -145,7 +146,7 @@ export default function TabletOutbound() {
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
               {/* 선택된 상품 정보 */}
               <div className="t-sel-banner active">
-                <div className="t-sel-product">{selectedProduct?.name}</div>
+                <div className="t-sel-product"><ProductLabel product={selectedProduct} compact /></div>
                 <div className="t-sel-meta">
                   <span>출고 {selectedSchedule.quantity.toLocaleString()}개</span>
                   <span>{selectedSchedule.note}</span>
