@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "generate:products": "python3 scripts/generate-products-from-example.py",
+    "predev": "npm run generate:products",
     "dev": "vite",
+    "prebuild": "npm run generate:products",
     "build": "vite build",
     "preview": "vite preview"
   },

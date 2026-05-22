@@ -20,7 +20,7 @@ export default function Products() {
         p.code.toLowerCase().includes(q) ||
         p.name.toLowerCase().includes(q) ||
         (p.description || '').toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q);
+        (p.category || '').toLowerCase().includes(q);
       const matchCat = !category || p.category === category;
       return matchSearch && matchCat;
     });
@@ -77,6 +77,7 @@ export default function Products() {
               <tr>
                 <th>상품코드</th>
                 <th>상품명</th>
+                <th>설명</th>
                 <th>분류</th>
                 <th>등록일</th>
                 <th>현재 재고</th>
@@ -86,7 +87,7 @@ export default function Products() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: 'center', padding: '40px 14px', color: 'var(--text-secondary)' }}>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '40px 14px', color: 'var(--text-secondary)' }}>
                     검색 결과가 없습니다.
                   </td>
                 </tr>
@@ -98,9 +99,10 @@ export default function Products() {
                   return (
                     <tr key={p.id}>
                       <td style={{ fontFamily: "'JetBrains Mono', monospace" }}>{p.code}</td>
-                      <td><ProductLabel product={p} /></td>
-                      <td>{p.category}</td>
-                      <td>{p.created_at}</td>
+                      <td><ProductLabel product={p} showDescription={false} /></td>
+                      <td>{p.description || '-'}</td>
+                      <td>{p.category || '-'}</td>
+                      <td>{p.created_at || '-'}</td>
                       <td>{total}개</td>
                       <td>
                         <button style={{ color: 'var(--cyan)', fontSize: '0.875rem', marginRight: 8, cursor: 'pointer', background: 'none', border: 'none' }} onClick={() => alert('데모: 수정 기능 준비 중')}>수정</button>

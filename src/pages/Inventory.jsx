@@ -173,12 +173,12 @@ export default function Inventory() {
             <table>
               <thead>
                 <tr>
-                  <th>상품코드</th><th>상품명</th><th>분류</th><th>총 수량</th><th>위치 수</th><th>상세</th>
+                  <th>상품코드</th><th>상품명</th><th>설명</th><th>분류</th><th>총 수량</th><th>위치 수</th><th>상세</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.length === 0 ? (
-                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '40px 14px', color: 'var(--text-secondary)' }}>검색 결과가 없습니다.</td></tr>
+                  <tr><td colSpan={7} style={{ textAlign: 'center', padding: '40px 14px', color: 'var(--text-secondary)' }}>검색 결과가 없습니다.</td></tr>
                 ) : (
                   filteredProducts.map((p) => {
                     const items = inventoryItems.filter((i) => i.product_id === p.id);
@@ -188,7 +188,8 @@ export default function Inventory() {
                       <>
                         <tr key={p.id}>
                           <td style={{ fontFamily: "'JetBrains Mono', monospace" }}>{p.code}</td>
-                          <td><ProductLabel product={p} /></td>
+                          <td><ProductLabel product={p} showDescription={false} /></td>
+                          <td>{p.description || '-'}</td>
                           <td>{p.category || '-'}</td>
                           <td>{total}개</td>
                           <td>{items.length}곳</td>
@@ -203,7 +204,7 @@ export default function Inventory() {
                         </tr>
                         {isExpanded && (
                           <tr key={`detail-${p.id}`}>
-                            <td colSpan={6}>
+                            <td colSpan={7}>
                               <div style={{ background: 'var(--bg-hover)', padding: 12, borderRadius: 4 }}>
                                 <table>
                                   <thead><tr><th>위치</th><th>입고일</th><th>수량</th></tr></thead>

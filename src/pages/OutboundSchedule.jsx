@@ -45,7 +45,9 @@ export default function OutboundSchedule() {
             <thead>
               <tr>
                 <th>번호</th>
+                <th>상품코드</th>
                 <th>상품명</th>
+                <th>설명</th>
                 <th>수량</th>
                 <th>예정일</th>
                 <th>상태</th>
@@ -59,7 +61,9 @@ export default function OutboundSchedule() {
                 return (
                   <tr key={s.id}>
                     <td>{s.id}</td>
-                    <td><ProductLabel product={product} /></td>
+                    <td style={{ fontFamily: "'JetBrains Mono', monospace" }}>{product?.code || '-'}</td>
+                    <td><ProductLabel product={product} showDescription={false} /></td>
+                    <td>{product?.description || '-'}</td>
                     <td>{s.quantity}개</td>
                     <td>{s.scheduled_date}</td>
                     <td>
