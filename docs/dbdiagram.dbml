@@ -1,0 +1,339 @@
+Project ynk_wms {
+  database_type: 'MySQL'
+  Note: '''
+    YNK WMS ERD
+    Source: docs/db-design.md
+  '''
+}
+
+Enum warehouse_type {
+  normal
+  electric
+}
+
+Enum pallet_status {
+  active
+  moved
+  disposed
+}
+
+Enum user_role {
+  developer
+  super_admin
+  admin
+  user
+}
+
+Enum schedule_status {
+  pending
+  done
+  cancelled
+}
+
+Enum stock_movement_type {
+  inbound
+  outbound
+  move
+  adjustment
+}
+
+Enum permission_feature {
+  dashboard
+  inbound_schedule
+  inbound_execute
+  outbound_schedule
+  outbound_execute
+  inventory
+  products
+  activity_log
+  users
+  settings
+}
+
+Enum device_type {
+  kiosk
+  tablet
+  electric_rack
+  bluetooth_gateway
+}
+
+Enum device_status {
+  connected
+  retrying
+  failed
+  offline
+}
+
+Table warehouses {
+  id bigint [pk, increment]
+  name varchar(100) [not null]
+  type warehouse_type [not null, default: 'normal']
+  max_rack_count int
+  is_active boolean [not null, default: true]
+  created_at datetime [not null]
+  updated_at datetime [not null]
+}
+
+Table racks {
+  id bigint [pk, increment]
+  warehouse_id bigint [not null, ref: > warehouses.id]
+  rack_no int [not null]
+  floor_count int [not null]
+  slots_per_floor int [not null]
+  is_active boolean [not null, default: true]
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    (warehouse_id, rack_no) [unique]
+  }
+}
+
+Table rack_slots {
+  id bigint [pk, increment]
+  rack_id bigint [not null, ref: > racks.id]
+  floor_no int [not null]
+  slot_no int [not null]
+  barcode varchar(80) [unique]
+  is_blocked boolean [not null, default: false]
+  created_at datetime [not null]
+
+  indexes {
+    (rack_id, floor_no, slot_no) [unique]
+  }
+}
+
+Table products {
+  id bigint [pk, increment]
+  code varchar(80) [not null, unique]
+  name varchar(255) [not null]
+  description text
+  category varchar(100)
+  unit varchar(20) [not null, default: 'ea']
+  is_active boolean [not null, default: true]
+  created_at datetime [not null]
+  updated_at datetime [not null]
+  deleted_at datetime
+
+  indexes {
+    category
+  }
+}
+
+Table pallets {
+  id bigint [pk, increment]
+  code varchar(80) [unique]
+  rack_slot_id bigint [not null, ref: > rack_slots.id]
+  status pallet_status [not null, default: 'active']
+  active_slot_id bigint [note: 'Generated column in MySQL: case when status = active then rack_slot_id else null end']
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    rack_slot_id
+    active_slot_id [unique]
+  }
+}
+
+Table inventory_items {
+  id bigint [pk, increment]
+  code varchar(80) [not null, unique]
+  product_id bigint [not null, ref: > products.id]
+  pallet_id bigint [not null, ref: > pallets.id]
+  quantity decimal(14,3) [not null]
+  received_at date [not null]
+  expiration_date date
+  production_date date
+  lot_no varchar(100)
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    (product_id, received_at, id) [name: 'idx_inventory_product_fifo']
+    pallet_id
+  }
+}
+
+Table users {
+  id bigint [pk, increment]
+  name varchar(80) [not null]
+  email varchar(255) [not null, unique]
+  password_hash varchar(255) [not null]
+  role user_role [not null, default: 'user']
+  is_approved boolean [not null, default: false]
+  last_login_at datetime
+  created_at datetime [not null]
+  updated_at datetime [not null]
+}
+
+Table inbound_schedules {
+  id bigint [pk, increment]
+  product_id bigint [not null, ref: > products.id]
+  quantity decimal(14,3) [not null]
+  scheduled_date date [not null]
+  status schedule_status [not null, default: 'pending']
+  supplier_name varchar(150)
+  note text
+  created_by bigint [ref: > users.id]
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    (status, scheduled_date)
+    product_id
+  }
+}
+
+Table inbound_records {
+  id bigint [pk, increment]
+  inbound_schedule_id bigint [not null, ref: > inbound_schedules.id]
+  inventory_item_id bigint [not null, ref: > inventory_items.id]
+  pallet_id bigint [not null, ref: > pallets.id]
+  rack_slot_id bigint [not null, ref: > rack_slots.id]
+  quantity decimal(14,3) [not null]
+  processed_by bigint [ref: > users.id]
+  processed_at datetime [not null]
+
+  indexes {
+    inbound_schedule_id
+    processed_at
+  }
+}
+
+Table outbound_schedules {
+  id bigint [pk, increment]
+  product_id bigint [not null, ref: > products.id]
+  quantity decimal(14,3) [not null]
+  scheduled_date date [not null]
+  status schedule_status [not null, default: 'pending']
+  customer_name varchar(150)
+  note text
+  created_by bigint [ref: > users.id]
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    (status, scheduled_date)
+    product_id
+  }
+}
+
+Table outbound_records {
+  id bigint [pk, increment]
+  outbound_schedule_id bigint [not null, ref: > outbound_schedules.id]
+  product_id bigint [not null, ref: > products.id]
+  total_quantity decimal(14,3) [not null]
+  processed_by bigint [ref: > users.id]
+  processed_at datetime [not null]
+
+  indexes {
+    outbound_schedule_id
+    processed_at
+  }
+}
+
+Table outbound_record_items {
+  id bigint [pk, increment]
+  outbound_record_id bigint [not null, ref: > outbound_records.id]
+  inventory_item_id bigint [not null, ref: > inventory_items.id]
+  pallet_id bigint [not null, ref: > pallets.id]
+  rack_slot_id bigint [not null, ref: > rack_slots.id]
+  quantity decimal(14,3) [not null]
+  fifo_rank int [not null]
+
+  indexes {
+    outbound_record_id
+    inventory_item_id
+  }
+}
+
+Table stock_movements {
+  id bigint [pk, increment]
+  inventory_item_id bigint [ref: > inventory_items.id]
+  product_id bigint [not null, ref: > products.id]
+  pallet_id bigint [ref: > pallets.id]
+  from_rack_slot_id bigint [ref: > rack_slots.id]
+  to_rack_slot_id bigint [ref: > rack_slots.id]
+  movement_type stock_movement_type [not null]
+  quantity_delta decimal(14,3) [not null]
+  reason text
+  ref_table varchar(80)
+  ref_id bigint
+  created_by bigint [ref: > users.id]
+  created_at datetime [not null]
+
+  indexes {
+    (product_id, created_at)
+    inventory_item_id
+    (ref_table, ref_id)
+  }
+}
+
+Table user_permissions {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > users.id]
+  warehouse_id bigint [ref: > warehouses.id]
+  feature permission_feature [not null]
+  actions json [not null, note: 'Example: ["view", "create", "update"]']
+  warehouse_scope_id bigint [note: 'Generated column in MySQL: coalesce(warehouse_id, 0)']
+  created_at datetime [not null]
+
+  indexes {
+    (user_id, warehouse_scope_id, feature) [unique]
+    warehouse_id
+  }
+}
+
+Table activity_logs {
+  id bigint [pk, increment]
+  user_id bigint [ref: > users.id]
+  user_name_snapshot varchar(80)
+  action varchar(80) [not null]
+  feature permission_feature
+  target_table varchar(80)
+  target_id bigint
+  detail text
+  payload json
+  ip varchar(45)
+  created_at datetime [not null]
+
+  indexes {
+    created_at
+    (feature, created_at)
+    (user_id, created_at)
+  }
+}
+
+Table devices {
+  id bigint [pk, increment]
+  code varchar(80) [not null, unique]
+  name varchar(120) [not null]
+  type device_type [not null]
+  warehouse_id bigint [ref: > warehouses.id]
+  rack_id bigint [ref: > racks.id]
+  status device_status [not null, default: 'offline']
+  last_seen_at datetime
+  meta json [not null]
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    warehouse_id
+    rack_id
+  }
+}
+
+Table device_events {
+  id bigint [pk, increment]
+  device_id bigint [not null, ref: > devices.id]
+  status device_status
+  event_type varchar(80) [not null]
+  message text
+  payload json
+  created_at datetime [not null]
+
+  indexes {
+    (device_id, created_at)
+    created_at
+  }
+}
