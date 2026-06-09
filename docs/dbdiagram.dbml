@@ -30,7 +30,7 @@ Enum schedule_status {
   cancelled
 }
 
-Enum stock_movement_type {
+Enum stock_transaction_type {
   inbound
   outbound
   move
@@ -184,22 +184,6 @@ Table inbound_schedules {
   }
 }
 
-Table inbound_records {
-  id bigint [pk, increment]
-  inbound_schedule_id bigint [not null, ref: > inbound_schedules.id]
-  inventory_item_id bigint [not null, ref: > inventory_items.id]
-  pallet_id bigint [not null, ref: > pallets.id]
-  rack_slot_id bigint [not null, ref: > rack_slots.id]
-  quantity decimal(14,3) [not null]
-  processed_by bigint [ref: > users.id]
-  processed_at datetime [not null]
-
-  indexes {
-    inbound_schedule_id
-    processed_at
-  }
-}
-
 Table outbound_schedules {
   id bigint [pk, increment]
   product_id bigint [not null, ref: > products.id]
@@ -218,54 +202,42 @@ Table outbound_schedules {
   }
 }
 
-Table outbound_records {
+Table stock_transactions {
   id bigint [pk, increment]
-  outbound_schedule_id bigint [not null, ref: > outbound_schedules.id]
+  transaction_type stock_transaction_type [not null]
+  inbound_schedule_id bigint [ref: > inbound_schedules.id]
+  outbound_schedule_id bigint [ref: > outbound_schedules.id]
   product_id bigint [not null, ref: > products.id]
   total_quantity decimal(14,3) [not null]
+  note text
   processed_by bigint [ref: > users.id]
   processed_at datetime [not null]
-
-  indexes {
-    outbound_schedule_id
-    processed_at
-  }
-}
-
-Table outbound_record_items {
-  id bigint [pk, increment]
-  outbound_record_id bigint [not null, ref: > outbound_records.id]
-  inventory_item_id bigint [not null, ref: > inventory_items.id]
-  pallet_id bigint [not null, ref: > pallets.id]
-  rack_slot_id bigint [not null, ref: > rack_slots.id]
-  quantity decimal(14,3) [not null]
-  fifo_rank int [not null]
-
-  indexes {
-    outbound_record_id
-    inventory_item_id
-  }
-}
-
-Table stock_movements {
-  id bigint [pk, increment]
-  inventory_item_id bigint [ref: > inventory_items.id]
-  product_id bigint [not null, ref: > products.id]
-  pallet_id bigint [ref: > pallets.id]
-  from_rack_slot_id bigint [ref: > rack_slots.id]
-  to_rack_slot_id bigint [ref: > rack_slots.id]
-  movement_type stock_movement_type [not null]
-  quantity_delta decimal(14,3) [not null]
-  reason text
-  ref_table varchar(80)
-  ref_id bigint
-  created_by bigint [ref: > users.id]
   created_at datetime [not null]
 
   indexes {
-    (product_id, created_at)
+    processed_at
+    (transaction_type, processed_at)
+    (product_id, processed_at)
+    inbound_schedule_id
+    outbound_schedule_id
+  }
+}
+
+Table stock_transaction_items {
+  id bigint [pk, increment]
+  stock_transaction_id bigint [not null, ref: > stock_transactions.id]
+  inventory_item_id bigint [ref: > inventory_items.id]
+  pallet_id bigint [not null, ref: > pallets.id]
+  from_rack_slot_id bigint [ref: > rack_slots.id]
+  to_rack_slot_id bigint [ref: > rack_slots.id]
+  quantity decimal(14,3) [not null]
+  quantity_delta decimal(14,3) [not null]
+  fifo_rank int
+
+  indexes {
+    stock_transaction_id
     inventory_item_id
-    (ref_table, ref_id)
+    pallet_id
   }
 }
 
